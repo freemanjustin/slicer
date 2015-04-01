@@ -10,6 +10,13 @@ Sphere::Sphere(){
 Sphere::~Sphere(){
 }
 
+
+
+// Create a sphere centered at c, with radius r, and precision n
+// Modified from the Paul Bourke implementation.
+// see:
+// http://paulbourke.net/geometry/circlesphere/
+
 void Sphere::init(int n, double xc, double yc, double zc, double r)
 {
     int i,j;
