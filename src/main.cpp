@@ -173,7 +173,7 @@ int main(int argc, char **argv) {
 		}
 		//Setup camera
 		camera.SetMode(FREE);
-		camera.SetPosition(glm::vec3(0, 0, -4));
+		camera.SetPosition(glm::vec3(0, 0, -2.2));
 		camera.SetLookAt(glm::vec3(0, 0, 0));
 		camera.SetClipping(.1, 1000);
 		camera.SetFOV(45);
