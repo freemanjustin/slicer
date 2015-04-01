@@ -21,6 +21,7 @@ class Sphere {
     double radius;
     int vertexVboId;   // identifier for the Vertex Buffer Object to hold the vertex coords
     int normalVboId;   // identifier for the Vertex Buffer Object to hold the normla vectors
+    int colorVboId;   // identifier for the Vertex Buffer Object to hold the normla vectors
 
 public:
     Sphere();
