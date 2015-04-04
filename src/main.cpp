@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 #include "camera.h"
 #include "sphere.h"
-#include "cube.h"
 
 using namespace std;
 
