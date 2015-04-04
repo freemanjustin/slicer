@@ -41,9 +41,9 @@ void Sphere::init(int n, glm::vec3 centre, double r)
             p[1] = centre.y + r * e[1];
             p[2] = centre.z + r * e[2];
             
-            c[0] = 0.1f;//fabs(e[0]);
-            c[1] = 0.5f;//fabs(e[1]);
-            c[2] = 0.8f;//fabs(e[2]);
+            c[0] = fabs(e[0]);
+            c[1] = fabs(e[1]);
+            c[2] = fabs(e[2]);
             
             
             normal_array.insert(normal_array.end(), e, e+3);

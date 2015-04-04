@@ -9,7 +9,8 @@
 
 OBJ=	./src/main.o \
 	./src/camera.o \
-	./src/sphere.o
+	./src/sphere.o \
+	./src/GLSLShader.o
 		
 
 
