@@ -17,7 +17,7 @@ Sphere::~Sphere(){
 // see:
 // http://paulbourke.net/geometry/circlesphere/
 
-void Sphere::init(int n, double xc, double yc, double zc, double r)
+void Sphere::init(int n, glm::vec3 centre, double r)
 {
     int i,j;
     double t1,t2,t3;
@@ -37,13 +37,13 @@ void Sphere::init(int n, double xc, double yc, double zc, double r)
             e[0] = cos(t1) * cos(t3);
             e[1] = sin(t1);
             e[2] = cos(t1) * sin(t3);
-            p[0] = xc + r * e[0];
-            p[1] = yc + r * e[1];
-            p[2] = zc + r * e[2];
+            p[0] = centre.x + r * e[0];
+            p[1] = centre.y + r * e[1];
+            p[2] = centre.z + r * e[2];
             
-            c[0] = fabs(e[0]);
-            c[1] = fabs(e[1]);
-            c[2] = fabs(e[2]);
+            c[0] = 0.1f;//fabs(e[0]);
+            c[1] = 0.5f;//fabs(e[1]);
+            c[2] = 0.8f;//fabs(e[2]);
             
             
             normal_array.insert(normal_array.end(), e, e+3);
@@ -61,9 +61,9 @@ void Sphere::init(int n, double xc, double yc, double zc, double r)
             e[0] = cos(t2) * cos(t3);
             e[1] = sin(t2);
             e[2] = cos(t2) * sin(t3);
-            p[0] = xc + r * e[0];
-            p[1] = yc + r * e[1];
-            p[2] = zc + r * e[2];
+            p[0] = centre.x + r * e[0];
+            p[1] = centre.y + r * e[1];
+            p[2] = centre.z + r * e[2];
             normal_array.insert(normal_array.end(), e, e+3);
             
             color_array.insert(color_array.end(),c,c+3);
@@ -135,5 +135,13 @@ void Sphere::draw() {
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+    
+}
+
+void Sphere::drawSphere(int n, glm::vec3 centre, double r){
+    
+    Sphere S;
+    S.init(n,centre,r);
+    S.draw();
     
 }
