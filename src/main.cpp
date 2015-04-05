@@ -204,7 +204,7 @@ void DisplayFunc() {
         groundFromSpace.SetUniform("nSamples", m_nSamples);
         groundFromSpace.SetUniform("fSamples", (float)m_nSamples);
     
-        Sphere::drawSphere(128, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+        Sphere::drawSphere(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     groundFromSpace.disable();
     
     
@@ -233,16 +233,17 @@ void DisplayFunc() {
         glFrontFace(GL_CW);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        Sphere::drawSphere(128, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
+        Sphere::drawSphere(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
         glDisable(GL_BLEND);
         glFrontFace(GL_CCW);
     skyFromSpace.disable();
     
     
+    /*
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    Sphere::drawSphere(128, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+    Sphere::drawSphere(32, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-    
+    */
     
 	glutSwapBuffers();
 }
