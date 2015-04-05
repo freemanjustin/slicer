@@ -117,8 +117,17 @@ void GLSLShader::SetUniform(const string& uniform, float p1){
 void GLSLShader::SetUniform(const string& uniform, glm::vec3 p){
     GLint	location;
     location = glGetUniformLocation(_program, uniform.c_str());
-    glUniform3f(location, p.x, p.y, p.z);
+    glUniform3fv(location, 1, glm::value_ptr(p)) ;
 }
+
+// j addition
+// freeman.justin@gmail.com
+void GLSLShader::SetUniform(const string& uniform, glm::mat4 m){
+    GLint	location;
+    location = glGetUniformLocation(_program, uniform.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(m));
+}
+
 
 GLuint GLSLShader::operator()(const string& uniform){
 	return _uniformLocationList[uniform];

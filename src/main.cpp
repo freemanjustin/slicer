@@ -163,7 +163,7 @@ void DisplayFunc() {
     //model = glm::rotate(model, YrotationAngle, glm::vec3(0,1,0));//rotating y axis
     //model = glm::rotate(model, ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
     
-	glm::mat4 mvp = projection* view * model;	//Compute the mvp matrix
+	glm::mat4 mvp = projection * view * model;	//Compute the mvp matrix
 	
     glLoadMatrixf(glm::value_ptr(mvp));
 	
@@ -183,6 +183,7 @@ void DisplayFunc() {
     //cout << camera.camera_position.x << " " << camera.camera_position.y<< " " << camera.camera_position.z << endl;
     
     groundFromSpace.enable();
+        groundFromSpace.SetUniform("MVP", mvp );
         groundFromSpace.SetUniform("v3CameraPos", glm::vec3(camera.camera_position.x, camera.camera_position.y, camera.camera_position.z) );
         groundFromSpace.SetUniform("v3LightPos", glm::vec3(light_direction[0], light_direction[1], light_direction[2] ));   // fix this one
         groundFromSpace.SetUniform("v3InvWavelength", glm::vec3(m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]) );
@@ -209,6 +210,7 @@ void DisplayFunc() {
     
     
     skyFromSpace.enable();
+        skyFromSpace.SetUniform("MVP", mvp );
         skyFromSpace.SetUniform("v3CameraPos", glm::vec3(camera.camera_position.x, camera.camera_position.y, camera.camera_position.z) );
         skyFromSpace.SetUniform("v3LightPos", glm::vec3(light_direction[0], light_direction[1], light_direction[2]) );   // fix this one
         skyFromSpace.SetUniform("v3InvWavelength", glm::vec3(m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]) );

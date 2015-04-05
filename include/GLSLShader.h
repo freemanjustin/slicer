@@ -38,6 +38,7 @@ public:
     void SetUniform(const string& parameter, int n);
     void SetUniform(const string& parameter, float p1);
     void SetUniform(const string& parameter, glm::vec3 p);
+    void SetUniform(const string& uniform, glm::mat4 m);
 private:
 	enum ShaderType {VERTEX_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER};
 	GLuint	_program;

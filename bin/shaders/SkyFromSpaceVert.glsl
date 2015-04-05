@@ -6,6 +6,7 @@
 // Copyright (c) 2004 Sean O'Neil
 //
 
+uniform mat4 MVP;
 uniform vec3 v3CameraPos;		// The camera's current position
 uniform vec3 v3LightPos;		// The direction vector to the light source
 uniform vec3 v3InvWavelength;	// 1 / pow(wavelength, 4) for the red, green, and blue channels
@@ -80,7 +81,10 @@ void main(void)
 	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
 	gl_FrontSecondaryColor.rgb = v3FrontColor * fKmESun;
 	gl_FrontColor.rgb = v3FrontColor * (v3InvWavelength * fKrESun);
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-	v3Direction = v3CameraPos - v3Pos;
+    
+	//gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    gl_Position = MVP * gl_Vertex;
+    
+    v3Direction = v3CameraPos - v3Pos;
 }
 
