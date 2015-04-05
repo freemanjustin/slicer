@@ -177,61 +177,58 @@ void DisplayFunc() {
     
     glEnable(GL_MULTISAMPLE);
     
-    //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     
     camera_magnitude = sqrt(camera.camera_position.x*camera.camera_position.x + camera.camera_position.y*camera.camera_position.y + camera.camera_position.z*camera.camera_position.z);
     
     //cout << camera.camera_position.x << " " << camera.camera_position.y<< " " << camera.camera_position.z << endl;
     
     groundFromSpace.enable();
-        glUniform3f(groundFromSpace("v3CameraPos"), camera.camera_position.x, camera.camera_position.y, camera.camera_position.z);
-        glUniform3f(groundFromSpace("v3LightPos"), light_direction[0], light_direction[1], light_direction[2]);   // fix this one
-        glUniform3f(groundFromSpace("v3InvWavelength"), m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]);
-        glUniform3f(groundFromSpace("v3InvWavelength"), m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]);
-        glUniform1f(groundFromSpace("fCameraHeight"), camera_magnitude);
-        glUniform1f(groundFromSpace("fCameraHeight2"), camera_magnitude*camera_magnitude);
-        glUniform1f(groundFromSpace("fInnerRadius"), m_fInnerRadius);
-        glUniform1f(groundFromSpace("fInnerRadius2"), m_fInnerRadius2);
-        glUniform1f(groundFromSpace("fOuterRadius"), m_fOuterRadius);
-        glUniform1f(groundFromSpace("fOuterRadius2"), m_fOuterRadius2);
-        glUniform1f(groundFromSpace("fKrESun"), m_Kr*m_ESun);
-        glUniform1f(groundFromSpace("fKmESun"), m_Km*m_ESun);
-        glUniform1f(groundFromSpace("fKr4PI"), m_Kr4PI);
-        glUniform1f(groundFromSpace("fKm4PI"), m_Km4PI);
-        glUniform1f(groundFromSpace("fScale"), m_fScale);
-        glUniform1f(groundFromSpace("fScaleDepth"), m_fRayleighScaleDepth);
-        glUniform1f(groundFromSpace("fScaleOverScaleDepth"), m_fScaleOverScaleDepth);
-        glUniform1f(groundFromSpace("g"), m_g);
-        glUniform1f(groundFromSpace("g2"), m_g2);
-        glUniform1i(groundFromSpace("nSamples"), m_nSamples);
-        glUniform1f(groundFromSpace("fSamples"), m_nSamples);
+        groundFromSpace.SetUniform("v3CameraPos", glm::vec3(camera.camera_position.x, camera.camera_position.y, camera.camera_position.z) );
+        groundFromSpace.SetUniform("v3LightPos", glm::vec3(light_direction[0], light_direction[1], light_direction[2] ));   // fix this one
+        groundFromSpace.SetUniform("v3InvWavelength", glm::vec3(m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]) );
+        groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
+        groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude*camera_magnitude);
+        groundFromSpace.SetUniform("fInnerRadius", m_fInnerRadius);
+        groundFromSpace.SetUniform("fInnerRadius2", m_fInnerRadius2);
+        groundFromSpace.SetUniform("fOuterRadius", m_fOuterRadius);
+        groundFromSpace.SetUniform("fOuterRadius2", m_fOuterRadius2);
+        groundFromSpace.SetUniform("fKrESun", m_Kr*m_ESun);
+        groundFromSpace.SetUniform("fKmESun", m_Km*m_ESun);
+        groundFromSpace.SetUniform("fKr4PI", m_Kr4PI);
+        groundFromSpace.SetUniform("fKm4PI", m_Km4PI);
+        groundFromSpace.SetUniform("fScale", m_fScale);
+        groundFromSpace.SetUniform("fScaleDepth", m_fRayleighScaleDepth);
+        groundFromSpace.SetUniform("fScaleOverScaleDepth", m_fScaleOverScaleDepth);
+        groundFromSpace.SetUniform("g", m_g);
+        groundFromSpace.SetUniform("g2", m_g2);
+        groundFromSpace.SetUniform("nSamples", m_nSamples);
+        groundFromSpace.SetUniform("fSamples", (float)m_nSamples);
     
         Sphere::drawSphere(128, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     groundFromSpace.disable();
     
     
     skyFromSpace.enable();
-        glUniform3f(skyFromSpace("v3CameraPos"), camera.camera_position.x, camera.camera_position.y, camera.camera_position.z);
-        glUniform3f(skyFromSpace("v3LightPos"), light_direction[0], light_direction[1], light_direction[2]);   // fix this one
-        glUniform3f(skyFromSpace("v3InvWavelength"), m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]);
-        glUniform3f(skyFromSpace("v3InvWavelength"), m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]);
-        glUniform1f(skyFromSpace("fCameraHeight"), camera_magnitude);
-        glUniform1f(skyFromSpace("fCameraHeight2"), camera_magnitude*camera_magnitude);
-        glUniform1f(skyFromSpace("fInnerRadius"), m_fInnerRadius);
-        glUniform1f(skyFromSpace("fInnerRadius2"), m_fInnerRadius2);
-        glUniform1f(skyFromSpace("fOuterRadius"), m_fOuterRadius);
-        glUniform1f(skyFromSpace("fOuterRadius2"), m_fOuterRadius2);
-        glUniform1f(skyFromSpace("fKrESun"), m_Kr*m_ESun);
-        glUniform1f(skyFromSpace("fKmESun"), m_Km*m_ESun);
-        glUniform1f(skyFromSpace("fKr4PI"), m_Kr4PI);
-        glUniform1f(skyFromSpace("fKm4PI"), m_Km4PI);
-        glUniform1f(skyFromSpace("fScale"), m_fScale);
-        glUniform1f(skyFromSpace("fScaleDepth"), m_fRayleighScaleDepth);
-        glUniform1f(skyFromSpace("fScaleOverScaleDepth"), m_fScaleOverScaleDepth);
-        glUniform1f(skyFromSpace("g"), m_g);
-        glUniform1f(skyFromSpace("g2"), m_g2);
-        glUniform1i(skyFromSpace("nSamples"), m_nSamples);
-        glUniform1f(skyFromSpace("fSamples"), m_nSamples);
+        skyFromSpace.SetUniform("v3CameraPos", glm::vec3(camera.camera_position.x, camera.camera_position.y, camera.camera_position.z) );
+        skyFromSpace.SetUniform("v3LightPos", glm::vec3(light_direction[0], light_direction[1], light_direction[2]) );   // fix this one
+        skyFromSpace.SetUniform("v3InvWavelength", glm::vec3(m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]) );
+        skyFromSpace.SetUniform("fCameraHeight", camera_magnitude);
+        skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude*camera_magnitude);
+        skyFromSpace.SetUniform("fInnerRadius", m_fInnerRadius);
+        skyFromSpace.SetUniform("fInnerRadius2", m_fInnerRadius2);
+        skyFromSpace.SetUniform("fOuterRadius", m_fOuterRadius);
+        skyFromSpace.SetUniform("fOuterRadius2", m_fOuterRadius2);
+        skyFromSpace.SetUniform("fKrESun", m_Kr*m_ESun);
+        skyFromSpace.SetUniform("fKmESun", m_Km*m_ESun);
+        skyFromSpace.SetUniform("fKr4PI", m_Kr4PI);
+        skyFromSpace.SetUniform("fKm4PI", m_Km4PI);
+        skyFromSpace.SetUniform("fScale", m_fScale);
+        skyFromSpace.SetUniform("fScaleDepth", m_fRayleighScaleDepth);
+        skyFromSpace.SetUniform("fScaleOverScaleDepth", m_fScaleOverScaleDepth);
+        skyFromSpace.SetUniform("g", m_g);
+        skyFromSpace.SetUniform("g2", m_g2);
+        skyFromSpace.SetUniform("nSamples", m_nSamples);
+        skyFromSpace.SetUniform("fSamples", (float)m_nSamples);
     
         glFrontFace(GL_CW);
         glEnable(GL_BLEND);
@@ -292,55 +289,10 @@ int main(int argc, char **argv) {
     groundFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/GroundFromSpaceVert.glsl");
     groundFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/GroundFromSpaceFrag.glsl");
     groundFromSpace.CreateAndLinkProgram();
-    // set uniforms for this shader
-    groundFromSpace.AddUniform("v3CameraPos");
-    groundFromSpace.AddUniform("v3LightPos");
-    groundFromSpace.AddUniform("v3InvWavelength");
-    groundFromSpace.AddUniform("fCameraHeight");
-    groundFromSpace.AddUniform("fCameraHeight2");
-    groundFromSpace.AddUniform("fInnerRadius");
-    groundFromSpace.AddUniform("fInnerRadius2");
-    groundFromSpace.AddUniform("fOuterRadius");
-    groundFromSpace.AddUniform("fOuterRadius2");
-    groundFromSpace.AddUniform("fKrESun");
-    groundFromSpace.AddUniform("fKmESun");
-    groundFromSpace.AddUniform("fKr4PI");
-    groundFromSpace.AddUniform("fKm4PI");
-    groundFromSpace.AddUniform("fScale");
-    groundFromSpace.AddUniform("fScaleDepth");
-    groundFromSpace.AddUniform("fScaleOverScaleDepth");
-    groundFromSpace.AddUniform("g");
-    groundFromSpace.AddUniform("g2");
-    groundFromSpace.AddUniform("nSamples");
-    groundFromSpace.AddUniform("fSamples");
-    
-    
     
     skyFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/SkyFromSpaceVert.glsl");
     skyFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/SkyFromSpaceFrag.glsl");
     skyFromSpace.CreateAndLinkProgram();
-    // set uniforms for this shader
-    skyFromSpace.AddUniform("v3CameraPos");
-    skyFromSpace.AddUniform("v3LightPos");
-    skyFromSpace.AddUniform("v3InvWavelength");
-    skyFromSpace.AddUniform("fCameraHeight");
-    skyFromSpace.AddUniform("fCameraHeight2");
-    skyFromSpace.AddUniform("fInnerRadius");
-    skyFromSpace.AddUniform("fInnerRadius2");
-    skyFromSpace.AddUniform("fOuterRadius");
-    skyFromSpace.AddUniform("fOuterRadius2");
-    skyFromSpace.AddUniform("fKrESun");
-    skyFromSpace.AddUniform("fKmESun");
-    skyFromSpace.AddUniform("fKr4PI");
-    skyFromSpace.AddUniform("fKm4PI");
-    skyFromSpace.AddUniform("fScale");
-    skyFromSpace.AddUniform("fScaleDepth");
-    skyFromSpace.AddUniform("fScaleOverScaleDepth");
-    skyFromSpace.AddUniform("g");
-    skyFromSpace.AddUniform("g2");
-    skyFromSpace.AddUniform("nSamples");
-    skyFromSpace.AddUniform("fSamples");
-
     
     // shader constants
     // shader variables
@@ -364,14 +316,6 @@ int main(int argc, char **argv) {
     m_fWavelength[1] = 0.590f;		// 570 nm for green
     m_fWavelength[2] = 0.475f;		// 475 nm for blue
     
-    
-    /*
-     // ...white atmosphere...
-     m_fWavelength[0] = 0.620f;		// 650 nm for red
-     m_fWavelength[1] = 0.620f;		// 570 nm for green
-     m_fWavelength[2] = 0.620f;		// 475 nm for blue
-     */
-    
     m_fWavelength4[0] = powf(m_fWavelength[0], 4.0f);
     m_fWavelength4[1] = powf(m_fWavelength[1], 4.0f);
     m_fWavelength4[2] = powf(m_fWavelength[2], 4.0f);
@@ -385,11 +329,9 @@ int main(int argc, char **argv) {
     
     m_fScaleOverScaleDepth = m_fScale / m_fRayleighScaleDepth;
 
-    
     light_pos[0] = 0.0;
     light_pos[1] = 0.0;
     light_pos[2] = -4.2;
-    
     
     light_magnitude = sqrt(light_pos[0]*light_pos[0] +
                            light_pos[1]*light_pos[1] +

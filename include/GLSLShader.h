@@ -5,6 +5,15 @@
 #include <map>
 #include <string>
 
+#define GLM_SWIZZLE
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
 using namespace std;
 
 class GLSLShader
@@ -25,6 +34,10 @@ public:
 	GLuint operator()(const string& uniform);
 	//Program deletion
 	void DeleteProgram() {glDeleteProgram(_program);_program=-1;}
+    // j additions
+    void SetUniform(const string& parameter, int n);
+    void SetUniform(const string& parameter, float p1);
+    void SetUniform(const string& parameter, glm::vec3 p);
 private:
 	enum ShaderType {VERTEX_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER};
 	GLuint	_program;
