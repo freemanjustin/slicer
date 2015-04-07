@@ -43,17 +43,15 @@ float m_fOuterRadius;
 float m_fOuterRadius2;
 
 float m_fScale;
-float m_fWavelength[3];
-float m_fWavelength4[3];
-float m_fWavelength4_inv[3];
+glm::vec3 m_fWavelength;
+glm::vec3 m_fWavelength4;
+glm::vec3 m_fWavelength4_inv;
 float m_fRayleighScaleDepth;
 float m_fMieScaleDepth;
 float m_fScaleOverScaleDepth;
 
-
-float light_pos[4];
-float light_magnitude;
-float light_direction[3];
+glm::vec3 light_pos;
+glm::vec3 light_direction;
 
 
 class Window {
@@ -156,8 +154,6 @@ void CallBackMotionFunc(int x, int y) {
 
 void DisplayFunc() {
     
-    float	camera_magnitude;
-    
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, window.size.x, window.size.y);
@@ -184,21 +180,18 @@ void DisplayFunc() {
     
     glEnable(GL_MULTISAMPLE);
     
-    
-    camera_magnitude = sqrt(camera.camera_position.x*camera.camera_position.x + camera.camera_position.y*camera.camera_position.y + camera.camera_position.z*camera.camera_position.z);
-    
-    //cout << camera.camera_position.x << " " << camera.camera_position.y<< " " << camera.camera_position.z << endl;
+    float camera_magnitude = glm::length(camera.camera_position);
+    float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
     groundFromSpace.enable();
-        //groundFromSpace.SetUniform("MVP", mvp );
-    groundFromSpace.SetUniform("model", model );
-    groundFromSpace.SetUniform("view", view );
-    groundFromSpace.SetUniform("projection", projection );
-        groundFromSpace.SetUniform("v3CameraPos", glm::vec3(camera.camera_position.x, camera.camera_position.y, camera.camera_position.z) );
-        groundFromSpace.SetUniform("v3LightPos", glm::vec3(light_direction[0], light_direction[1], light_direction[2] ));   // fix this one
-        groundFromSpace.SetUniform("v3InvWavelength", glm::vec3(m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]) );
+        groundFromSpace.SetUniform("model", model );
+        groundFromSpace.SetUniform("view", view );
+        groundFromSpace.SetUniform("projection", projection );
+        groundFromSpace.SetUniform("v3CameraPos", camera.camera_position );
+        groundFromSpace.SetUniform("v3LightPos", light_direction);
+        groundFromSpace.SetUniform("v3InvWavelength", m_fWavelength4_inv );
         groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
-        groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude*camera_magnitude);
+    groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
         groundFromSpace.SetUniform("fInnerRadius", m_fInnerRadius);
         groundFromSpace.SetUniform("fInnerRadius2", m_fInnerRadius2);
         groundFromSpace.SetUniform("fOuterRadius", m_fOuterRadius);
@@ -221,15 +214,14 @@ void DisplayFunc() {
     
     
     skyFromSpace.enable();
-        //skyFromSpace.SetUniform("MVP", mvp );
-    skyFromSpace.SetUniform("model", model );
-    skyFromSpace.SetUniform("view", view );
-    skyFromSpace.SetUniform("projection", projection );
-        skyFromSpace.SetUniform("v3CameraPos", glm::vec3(camera.camera_position.x, camera.camera_position.y, camera.camera_position.z) );
-        skyFromSpace.SetUniform("v3LightPos", glm::vec3(light_direction[0], light_direction[1], light_direction[2]) );   // fix this one
-        skyFromSpace.SetUniform("v3InvWavelength", glm::vec3(m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]) );
+        skyFromSpace.SetUniform("model", model );
+        skyFromSpace.SetUniform("view", view );
+        skyFromSpace.SetUniform("projection", projection );
+        skyFromSpace.SetUniform("v3CameraPos", camera.camera_position );
+        skyFromSpace.SetUniform("v3LightPos", light_direction );
+        skyFromSpace.SetUniform("v3InvWavelength", m_fWavelength4_inv );
         skyFromSpace.SetUniform("fCameraHeight", camera_magnitude);
-        skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude*camera_magnitude);
+        skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
         skyFromSpace.SetUniform("fInnerRadius", m_fInnerRadius);
         skyFromSpace.SetUniform("fInnerRadius2", m_fInnerRadius2);
         skyFromSpace.SetUniform("fOuterRadius", m_fOuterRadius);
@@ -338,35 +330,20 @@ int main(int argc, char **argv) {
     m_fScale = 1.0f / (m_fOuterRadius - m_fInnerRadius);
     
     
-    m_fWavelength[0] = 0.650f;		// 650 nm for red
-    m_fWavelength[1] = 0.590f;		// 570 nm for green
-    m_fWavelength[2] = 0.475f;		// 475 nm for blue
-    
-    m_fWavelength4[0] = powf(m_fWavelength[0], 4.0f);
-    m_fWavelength4[1] = powf(m_fWavelength[1], 4.0f);
-    m_fWavelength4[2] = powf(m_fWavelength[2], 4.0f);
-    
-    m_fWavelength4_inv[0] = 1.0/m_fWavelength4[0];
-    m_fWavelength4_inv[1] = 1.0/m_fWavelength4[1];
-    m_fWavelength4_inv[2] = 1.0/m_fWavelength4[2];
+    m_fWavelength = glm::vec3(0.650f, 0.590f, 0.475f);
+    // 650 nm for red
+    // 570 nm for green
+    // 475 nm for blue
+    m_fWavelength4 = glm::pow(m_fWavelength, glm::vec3(4.0f,4.0f,4.0f));
+    m_fWavelength4_inv = 1.0f/m_fWavelength4;
     
     m_fRayleighScaleDepth = 0.25f;
     m_fMieScaleDepth = 0.1f;
     
     m_fScaleOverScaleDepth = m_fScale / m_fRayleighScaleDepth;
 
-    light_pos[0] = 0.0;
-    light_pos[1] = 0.0;
-    light_pos[2] = -4.2;
-    
-    light_magnitude = sqrt(light_pos[0]*light_pos[0] +
-                           light_pos[1]*light_pos[1] +
-                           light_pos[2]*light_pos[2]);
-    
-    light_direction[0] = light_pos[0]/light_magnitude;
-    light_direction[1] = light_pos[1]/light_magnitude;
-    light_direction[2] = light_pos[2]/light_magnitude;
-    
+    light_pos = glm::vec3(0.0, 0.0, -4.2);
+    light_direction = glm::normalize(light_pos);
     
     // init sphere
     ground.init(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
