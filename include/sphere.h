@@ -33,9 +33,9 @@ public:
     void init(int, glm::vec3, double);
     void draw();
     static void drawSphere(int n, glm::vec3 centre, double r);
-    GLint getVertexVBOid();
+    //GLint getVertexVBOid();
     GLuint  vao[1];
-    GLuint  vertexLoc;
+    GLint  vertex_position_attrib_location;
     
 };
 

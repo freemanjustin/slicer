@@ -5,6 +5,7 @@ Sphere::Sphere(){
     num_vertices = 0;
     resolution = 0;
     radius = 0.0;
+    vertex_position_attrib_location = -1;
 }
 
 Sphere::~Sphere(){
@@ -80,6 +81,7 @@ void Sphere::init(int n, glm::vec3 centre, double r)
     resolution = n;
     num_vertices = vertex_array.size();
     
+    
     /*
     unsigned int bufferIDs[3];
     glGenBuffers(3, bufferIDs);
@@ -104,17 +106,21 @@ void Sphere::init(int n, glm::vec3 centre, double r)
     // add additional buffer data here (ie. normals, etc.)
     GLuint  buffers[1];
     
-    
+    // create VAO
     glGenVertexArrays(1, vao);
-    
     glBindVertexArray(vao[0]);
+    
+    // crate VBO
     glGenBuffers(1, buffers);
-    // bind buffer for vertices and copy data into buffer
+    // bind buffer for vertices
     glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+    // and copy data into buffer
     glBufferData(GL_ARRAY_BUFFER, vertex_array.size()*sizeof(float), &vertex_array[0], GL_STATIC_DRAW);
+    
+    // connect the vertex data to the "position" attribute of the vertex shader
     // attribute for the vertex shader
-    glEnableVertexAttribArray(vertexLoc);
-    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(vertex_position_attrib_location);
+    glVertexAttribPointer(vertex_position_attrib_location, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 
 void Sphere::draw() {
@@ -141,7 +147,9 @@ void Sphere::drawSphere(int n, glm::vec3 centre, double r){
     
 }
 
+/*
 GLint Sphere::getVertexVBOid(){
     
     return vertexVboId;
 }
+ */

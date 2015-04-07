@@ -132,15 +132,14 @@ void GLSLShader::SetUniform(const string& uniform, glm::mat4 m){
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(m));
 }
 
-/*
-void GLSLShader::SetAttribute(const string& attribute, glm::mat4 m){
-    GLint	location;
-    location = glGetAttribLocation(_program, attribute);
-    glEnableVertexAttribArray(location);
-    glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0,0 );
+
+GLint GLSLShader::GetAttributeLocation(const string& attribute){
+    return glGetAttribLocation(_program, attribute.c_str());
+    //glEnableVertexAttribArray(location);
+    //glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0,0 );
     
 }
-*/
+
 
 GLuint GLSLShader::operator()(const string& uniform){
 	return _uniformLocationList[uniform];

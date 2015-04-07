@@ -308,6 +308,8 @@ int main(int argc, char **argv) {
     groundFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/GroundFromSpaceFrag.glsl");
     groundFromSpace.CreateAndLinkProgram();
     
+    
+    
     skyFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/SkyFromSpaceVert.glsl");
     skyFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/SkyFromSpaceFrag.glsl");
     skyFromSpace.CreateAndLinkProgram();
@@ -346,9 +348,12 @@ int main(int argc, char **argv) {
     light_direction = glm::normalize(light_pos);
     
     // init sphere
+    ground.vertex_position_attrib_location = groundFromSpace.GetAttributeLocation("v3Position");
     ground.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
-    sky.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
     
+    sky.vertex_position_attrib_location = skyFromSpace.GetAttributeLocation("v3Position");
+    sky.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
+        
     //Start the glut loop!
     glutMainLoop();
     return 0;
