@@ -13,7 +13,10 @@ in vec3 v3Position;
 out vec3 v3Color;
 out vec3 v3SecondaryColor;
 
-uniform mat4 MVP;   // Model, View, Projection matrix
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
 uniform vec3 v3CameraPos;		// The camera's current position
 uniform vec3 v3LightPos;		// The direction vector to the light source
 uniform vec3 v3InvWavelength;	// 1 / pow(wavelength, 4) for the red, green, and blue channels
@@ -91,15 +94,11 @@ void main(void)
     v3Color.rgb = v3FrontColor * (v3InvWavelength * fKrESun + fKmESun);
     
 	// Calculate the attenuation factor for the ground
-	//gl_FrontSecondaryColor.rgb = v3Attenuate;
     v3SecondaryColor.rgb = v3Attenuate;
     
-
-	//gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-    //gl_Position = MVP * gl_Vertex;
-     
-    gl_Position = MVP * vec4( v3Position, 1.0 );
     
-	//gl_TexCoord[0] =  gl_TextureMatrix[0] * gl_MultiTexCoord0;
+    gl_Position = projection * view * model * vec4( v3Position, 1.0 );
+	
+    //gl_TexCoord[0] =  gl_TextureMatrix[0] * gl_MultiTexCoord0;
 	//gl_TexCoord[1] =  gl_TextureMatrix[1] * gl_MultiTexCoord1;
 }

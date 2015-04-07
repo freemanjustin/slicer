@@ -190,7 +190,10 @@ void DisplayFunc() {
     //cout << camera.camera_position.x << " " << camera.camera_position.y<< " " << camera.camera_position.z << endl;
     
     groundFromSpace.enable();
-        groundFromSpace.SetUniform("MVP", mvp );
+        //groundFromSpace.SetUniform("MVP", mvp );
+    groundFromSpace.SetUniform("model", model );
+    groundFromSpace.SetUniform("view", view );
+    groundFromSpace.SetUniform("projection", projection );
         groundFromSpace.SetUniform("v3CameraPos", glm::vec3(camera.camera_position.x, camera.camera_position.y, camera.camera_position.z) );
         groundFromSpace.SetUniform("v3LightPos", glm::vec3(light_direction[0], light_direction[1], light_direction[2] ));   // fix this one
         groundFromSpace.SetUniform("v3InvWavelength", glm::vec3(m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]) );
@@ -218,7 +221,10 @@ void DisplayFunc() {
     
     
     skyFromSpace.enable();
-        skyFromSpace.SetUniform("MVP", mvp );
+        //skyFromSpace.SetUniform("MVP", mvp );
+    skyFromSpace.SetUniform("model", model );
+    skyFromSpace.SetUniform("view", view );
+    skyFromSpace.SetUniform("projection", projection );
         skyFromSpace.SetUniform("v3CameraPos", glm::vec3(camera.camera_position.x, camera.camera_position.y, camera.camera_position.z) );
         skyFromSpace.SetUniform("v3LightPos", glm::vec3(light_direction[0], light_direction[1], light_direction[2]) );   // fix this one
         skyFromSpace.SetUniform("v3InvWavelength", glm::vec3(m_fWavelength4_inv[0], m_fWavelength4_inv[1], m_fWavelength4_inv[2]) );
@@ -292,11 +298,8 @@ int main(int argc, char **argv) {
         cerr << "GLEW failed to initialize." << endl;
         exit(1);
     }
-    
-    if (glewIsSupported("GL_VERSION_3_3"))
-        printf("OpenGL 3.3 supported\n");
-    else {
-        printf("OpenGL 3.3 not supported\n");
+    if (!glewIsSupported("GL_VERSION_3_2")){
+        cerr << "OpenGL 3.2 not supported." << endl;
         exit(1);
     }
     
