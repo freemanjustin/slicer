@@ -1,12 +1,7 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#ifdef _OSX_
-    #include <GLUT/glut.h>
-#else
-    #include <GL/glew.h>
-#endif
-
+#include <GL/glew.h>
 #include <iostream>
 #include <vector>
 #include <math.h>
@@ -38,6 +33,9 @@ public:
     void init(int, glm::vec3, double);
     void draw();
     static void drawSphere(int n, glm::vec3 centre, double r);
+    GLint getVertexVBOid();
+    GLuint  vao[1];
+    GLuint  vertexLoc;
     
 };
 

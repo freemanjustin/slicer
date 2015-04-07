@@ -46,4 +46,7 @@ private:
 	GLuint _shaders[3];//0->vertexshader, 1->fragmentshader, 2->geometryshader
 	map<string,GLuint> _attributeList;
 	map<string,GLuint> _uniformLocationList;
+    // j testing
+    //GLuint vertexLoc;
+    //GLint mvpMatrixLoc;
 };	

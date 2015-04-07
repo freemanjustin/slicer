@@ -80,7 +80,7 @@ void Sphere::init(int n, glm::vec3 centre, double r)
     resolution = n;
     num_vertices = vertex_array.size();
     
-    
+    /*
     unsigned int bufferIDs[3];
     glGenBuffers(3, bufferIDs);
     
@@ -99,7 +99,22 @@ void Sphere::init(int n, glm::vec3 centre, double r)
     // color
     glBindBuffer(GL_ARRAY_BUFFER, colorVboId);
     glBufferData(GL_ARRAY_BUFFER, color_array.size()*sizeof(float), &color_array[0], GL_STATIC_DRAW);
+    */
     
+    // add additional buffer data here (ie. normals, etc.)
+    GLuint  buffers[1];
+    
+    
+    glGenVertexArrays(1, vao);
+    
+    glBindVertexArray(vao[0]);
+    glGenBuffers(1, buffers);
+    // bind buffer for vertices and copy data into buffer
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+    glBufferData(GL_ARRAY_BUFFER, vertex_array.size()*sizeof(float), &vertex_array[0], GL_STATIC_DRAW);
+    // attribute for the vertex shader
+    glEnableVertexAttribArray(vertexLoc);
+    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, 0, 0, 0);
 }
 
 void Sphere::draw() {
@@ -111,31 +126,11 @@ void Sphere::draw() {
     int stacks = slices/2;
     int vertices = (slices+1)*2;
     
-    glEnableClientState(GL_VERTEX_ARRAY);   // enable vertex
-    glEnableClientState(GL_NORMAL_ARRAY);   // enable normals
-    glEnableClientState(GL_COLOR_ARRAY);    // enable color array
-    
-    // When using VBOs, the pointers refer to data in the VBOs.
-    glBindBuffer(GL_ARRAY_BUFFER, vertexVboId);
-    glVertexPointer(3,GL_FLOAT,0,0);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, normalVboId);
-    glNormalPointer(GL_FLOAT,0,0);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, colorVboId);
-    glColorPointer(3,GL_FLOAT,0,0);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
+    glBindVertexArray(vao[0]);
     for (i = 0; i < stacks; i++) {
         int pos = i*(slices+1)*2;
         glDrawArrays(GL_TRIANGLE_STRIP, pos, vertices);
     }
-    
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-    
 }
 
 void Sphere::drawSphere(int n, glm::vec3 centre, double r){
@@ -144,4 +139,9 @@ void Sphere::drawSphere(int n, glm::vec3 centre, double r){
     S.init(n,centre,r);
     S.draw();
     
+}
+
+GLint Sphere::getVertexVBOid(){
+    
+    return vertexVboId;
 }

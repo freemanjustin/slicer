@@ -61,7 +61,7 @@ void Camera::Update() {
 void Camera::SetMode(CameraType cam_mode) {
 	camera_mode = cam_mode;
 	camera_up = glm::vec3(0, 1, 0);
-    camera_scale = 0.0025f;
+    camera_scale = 0.025f;
 
 }
 

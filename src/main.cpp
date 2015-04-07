@@ -4,6 +4,10 @@
 #include <vector>
 #include <math.h>
 #include <GL/glew.h>
+#ifdef _OSX_
+#include <GLUT/glut.h>
+#endif
+
 #include "camera.h"
 #include "sphere.h"
 #include "GLSLShader.h"
@@ -12,6 +16,9 @@ using namespace std;
 
 //Create the Camera
 Camera camera;
+
+Sphere ground;
+Sphere sky;
 
 // rotation variables
 GLfloat XrotationAngle=0;
@@ -49,8 +56,6 @@ float light_magnitude;
 float light_direction[3];
 
 
-
-
 class Window {
 public:
 	Window() {
@@ -67,6 +72,7 @@ public:
 void CloseFunc() {
 	window.window_handle = -1;
 }
+
 //Resize the window and properly update the camera viewport
 void ReshapeFunc(int w, int h) {
 	if (h > 0) {
@@ -146,7 +152,8 @@ void CallBackMouseFunc(int button, int state, int x, int y) {
 void CallBackMotionFunc(int x, int y) {
 	camera.Move2D(x, y);
 }
-//Draw a wire cube! (nothing fancy here)
+
+
 void DisplayFunc() {
     
     float	camera_magnitude;
@@ -205,7 +212,8 @@ void DisplayFunc() {
         groundFromSpace.SetUniform("nSamples", m_nSamples);
         groundFromSpace.SetUniform("fSamples", (float)m_nSamples);
     
-        Sphere::drawSphere(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+        ground.draw();
+    
     groundFromSpace.disable();
     
     
@@ -235,19 +243,22 @@ void DisplayFunc() {
         glFrontFace(GL_CW);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        Sphere::drawSphere(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
+    
+        sky.draw();
+    
         glDisable(GL_BLEND);
         glFrontFace(GL_CCW);
+    
     skyFromSpace.disable();
     
     
     /*
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    Sphere::drawSphere(32, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+    Sphere::drawSphere(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     */
     
-	glutSwapBuffers();
+    glutSwapBuffers();
 }
 
 //Redraw based on fps set for window
@@ -258,12 +269,13 @@ void TimerFunc(int value) {
 	}
 }
 
+
 int main(int argc, char **argv) {
     //glut boilerplate
     glutInit(&argc, argv);
     glutInitWindowSize(1024, 512);
     glutInitWindowPosition(0, 0);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glutInitDisplayMode( GLUT_3_2_CORE_PROFILE | GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
     //Setup window and callbacks
     window.window_handle = glutCreateWindow("slicer");
     glutReshapeFunc(ReshapeFunc);
@@ -276,17 +288,25 @@ int main(int argc, char **argv) {
     glutTimerFunc(window.interval, TimerFunc, 0);
 
     glewExperimental = GL_TRUE;
-
     if (glewInit() != GLEW_OK) {
         cerr << "GLEW failed to initialize." << endl;
         exit(1);
     }
+    
+    if (glewIsSupported("GL_VERSION_3_3"))
+        printf("OpenGL 3.3 supported\n");
+    else {
+        printf("OpenGL 3.3 not supported\n");
+        exit(1);
+    }
+    
     //Setup camera
     camera.SetMode(FREE);
-    camera.SetPosition(glm::vec3(0, 0, -4.2));
+    camera.SetPosition(glm::vec3(0, 0, -4));
     camera.SetLookAt(glm::vec3(0, 0, 0));
     camera.SetClipping(.1, 1000);
     camera.SetFOV(45);
+    
     
     // load the shaders
     groundFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/GroundFromSpaceVert.glsl");
@@ -297,7 +317,7 @@ int main(int argc, char **argv) {
     skyFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/SkyFromSpaceFrag.glsl");
     skyFromSpace.CreateAndLinkProgram();
     
-    // shader constants
+    
     // shader variables
     m_nSamples = 16;		// Number of sample rays to use in integral equation
     m_Kr = 0.0035f;		// Rayleigh scattering constant
@@ -343,6 +363,11 @@ int main(int argc, char **argv) {
     light_direction[0] = light_pos[0]/light_magnitude;
     light_direction[1] = light_pos[1]/light_magnitude;
     light_direction[2] = light_pos[2]/light_magnitude;
+    
+    
+    // init sphere
+    ground.init(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+    sky.init(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
     
     //Start the glut loop!
     glutMainLoop();

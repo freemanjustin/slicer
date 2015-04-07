@@ -58,7 +58,11 @@ void GLSLShader::CreateAndLinkProgram() {
 	
 	//link and check whether the program links fine
 	GLint status;
-	glLinkProgram (_program);
+    
+    // FBO frag output placeholder
+    //glBindFragDataLocation(_program, 0, "v4FragColor");
+	
+    glLinkProgram (_program);
 	glGetProgramiv (_program, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE) {
 		GLint infoLogLength;
@@ -69,7 +73,7 @@ void GLSLShader::CreateAndLinkProgram() {
 		cerr<<"Link log: "<<infoLog<<endl;
 		delete [] infoLog;
 	}
-
+    
 	glDeleteShader(_shaders[VERTEX_SHADER]);
 	glDeleteShader(_shaders[FRAGMENT_SHADER]);
 	glDeleteShader(_shaders[GEOMETRY_SHADER]);
@@ -128,6 +132,15 @@ void GLSLShader::SetUniform(const string& uniform, glm::mat4 m){
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(m));
 }
 
+/*
+void GLSLShader::SetAttribute(const string& attribute, glm::mat4 m){
+    GLint	location;
+    location = glGetAttribLocation(_program, attribute);
+    glEnableVertexAttribArray(location);
+    glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0,0 );
+    
+}
+*/
 
 GLuint GLSLShader::operator()(const string& uniform){
 	return _uniformLocationList[uniform];
