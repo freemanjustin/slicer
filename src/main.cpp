@@ -127,7 +127,7 @@ void KeyboardFunc(unsigned char c, int x, int y) {
             if(ZrotationAngle < 0) ZrotationAngle += 360.0*M_PI/180.0;
             break;
         case 'r':
-            camera.SetPosition(glm::vec3(0, 0, -4));
+            camera.SetPosition(glm::vec3(0, 0, -2));
             camera.SetLookAt(glm::vec3(0, 0, 0));
             XrotationAngle = YrotationAngle = ZrotationAngle = 0.0;
             break;
@@ -191,7 +191,7 @@ void DisplayFunc() {
         groundFromSpace.SetUniform("v3LightPos", light_direction);
         groundFromSpace.SetUniform("v3InvWavelength", m_fWavelength4_inv );
         groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
-    groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
+        groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
         groundFromSpace.SetUniform("fInnerRadius", m_fInnerRadius);
         groundFromSpace.SetUniform("fInnerRadius2", m_fInnerRadius2);
         groundFromSpace.SetUniform("fOuterRadius", m_fOuterRadius);
@@ -297,7 +297,7 @@ int main(int argc, char **argv) {
     
     //Setup camera
     camera.SetMode(FREE);
-    camera.SetPosition(glm::vec3(0, 0, -4));
+    camera.SetPosition(glm::vec3(0, 0, -2));
     camera.SetLookAt(glm::vec3(0, 0, 0));
     camera.SetClipping(.1, 1000);
     camera.SetFOV(45);
@@ -346,8 +346,8 @@ int main(int argc, char **argv) {
     light_direction = glm::normalize(light_pos);
     
     // init sphere
-    ground.init(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
-    sky.init(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
+    ground.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+    sky.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
     
     //Start the glut loop!
     glutMainLoop();

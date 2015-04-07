@@ -114,7 +114,7 @@ void Sphere::init(int n, glm::vec3 centre, double r)
     glBufferData(GL_ARRAY_BUFFER, vertex_array.size()*sizeof(float), &vertex_array[0], GL_STATIC_DRAW);
     // attribute for the vertex shader
     glEnableVertexAttribArray(vertexLoc);
-    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, 0, 0, 0);
+    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 
 void Sphere::draw() {
