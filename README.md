@@ -1,2 +1,4 @@
 # slicer
-OpenGL data visualisation project
+OpenGL data presentation project.
+
+freeman.justin@gmail.com
