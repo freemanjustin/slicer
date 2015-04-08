@@ -12,6 +12,8 @@
 #include "sphere.h"
 #include "GLSLShader.h"
 
+#include "SOIL.h"
+
 using namespace std;
 
 //Create the Camera
@@ -19,6 +21,7 @@ Camera camera;
 
 Sphere ground;
 Sphere sky;
+Sphere texSphere;
 
 // rotation variables
 GLfloat XrotationAngle=0;
@@ -28,6 +31,10 @@ GLfloat ZrotationAngle=0;
 // shader variables
 GLSLShader groundFromSpace;
 GLSLShader skyFromSpace;
+GLSLShader texMap;
+
+// texture map
+GLuint  textures[1];
 
 int m_nSamples;
 float m_Kr, m_Kr4PI;
@@ -66,6 +73,27 @@ public:
 } window;
 
 
+
+void loadTextureMap(){
+    
+    textures[0] = SOIL_load_OGL_texture(
+                                        "texture/test.jpg",
+                                        SOIL_LOAD_RGB,
+                                        SOIL_CREATE_NEW_ID,
+                                        SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS
+                                        );
+    
+    if( 0 == textures[0] )
+    {
+        printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+    }
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    
+}
+
 //Invalidate the window handle when window is closed
 void CloseFunc() {
 	window.window_handle = -1;
@@ -83,18 +111,35 @@ void ReshapeFunc(int w, int h) {
 
 //Keyboard input for camera, also handles exit case
 void KeyboardFunc(unsigned char c, int x, int y) {
+    
+    glm::vec3 lookAt;
+    
 	switch (c) {
+        case 'j':
+            lookAt = camera.camera_look_at;
+            cout << "before: " << camera.camera_look_at.x << " " << camera.camera_look_at.y << " " << camera.camera_look_at.z << endl;
+            camera.camera_position = glm::rotate(camera.camera_position, -0.1f, glm::vec3(0,1,0)); //rotating y axis
+            cout << "after: " << camera.camera_look_at.x << " " << camera.camera_look_at.y << " " << camera.camera_look_at.z << endl;
+            //camera.SetLookAt(glm::vec3(0, 0, 0));
+            //camera.SetLookAt(lookAt);
+            break;
+        case 'l':
+            camera.camera_position = glm::rotate(camera.camera_position, 0.1f, glm::vec3(0,1,0)); //rotating y axis
+            camera.SetLookAt(glm::vec3(0, 0, 0));
+            break;
         case 'w':
             camera.Move(FORWARD);
             break;
         case 'a':
             camera.Move(LEFT);
+            //camera.SetLookAt(glm::vec3(0, 0, 0));
             break;
         case 's':
             camera.Move(BACK);
             break;
         case 'd':
             camera.Move(RIGHT);
+            //camera.SetLookAt(glm::vec3(0, 0, 0));
             break;
         case 'q':
             camera.Move(DOWN);
@@ -127,7 +172,7 @@ void KeyboardFunc(unsigned char c, int x, int y) {
             if(ZrotationAngle < 0) ZrotationAngle += 360.0*M_PI/180.0;
             break;
         case 'r':
-            camera.SetPosition(glm::vec3(0, 0, -2));
+            camera.SetPosition(glm::vec3(0, 0, 2));
             camera.SetLookAt(glm::vec3(0, 0, 0));
             XrotationAngle = YrotationAngle = ZrotationAngle = 0.0;
             break;
@@ -154,12 +199,16 @@ void CallBackMotionFunc(int x, int y) {
 
 void DisplayFunc() {
     
+    
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, window.size.x, window.size.y);
 
 	glm::mat4 model, view, projection;
 	camera.Update();
+    
+    //camera.camera_position = glm::rotate(camera.camera_position, -0.1f, glm::vec3(0,1,0)); //rotating y axis
+    
 	camera.GetMatricies(projection, view, model);
 
     //model = glm::rotate(model, XrotationAngle, glm::vec3(1,0,0));//rotating x axis
@@ -188,7 +237,7 @@ void DisplayFunc() {
         groundFromSpace.SetUniform("view", view );
         groundFromSpace.SetUniform("projection", projection );
         groundFromSpace.SetUniform("v3CameraPos", camera.camera_position );
-        groundFromSpace.SetUniform("v3LightPos", light_direction);
+        groundFromSpace.SetUniform("v3LightPos", glm::normalize(camera.camera_position) ); //light_direction);
         groundFromSpace.SetUniform("v3InvWavelength", m_fWavelength4_inv );
         groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
         groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
@@ -218,7 +267,7 @@ void DisplayFunc() {
         skyFromSpace.SetUniform("view", view );
         skyFromSpace.SetUniform("projection", projection );
         skyFromSpace.SetUniform("v3CameraPos", camera.camera_position );
-        skyFromSpace.SetUniform("v3LightPos", light_direction );
+        skyFromSpace.SetUniform("v3LightPos", glm::normalize(camera.camera_position) );//light_direction );
         skyFromSpace.SetUniform("v3InvWavelength", m_fWavelength4_inv );
         skyFromSpace.SetUniform("fCameraHeight", camera_magnitude);
         skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
@@ -250,11 +299,36 @@ void DisplayFunc() {
     skyFromSpace.disable();
     
     
+    
     /*
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     Sphere::drawSphere(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     */
+    
+    // texture map sphere
+    // bind the texture and set the "tex" uniform in the fragment shader
+    
+    
+    texMap.enable();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textures[0]);
+        texMap.SetUniform("tex", 0); //set to 0 because the texture is bound to GL_TEXTURE0
+        texMap.SetUniform("model", model );
+        texMap.SetUniform("view", view );
+        texMap.SetUniform("projection", projection );
+    
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    
+        texSphere.draw();
+    
+        glDisable(GL_BLEND);
+    texMap.disable();
+    
+    glDisable(GL_BLEND);
+    texMap.disable();
+    
     
     glutSwapBuffers();
 }
@@ -266,6 +340,8 @@ void TimerFunc(int value) {
 		glutPostRedisplay();
 	}
 }
+
+
 
 
 int main(int argc, char **argv) {
@@ -297,10 +373,10 @@ int main(int argc, char **argv) {
     
     //Setup camera
     camera.SetMode(FREE);
-    camera.SetPosition(glm::vec3(0, 0, -2));
-    camera.SetLookAt(glm::vec3(0, 0, 0));
-    camera.SetClipping(.1, 1000);
-    camera.SetFOV(45);
+    camera.SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+    camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.SetClipping(.1f, 1000.0f);
+    camera.SetFOV(45.0f);
     
     
     // load the shaders
@@ -308,11 +384,10 @@ int main(int argc, char **argv) {
     groundFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/GroundFromSpaceFrag.glsl");
     groundFromSpace.CreateAndLinkProgram();
     
-    
-    
     skyFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/SkyFromSpaceVert.glsl");
     skyFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/SkyFromSpaceFrag.glsl");
     skyFromSpace.CreateAndLinkProgram();
+
     
     
     // shader variables
@@ -349,11 +424,28 @@ int main(int argc, char **argv) {
     
     // init sphere
     ground.vertex_position_attrib_location = groundFromSpace.GetAttributeLocation("v3Position");
+    ground.texture_coords_attrib_location = groundFromSpace.GetAttributeLocation("v2TexCoords");
     ground.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     
     sky.vertex_position_attrib_location = skyFromSpace.GetAttributeLocation("v3Position");
+    sky.texture_coords_attrib_location = skyFromSpace.GetAttributeLocation("v2TexCoords");
     sky.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
-        
+    
+    
+    
+    // texture mapping
+    texMap.LoadFromFile(GL_VERTEX_SHADER,"shaders/textureMap.vert");
+    texMap.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/textureMap.frag");
+    texMap.CreateAndLinkProgram();
+    
+    texSphere.vertex_position_attrib_location = texMap.GetAttributeLocation("v3Position");
+    texSphere.texture_coords_attrib_location = texMap.GetAttributeLocation("v2TexCoord");
+    texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+    
+    loadTextureMap();
+    
+    
+    
     //Start the glut loop!
     glutMainLoop();
     return 0;

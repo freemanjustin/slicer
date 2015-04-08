@@ -2,10 +2,10 @@
 using namespace std;
 
 Sphere::Sphere(){
-    num_vertices = 0;
     resolution = 0;
     radius = 0.0;
     vertex_position_attrib_location = -1;
+    texture_coords_attrib_location = -1;
 }
 
 Sphere::~Sphere(){
@@ -24,9 +24,8 @@ void Sphere::init(int n, glm::vec3 centre, double r)
     double t1,t2,t3;
     float e[3],p[3], c[3];
     
-    vector<float> vertex_array;
-    vector<float> normal_array;
-    vector<float> color_array;
+    //vector<GLfloat> buffer_data;
+    
     
     for (j=0;j<n/2;j++) {
         t1 = (j*M_PI / (n/2)) - (M_PI/2);
@@ -47,8 +46,8 @@ void Sphere::init(int n, glm::vec3 centre, double r)
             c[2] = fabs(e[2]);
             
             
-            normal_array.insert(normal_array.end(), e, e+3);
-            color_array.insert(color_array.end(),c,c+3);
+            //normal_array.insert(normal_array.end(), e, e+3);
+            //color_array.insert(color_array.end(),c,c+3);
             
             // j - swapped the x texture coordinates so that the
             // texture maps show up properly
@@ -56,8 +55,13 @@ void Sphere::init(int n, glm::vec3 centre, double r)
             //glTexCoord2f(i/(double)n,2*j/(double)n);
             //glTexCoord2f( (n-i)/(double)n, 2*j/(double)n);
             
-            vertex_array.insert(vertex_array.end(), p, p+3);
+            //vertex_array.insert(vertex_array.end(), p, p+3);
             
+            // vertex data
+            vertex_coords.insert(vertex_coords.end(), p, p+3);
+            // texture coordinate data
+            texture_coords.push_back((n-i)/(double)n);
+            texture_coords.push_back(2*j/(double)n);
             
             e[0] = cos(t2) * cos(t3);
             e[1] = sin(t2);
@@ -65,62 +69,56 @@ void Sphere::init(int n, glm::vec3 centre, double r)
             p[0] = centre.x + r * e[0];
             p[1] = centre.y + r * e[1];
             p[2] = centre.z + r * e[2];
-            normal_array.insert(normal_array.end(), e, e+3);
+            //normal_array.insert(normal_array.end(), e, e+3);
             
-            color_array.insert(color_array.end(),c,c+3);
+            //color_array.insert(color_array.end(),c,c+3);
             // j - swapped the x texture coordinates so that the
             // texture maps show up properly
             // this commented line is the original texCoord
             //glTexCoord2f(i/(double)n,2*(j+1)/(double)n);
             //glTexCoord2f( (n-i)/(double)n,2*(j+1)/(double)n);
-            vertex_array.insert(vertex_array.end(), p, p+3);
+            //vertex_array.insert(vertex_array.end(), p, p+3);
+            
+            // vertex data
+            vertex_coords.insert(vertex_coords.end(), p, p+3);
+            // texture coordinate data
+            texture_coords.push_back((n-i)/(double)n);
+            texture_coords.push_back(2*j/(double)n);
         }
     }
     
     radius = r;
     resolution = n;
-    num_vertices = vertex_array.size();
     
     
-    /*
-    unsigned int bufferIDs[3];
-    glGenBuffers(3, bufferIDs);
-    
-    vertexVboId = bufferIDs[0];
-    normalVboId = bufferIDs[1];
-    colorVboId = bufferIDs[2];
-    
-    // vertex position
-    glBindBuffer(GL_ARRAY_BUFFER, vertexVboId);
-    glBufferData(GL_ARRAY_BUFFER, vertex_array.size()*sizeof(float), &vertex_array[0], GL_STATIC_DRAW);
-    
-    // normals
-    glBindBuffer(GL_ARRAY_BUFFER, normalVboId);
-    glBufferData(GL_ARRAY_BUFFER, normal_array.size()*sizeof(float), &normal_array[0], GL_STATIC_DRAW);
-    
-    // color
-    glBindBuffer(GL_ARRAY_BUFFER, colorVboId);
-    glBufferData(GL_ARRAY_BUFFER, color_array.size()*sizeof(float), &color_array[0], GL_STATIC_DRAW);
-    */
-    
-    // add additional buffer data here (ie. normals, etc.)
-    GLuint  buffers[1];
+    GLuint  buffers[2];
     
     // create VAO
     glGenVertexArrays(1, vao);
     glBindVertexArray(vao[0]);
     
     // crate VBO
-    glGenBuffers(1, buffers);
+    glGenBuffers(2, buffers);
     // bind buffer for vertices
     glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
     // and copy data into buffer
-    glBufferData(GL_ARRAY_BUFFER, vertex_array.size()*sizeof(float), &vertex_array[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertex_coords.size()*sizeof(GLfloat), &vertex_coords[0], GL_STATIC_DRAW);
     
-    // connect the vertex data to the "position" attribute of the vertex shader
-    // attribute for the vertex shader
+    // connect the vertex.xyz data to the "v3Position" attribute of the vertex shader
     glEnableVertexAttribArray(vertex_position_attrib_location);
     glVertexAttribPointer(vertex_position_attrib_location, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    
+    // bind buffer for vertices
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
+    // and copy data into buffer
+    glBufferData(GL_ARRAY_BUFFER, texture_coords.size()*sizeof(GLfloat), &texture_coords[0], GL_STATIC_DRAW);
+    
+    // connect the uv texture coords to the "v2TextCoord" attribute of the vertex shader
+    glEnableVertexAttribArray(texture_coords_attrib_location);
+    glVertexAttribPointer(texture_coords_attrib_location, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+    
+    // unbind the VAO
+    glBindVertexArray(0);
 }
 
 void Sphere::draw() {

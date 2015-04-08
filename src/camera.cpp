@@ -44,8 +44,10 @@ void Camera::Update() {
 		camera_direction = glm::rotate(temp, camera_direction);
 		//add the camera delta
 		camera_position += camera_position_delta;
+        
 		//set the look at to be infront of the camera
 		camera_look_at = camera_position + camera_direction * 1.0f;
+        
 		//damping for smooth camera
 		camera_heading *= .5;
 		camera_pitch *= .5;

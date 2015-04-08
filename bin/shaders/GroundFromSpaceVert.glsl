@@ -10,6 +10,8 @@
 // updated by freeman.justin@gmail.com (2015)
 
 in vec3 v3Position;
+in vec2 v2TexCoords;
+
 out vec3 v3Color;
 out vec3 v3SecondaryColor;
 
