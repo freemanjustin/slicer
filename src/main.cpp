@@ -34,7 +34,7 @@ GLSLShader skyFromSpace;
 GLSLShader texMap;
 
 // texture map
-GLuint  textures[8];
+GLuint  textures[2];
 
 int m_nSamples;
 float m_Kr, m_Kr4PI;
@@ -76,25 +76,33 @@ public:
 
 void loadTextureMap(){
     
-    //int max;
-    
-    //glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
-    //cout<< "MAX_TEXTURE_SIZE = "<<max<<endl;
-    
     textures[0] = SOIL_load_OGL_texture(
+                                        "bluemarble/cont8.png",
+                                        SOIL_LOAD_AUTO,
+                                        SOIL_CREATE_NEW_ID,
+                                        SOIL_FLAG_INVERT_Y
+                                        );
+    
+    if( textures[0] == 0 ){
+        printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+    }
+    
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    textures[1] = SOIL_load_OGL_texture(
                                         "texture/test.jpg",
                                         SOIL_LOAD_AUTO,
                                         SOIL_CREATE_NEW_ID,
                                         SOIL_FLAG_INVERT_Y
                                         );
     
-    if( textures[0] == 0 )
-    {
+    if( textures[1] == 0 ){
         printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
     }
     
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
     
 }
@@ -314,11 +322,16 @@ void DisplayFunc() {
     // texture map sphere
     // bind the texture and set the "tex" uniform in the fragment shader
     
+    glEnable(GL_TEXTURE_2D);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
     
     texMap.enable();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[0]);
-        texMap.SetUniform("tex", 0); //set to 0 because the texture is bound to GL_TEXTURE0
+    
+        texMap.SetUniform("Texture0", 0); //set to 0 because the texture is bound to GL_TEXTURE0
+        texMap.SetUniform("Texture1", 1);
         texMap.SetUniform("model", model );
         texMap.SetUniform("view", view );
         texMap.SetUniform("projection", projection );
@@ -437,7 +450,7 @@ int main(int argc, char **argv) {
     sky.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
     
     
-    
+    /*
     // texture mapping
     texMap.LoadFromFile(GL_VERTEX_SHADER,"shaders/textureMap.vert");
     texMap.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/textureMap.frag");
@@ -446,9 +459,19 @@ int main(int argc, char **argv) {
     texSphere.vertex_position_attrib_location = texMap.GetAttributeLocation("v3Position");
     texSphere.texture_coords_attrib_location = texMap.GetAttributeLocation("v2TexCoord");
     texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+    */
+    
+    
+    
+    texMap.LoadFromFile(GL_VERTEX_SHADER,"shaders/texBlend_contrast.vert");
+    texMap.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/texBlend_contrast.frag");
+    texMap.CreateAndLinkProgram();
+    
+    texSphere.vertex_position_attrib_location = texMap.GetAttributeLocation("v3Position");
+    texSphere.texture_coords_attrib_location = texMap.GetAttributeLocation("v2TexCoord");
+    texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     
     loadTextureMap();
-    
     
     
     //Start the glut loop!
