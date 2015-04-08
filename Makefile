@@ -27,8 +27,7 @@ INC=   -D_OS_X_ \
 # Libraries
 LFLAGS= -lGLEW \
 	-framework OpenGL \
-	-framework GLUT \
-	-framework AppKit
+	-framework GLUT 
 
 CPPFLAGS=	-O3 -g -Wall -Wno-deprecated-declarations
 
