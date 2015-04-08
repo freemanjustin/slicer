@@ -5,6 +5,7 @@
 #include <math.h>
 #include <GL/glew.h>
 #ifdef _OSX_
+//#include <OpenGL/gl3.h>
 #include <GLUT/glut.h>
 #endif
 
@@ -81,7 +82,7 @@ void loadTextureMap(){
                                         "bluemarble/cont8.png",
                                         SOIL_LOAD_AUTO,
                                         SOIL_CREATE_NEW_ID,
-                                        SOIL_FLAG_INVERT_Y
+                                        SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS//| SOIL_FLAG_TEXTURE_RECTANGLE
                                         );
     
     if( textures[0] == 0 ){
@@ -95,7 +96,7 @@ void loadTextureMap(){
                                         "texture/test.jpg",
                                         SOIL_LOAD_AUTO,
                                         SOIL_CREATE_NEW_ID,
-                                        SOIL_FLAG_INVERT_Y
+                                        SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS//| SOIL_FLAG_TEXTURE_RECTANGLE
                                         );
     
     if( textures[1] == 0 ){
@@ -324,11 +325,13 @@ void DisplayFunc() {
     // bind the texture and set the "tex" uniform in the fragment shader
     
     glEnable(GL_TEXTURE_2D);
+    //glEnable( GL_TEXTURE_RECTANGLE_ARB );// enables texture rectangle
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures[0]);
+    //glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[0]);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, textures[1]);
-    
+    //glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[1]);
     texMap.enable();
     
         texMap.SetUniform("Texture0", 0); //set to 0 because the texture is bound to GL_TEXTURE0
@@ -346,6 +349,8 @@ void DisplayFunc() {
     texMap.disable();
     
     glDisable(GL_BLEND);
+    glDisable( GL_TEXTURE_2D );
+    //glDisable( GL_TEXTURE_RECTANGLE_ARB );
     texMap.disable();
     
     
@@ -389,7 +394,7 @@ int main(int argc, char **argv) {
         cerr << "OpenGL 3.2 not supported." << endl;
         exit(1);
     }
-    
+
     //Setup camera
     camera.SetMode(FREE);
     camera.SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));

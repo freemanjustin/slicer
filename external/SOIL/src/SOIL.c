@@ -1169,6 +1169,7 @@ unsigned int
 	}
 	/*	create the OpenGL texture ID handle
     	(note: allowing a forced texture ID lets me reload a texture)	*/
+    
     tex_id = reuse_texture_ID;
     if( tex_id == 0 )
     {
@@ -1881,7 +1882,7 @@ int query_NPOT_capability( void )
     // freeman.justin@gmail.com addition
     // update this function to use glew.h and
     // use glew to check for extensions
-    if ( glewIsSupported("GL_ARB_texture_non_power_of_two") ){
+    if ( "GLEW_ARB_texture_non_power_of_two"){
         // The GL_ARB_texture_non_power_of_two extension is supported.
         return( SOIL_CAPABILITY_PRESENT );
     }
@@ -1899,11 +1900,12 @@ int query_tex_rectangle_capability( void )
     
     if( has_tex_rectangle_capability == SOIL_CAPABILITY_UNKNOWN ){
         //	we haven't yet checked for the capability, do so
-        if(glewIsSupported("GL_ARB_texture_rectangle" ) )
+        
+        if("GLEW_ARB_texture_rectangle")
             has_tex_rectangle_capability = SOIL_CAPABILITY_PRESENT;
-        else if(glewIsSupported("GL_EXT_texture_rectangle") )
+        else if( "GLEW_EXT_texture_rectangle" )
             has_tex_rectangle_capability = SOIL_CAPABILITY_PRESENT;
-        else if(glewIsSupported("GL_NV_texture_rectangle") )
+        else if( "GLEW_NV_texture_rectangle" )
             has_tex_rectangle_capability = SOIL_CAPABILITY_PRESENT;
         else
             has_tex_rectangle_capability = SOIL_CAPABILITY_NONE;
@@ -1949,9 +1951,9 @@ int query_cubemap_capability( void ){
     
     if( has_cubemap_capability == SOIL_CAPABILITY_UNKNOWN ){
         //	we haven't yet checked for the capability, do so
-        if(glewIsSupported("GL_ARB_texture_cube_map" ) )
+        if("GLEW_ARB_texture_cube_map" )
             has_cubemap_capability = SOIL_CAPABILITY_PRESENT;
-        else if(glewIsSupported("GL_EXT_texture_cube_map") )
+        else if("GLEW_EXT_texture_cube_map")
             has_cubemap_capability = SOIL_CAPABILITY_PRESENT;
         else
             has_cubemap_capability = SOIL_CAPABILITY_NONE;
@@ -1970,7 +1972,7 @@ int query_DXT_capability( void )
     
     if( has_DXT_capability == SOIL_CAPABILITY_UNKNOWN ){
         //	we haven't yet checked for the capability, do so
-        if(glewIsSupported("GL_EXT_texture_compression_s3tc" ) ){
+        if("GLEW_EXT_texture_compression_s3tc"){
             fprintf(stderr,"GL_EXT_texture_compression_s3tc extension present, but query_DXT_capability() function in SOIL.c was not updated!\n");
             fprintf(stderr,"Prepare for strangeness!\n");
             //return SOIL_CAPABILITY_PRESENT;

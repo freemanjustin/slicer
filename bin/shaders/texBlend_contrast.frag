@@ -4,6 +4,9 @@
 uniform sampler2D Texture0;
 uniform sampler2D Texture1;
 
+//uniform sampler2DRect Texture0;
+//uniform sampler2DRect Texture1;
+
 in vec2 fragTexCoord;
 
 out vec4 finalColor;
