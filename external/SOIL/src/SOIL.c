@@ -24,7 +24,7 @@
 #elif defined(_OSX_) || defined(__APPLE__) || defined(__APPLE_CC__)
 	//#include <OpenGL/gl.h>
     #include <GL/glew.h>
-	#include <Carbon/Carbon.h>
+	#//include <Carbon/Carbon.h>
 	#define APIENTRY
 #else
 	#include <GL/gl.h>
