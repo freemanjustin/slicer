@@ -36,6 +36,7 @@ GLSLShader texMap;
 // texture map
 GLuint  textures[2];
 
+
 int m_nSamples;
 float m_Kr, m_Kr4PI;
 float m_Km, m_Km4PI;
