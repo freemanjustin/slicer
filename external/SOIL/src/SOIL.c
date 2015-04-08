@@ -1877,35 +1877,44 @@ unsigned int SOIL_direct_load_DDS(
 int query_NPOT_capability( void )
 {
     
-    return SOIL_CAPABILITY_PRESENT;
+    // freeman.justin@gmail.com addition
+    // update this function to use glew.h and
+    // use glew to check for extensions
+    if ( glewIsSupported("GL_ARB_texture_non_power_of_two") ){
+        // The GL_ARB_texture_non_power_of_two extension is supported.
+        return( SOIL_CAPABILITY_PRESENT );
+    }
+    else
+        return( has_NPOT_capability = SOIL_CAPABILITY_NONE );
     
-	/*	check for the capability	*/
-	if( has_NPOT_capability == SOIL_CAPABILITY_UNKNOWN )
-	{
-		/*	we haven't yet checked for the capability, do so	*/
-		if(
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_ARB_texture_non_power_of_two" ) )
-			)
-		{
-			/*	not there, flag the failure	*/
-			has_NPOT_capability = SOIL_CAPABILITY_NONE;
-		} else
-		{
-			/*	it's there!	*/
-			has_NPOT_capability = SOIL_CAPABILITY_PRESENT;
-		}
-	}
-	/*	let the user know if we can do non-power-of-two textures or not	*/
-	return has_NPOT_capability;
 }
 
 int query_tex_rectangle_capability( void )
 {
-	/*	check for the capability	*/
+    // freeman.justin@gmail.com addition
+    // update this function to use glew.h and
+    // use glew to check for extensions
+    
+    
+    if( has_tex_rectangle_capability == SOIL_CAPABILITY_UNKNOWN ){
+        //	we haven't yet checked for the capability, do so
+        if(glewIsSupported("GL_ARB_texture_rectangle" ) )
+            has_tex_rectangle_capability = SOIL_CAPABILITY_PRESENT;
+        else if(glewIsSupported("GL_EXT_texture_rectangle") )
+            has_tex_rectangle_capability = SOIL_CAPABILITY_PRESENT;
+        else if(glewIsSupported("GL_NV_texture_rectangle") )
+            has_tex_rectangle_capability = SOIL_CAPABILITY_PRESENT;
+        else
+            has_tex_rectangle_capability = SOIL_CAPABILITY_NONE;
+    }
+    
+    return has_tex_rectangle_capability;
+    
+    /*
+	//	check for the capability
 	if( has_tex_rectangle_capability == SOIL_CAPABILITY_UNKNOWN )
 	{
-		/*	we haven't yet checked for the capability, do so	*/
+		//	we haven't yet checked for the capability, do so
 		if(
 			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
 				"GL_ARB_texture_rectangle" ) )
@@ -1917,59 +1926,74 @@ int query_tex_rectangle_capability( void )
 				"GL_NV_texture_rectangle" ) )
 			)
 		{
-			/*	not there, flag the failure	*/
+			//	not there, flag the failure
 			has_tex_rectangle_capability = SOIL_CAPABILITY_NONE;
 		} else
 		{
-			/*	it's there!	*/
+			//	it's there!
 			has_tex_rectangle_capability = SOIL_CAPABILITY_PRESENT;
 		}
 	}
-	/*	let the user know if we can do texture rectangles or not	*/
+	//	let the user know if we can do texture rectangles or not
 	return has_tex_rectangle_capability;
+     */
 }
 
-int query_cubemap_capability( void )
-{
-	/*	check for the capability	*/
-	if( has_cubemap_capability == SOIL_CAPABILITY_UNKNOWN )
-	{
-		/*	we haven't yet checked for the capability, do so	*/
-		if(
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_ARB_texture_cube_map" ) )
-		&&
-			(NULL == strstr( (char const*)glGetString( GL_EXTENSIONS ),
-				"GL_EXT_texture_cube_map" ) )
-			)
-		{
-			/*	not there, flag the failure	*/
-			has_cubemap_capability = SOIL_CAPABILITY_NONE;
-		} else
-		{
-			/*	it's there!	*/
-			has_cubemap_capability = SOIL_CAPABILITY_PRESENT;
-		}
-	}
-	/*	let the user know if we can do cubemaps or not	*/
-	return has_cubemap_capability;
+int query_cubemap_capability( void ){
+    
+    // freeman.justin@gmail.com addition
+    // update this function to use glew.h and
+    // use glew to check for extensions
+    
+    
+    if( has_cubemap_capability == SOIL_CAPABILITY_UNKNOWN ){
+        //	we haven't yet checked for the capability, do so
+        if(glewIsSupported("GL_ARB_texture_cube_map" ) )
+            has_cubemap_capability = SOIL_CAPABILITY_PRESENT;
+        else if(glewIsSupported("GL_EXT_texture_cube_map") )
+            has_cubemap_capability = SOIL_CAPABILITY_PRESENT;
+        else
+            has_cubemap_capability = SOIL_CAPABILITY_NONE;
+    }
+    
+    return has_cubemap_capability;
+
 }
 
 int query_DXT_capability( void )
 {
-	/*	check for the capability	*/
+    
+    // freeman.justin@gmail.com addition
+    // update this function to use glew.h and
+    // use glew to check for extensions
+    
+    if( has_DXT_capability == SOIL_CAPABILITY_UNKNOWN ){
+        //	we haven't yet checked for the capability, do so
+        if(glewIsSupported("GL_EXT_texture_compression_s3tc" ) ){
+            fprintf(stderr,"GL_EXT_texture_compression_s3tc extension present, but query_DXT_capability() function in SOIL.c was not updated!\n");
+            fprintf(stderr,"Prepare for strangeness!\n");
+            //return SOIL_CAPABILITY_PRESENT;
+            has_DXT_capability = SOIL_CAPABILITY_NONE;
+        }
+        else
+            has_DXT_capability = SOIL_CAPABILITY_NONE;
+    }
+    return has_DXT_capability;
+    
+    /*
+	//	check for the capability
 	if( has_DXT_capability == SOIL_CAPABILITY_UNKNOWN )
 	{
-		/*	we haven't yet checked for the capability, do so	*/
+		//	we haven't yet checked for the capability, do so
 		if( NULL == strstr(
 				(char const*)glGetString( GL_EXTENSIONS ),
 				"GL_EXT_texture_compression_s3tc" ) )
 		{
-			/*	not there, flag the failure	*/
+			//	not there, flag the failure
 			has_DXT_capability = SOIL_CAPABILITY_NONE;
 		} else
 		{
-			/*	and find the address of the extension function	*/
+			//	and find the address of the extension function
 			P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC ext_addr = NULL;
 			#ifdef WIN32
 				ext_addr = (P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC)
@@ -1978,7 +2002,7 @@ int query_DXT_capability( void )
 							"glCompressedTexImage2DARB"
 						);
 			#elif defined(__APPLE__) || defined(__APPLE_CC__)
-				/*	I can't test this Apple stuff!	*/
+				//	I can't test this Apple stuff!
 				CFBundleRef bundle;
 				CFURLRef bundleURL =
 					CFURLCreateWithFileSystemPath(
@@ -2008,24 +2032,25 @@ int query_DXT_capability( void )
 							(const GLubyte *)"glCompressedTexImage2DARB"
 						);
 			#endif
-			/*	Flag it so no checks needed later	*/
+			//	Flag it so no checks needed later
 			if( NULL == ext_addr )
 			{
-				/*	hmm, not good!!  This should not happen, but does on my
-					laptop's VIA chipset.  The GL_EXT_texture_compression_s3tc
-					spec requires that ARB_texture_compression be present too.
-					this means I can upload and have the OpenGL drive do the
-					conversion, but I can't use my own routines or load DDS files
-					from disk and upload them directly [8^(	*/
+				//	hmm, not good!!  This should not happen, but does on my
+				//	laptop's VIA chipset.  The GL_EXT_texture_compression_s3tc
+				//	spec requires that ARB_texture_compression be present too.
+				//	this means I can upload and have the OpenGL drive do the
+				//	conversion, but I can't use my own routines or load DDS files
+				//	from disk and upload them directly [8^(
 				has_DXT_capability = SOIL_CAPABILITY_NONE;
 			} else
 			{
-				/*	all's well!	*/
+				//	all's well!
 				soilGlCompressedTexImage2D = ext_addr;
 				has_DXT_capability = SOIL_CAPABILITY_PRESENT;
 			}
 		}
 	}
-	/*	let the user know if we can do DXT or not	*/
+	//	let the user know if we can do DXT or not
 	return has_DXT_capability;
+    */
 }
