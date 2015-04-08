@@ -21,7 +21,7 @@ Sphere::~Sphere(){
 void Sphere::init(int n, glm::vec3 centre, double r)
 {
     int i,j;
-    double t1,t2,t3;
+    float t1,t2,t3;
     float e[3],p[3], c[3];
     
     //vector<GLfloat> buffer_data;
@@ -60,8 +60,8 @@ void Sphere::init(int n, glm::vec3 centre, double r)
             // vertex data
             vertex_coords.insert(vertex_coords.end(), p, p+3);
             // texture coordinate data
-            texture_coords.push_back((n-i)/(double)n);
-            texture_coords.push_back(2*j/(double)n);
+            texture_coords.push_back((float)(n-i)/(float)n);
+            texture_coords.push_back((float)2.0f*j/(float)n);
             
             e[0] = cos(t2) * cos(t3);
             e[1] = sin(t2);
@@ -82,8 +82,8 @@ void Sphere::init(int n, glm::vec3 centre, double r)
             // vertex data
             vertex_coords.insert(vertex_coords.end(), p, p+3);
             // texture coordinate data
-            texture_coords.push_back((n-i)/(double)n);
-            texture_coords.push_back(2*j/(double)n);
+            texture_coords.push_back((float)(n-i)/(float)n);
+            texture_coords.push_back(2.0*(j+1)/(float)n);
         }
     }
     

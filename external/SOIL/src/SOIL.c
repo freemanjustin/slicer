@@ -1108,6 +1108,7 @@ unsigned int
 		{
 			new_height *= 2;
 		}
+        
 		/*	still?	*/
 		if( (new_width != width) || (new_height != height) )
 		{
@@ -1118,7 +1119,7 @@ unsigned int
 					resampled, new_width, new_height );
 			/*	OJO	this is for debug only!	*/
 			/*
-			SOIL_save_image( "\\showme.bmp", SOIL_SAVE_TYPE_BMP,
+			SOIL_save_image( "showme.bmp", SOIL_SAVE_TYPE_BMP,
 							new_width, new_height, channels,
 							resampled );
 			*/

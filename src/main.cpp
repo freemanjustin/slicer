@@ -34,7 +34,7 @@ GLSLShader skyFromSpace;
 GLSLShader texMap;
 
 // texture map
-GLuint  textures[1];
+GLuint  textures[8];
 
 int m_nSamples;
 float m_Kr, m_Kr4PI;
@@ -76,14 +76,19 @@ public:
 
 void loadTextureMap(){
     
+    //int max;
+    
+    //glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
+    //cout<< "MAX_TEXTURE_SIZE = "<<max<<endl;
+    
     textures[0] = SOIL_load_OGL_texture(
                                         "texture/test.jpg",
-                                        SOIL_LOAD_RGB,
+                                        SOIL_LOAD_AUTO,
                                         SOIL_CREATE_NEW_ID,
-                                        SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS
+                                        SOIL_FLAG_INVERT_Y
                                         );
     
-    if( 0 == textures[0] )
+    if( textures[0] == 0 )
     {
         printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
     }
