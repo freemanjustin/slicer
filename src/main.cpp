@@ -127,16 +127,18 @@ void ReshapeFunc(int w, int h) {
 //Keyboard input for camera, also handles exit case
 void KeyboardFunc(unsigned char c, int x, int y) {
     
-    glm::vec3 lookAt;
-    
 	switch (c) {
         case 'j':
-            lookAt = camera.camera_look_at;
-            cout << "before: " << camera.camera_look_at.x << " " << camera.camera_look_at.y << " " << camera.camera_look_at.z << endl;
-            camera.camera_position = glm::rotate(camera.camera_position, -0.1f, glm::vec3(0,1,0)); //rotating y axis
-            cout << "after: " << camera.camera_look_at.x << " " << camera.camera_look_at.y << " " << camera.camera_look_at.z << endl;
+            //lookAt = camera.camera_look_at;
+            //cout << "before: " << camera.camera_look_at.x << " " << camera.camera_look_at.y << " " << camera.camera_look_at.z << endl;
+            //camera.camera_position = glm::rotate(camera.camera_position, -0.1f, glm::vec3(0,1,0)); //rotating y axis
+            //cout << "after: " << camera.camera_look_at.x << " " << camera.camera_look_at.y << " " << camera.camera_look_at.z << endl;
+            //glm::lookAt(camera.camera_position, camera.camera_look_at, camera.camera_up);
             //camera.SetLookAt(glm::vec3(0, 0, 0));
             //camera.SetLookAt(lookAt);
+            camera.SetMode(SPHERICAL);
+            camera.Move(LEFT);
+            camera.SetMode(FREE);
             break;
         case 'l':
             camera.camera_position = glm::rotate(camera.camera_position, 0.1f, glm::vec3(0,1,0)); //rotating y axis
@@ -396,6 +398,7 @@ int main(int argc, char **argv) {
     }
 
     //Setup camera
+    //camera.SetMode(SPHERICAL);
     camera.SetMode(FREE);
     camera.SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));

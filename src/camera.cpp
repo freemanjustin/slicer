@@ -6,11 +6,12 @@ Camera::Camera() {
 	camera_mode = FREE;
 	camera_up = glm::vec3(0, 1, 0);
 	field_of_view = 45;
+    rotation_quaternion = glm::quat(1, 0, 0, 0);
 	camera_position_delta = glm::vec3(0, 0, 0);
 	camera_scale = .005f;
 	max_pitch_rate = 5;
 	max_heading_rate = 5;
-	move_camera = false;
+	move_camera = true;
 }
 Camera::~Camera() {
 }
@@ -24,7 +25,10 @@ void Camera::Update() {
 	//need to set the matrix state. this is only important because lighting doesn't work if this isn't done
 	glViewport(viewport_x, viewport_y, window_width, window_height);
 
-	if (camera_mode == ORTHO) {
+    if(camera_mode == SPHERICAL) {
+        projection = glm::perspective(field_of_view, aspect, near_clip, far_clip);
+    }
+	else if (camera_mode == ORTHO) {
 		//our projection matrix will be an orthogonal one in this case
 		//if the values are not floating point, this command does not work properly
 		//need to multiply by aspect!!! (otherise will not scale properly)
@@ -63,6 +67,7 @@ void Camera::Update() {
 void Camera::SetMode(CameraType cam_mode) {
 	camera_mode = cam_mode;
 	camera_up = glm::vec3(0, 1, 0);
+    rotation_quaternion = glm::quat(1, 0, 0, 0);
     camera_scale = 0.025f;
 
 }
@@ -92,7 +97,25 @@ void Camera::SetClipping(double near_clip_distance, double far_clip_distance) {
 }
 
 void Camera::Move(CameraDirection dir) {
-	if (camera_mode == FREE) {
+    
+    if(camera_mode == SPHERICAL) {
+        float angle = 0;
+        glm::quat rot_quat;
+        glm::vec3 rot_vector;
+        if(dir == FORWARD || dir == RIGHT) {angle = 0.1f; }
+        else if(dir == BACK || dir == LEFT) {angle = -0.10f;}
+        if(dir == FORWARD || dir == BACK) {
+            glm::vec3 cross_vector = camera_up;
+            rot_vector = glm::cross(cross_vector, camera_direction);
+        } else if (dir == LEFT || dir == RIGHT) {
+            rot_vector = glm::vec3(0, 1, 0);
+        }
+        rot_quat = glm::angleAxis(angle, rot_vector);
+        rotation_quaternion = glm::cross(rotation_quaternion, rot_quat);
+        camera_position = glm::rotate(rot_quat, camera_position);
+        camera_up = glm::rotate(rot_quat, camera_up);
+    }
+	else if (camera_mode == FREE) {
 		switch (dir) {
 			case UP:
 				camera_position_delta += camera_up * camera_scale;

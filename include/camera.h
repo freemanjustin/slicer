@@ -8,11 +8,13 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#ifdef __APPLE__
+
+#ifdef _OS_X_
 #include <GLUT/glut.h>
 #else
 #include <GL/freeglut.h>
 #endif
+
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -22,8 +24,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
+
 enum CameraType {
-	ORTHO, FREE
+	SPHERICAL, ORTHO, FREE
 };
 enum CameraDirection {
 	UP, DOWN, LEFT, RIGHT, FORWARD, BACK
@@ -101,6 +104,7 @@ class Camera {
 		glm::vec3 camera_direction;
 
 		glm::vec3 camera_up;
+        glm::quat rotation_quaternion;
 		glm::vec3 mouse_position;
 
 		glm::mat4 projection;
