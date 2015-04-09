@@ -8,11 +8,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-
 #ifdef _OS_X_
 #include <GLUT/glut.h>
-#else
+#elif defined _LINUX_
 #include <GL/freeglut.h>
+#else
+#include <GL/glut.h>
 #endif
 
 

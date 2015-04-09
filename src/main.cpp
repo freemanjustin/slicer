@@ -4,9 +4,13 @@
 #include <vector>
 #include <math.h>
 #include <GL/glew.h>
-#ifdef _OSX_
-//#include <OpenGL/gl3.h>
+
+#ifdef _OS_X_
 #include <GLUT/glut.h>
+#elif defined _LINUX_
+#include <GL/freeglut.h>
+#else
+#include <GL/glut.h>
 #endif
 
 #include "camera.h"
@@ -86,7 +90,7 @@ void loadTextureMap(){
                                         );
     
     if( textures[0] == 0 ){
-        printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+        cerr << "SOIL loading error: " << SOIL_last_result() << endl;
     }
     
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -100,7 +104,7 @@ void loadTextureMap(){
                                         );
     
     if( textures[1] == 0 ){
-        printf( "SOIL loading error: '%s'\n", SOIL_last_result() );
+        cerr << "SOIL loading error: " << SOIL_last_result() << endl;
     }
     
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -130,12 +134,12 @@ void KeyboardFunc(unsigned char c, int x, int y) {
 	switch (c) {
             
         case 'j':
-            camera.camera_position = glm::rotate(camera.camera_position, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
-            camera.camera_look_at = glm::rotate(camera.camera_look_at, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
-            break;
-        case 'l':
             camera.camera_position = glm::rotate(camera.camera_position, 0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             camera.camera_look_at = glm::rotate(camera.camera_look_at, 0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
+            break;
+        case 'l':
+            camera.camera_position = glm::rotate(camera.camera_position, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
+            camera.camera_look_at = glm::rotate(camera.camera_look_at, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             break;
         /*
         case 'k':
@@ -227,8 +231,6 @@ void DisplayFunc() {
 	glm::mat4 model, view, projection;
 	camera.Update();
     
-    //camera.camera_position = glm::rotate(camera.camera_position, -0.1f, glm::vec3(0,1,0)); //rotating y axis
-    
 	camera.GetMatricies(projection, view, model);
 
     //model = glm::rotate(model, XrotationAngle, glm::vec3(1,0,0));//rotating x axis
@@ -257,7 +259,7 @@ void DisplayFunc() {
         groundFromSpace.SetUniform("view", view );
         groundFromSpace.SetUniform("projection", projection );
         groundFromSpace.SetUniform("v3CameraPos", camera.camera_position );
-        groundFromSpace.SetUniform("v3LightPos", glm::normalize(camera.camera_position) ); //light_direction);
+        groundFromSpace.SetUniform("v3LightPos", glm::normalize(camera.camera_position) );
         groundFromSpace.SetUniform("v3InvWavelength", m_fWavelength4_inv );
         groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
         groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
@@ -287,7 +289,7 @@ void DisplayFunc() {
         skyFromSpace.SetUniform("view", view );
         skyFromSpace.SetUniform("projection", projection );
         skyFromSpace.SetUniform("v3CameraPos", camera.camera_position );
-        skyFromSpace.SetUniform("v3LightPos", glm::normalize(camera.camera_position) );//light_direction );
+        skyFromSpace.SetUniform("v3LightPos", glm::normalize(camera.camera_position) );
         skyFromSpace.SetUniform("v3InvWavelength", m_fWavelength4_inv );
         skyFromSpace.SetUniform("fCameraHeight", camera_magnitude);
         skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
@@ -372,13 +374,16 @@ void TimerFunc(int value) {
 
 
 
-
 int main(int argc, char **argv) {
     //glut boilerplate
     glutInit(&argc, argv);
     glutInitWindowSize(1024, 512);
     glutInitWindowPosition(0, 0);
+#ifdef _OS_X_
     glutInitDisplayMode( GLUT_3_2_CORE_PROFILE | GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
+#else
+    glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
+#endif
     //Setup window and callbacks
     window.window_handle = glutCreateWindow("slicer");
     glutReshapeFunc(ReshapeFunc);
