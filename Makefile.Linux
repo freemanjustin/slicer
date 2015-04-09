@@ -20,13 +20,13 @@ OBJ=	./src/main.o \
 INC=   -D_LINUX_ \
 	-I./include \
 	-I./external/glm-0.9.6.3/glm \
-	-I./external/SOIL/src
+	-I./external/SOIL/src \
+	-I./external/stb
 
 # Libraries
 LFLAGS= -lGLEW \
 	-lglut \
-	-lGL \
-	-lpng
+	-lGL 
 
 CPPFLAGS=	-O3 -g -Wall -Wno-deprecated-declarations
 

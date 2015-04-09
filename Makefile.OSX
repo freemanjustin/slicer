@@ -22,13 +22,13 @@ OBJ=	./src/main.o \
 INC=   -D_OS_X_ \
 	-I./include \
 	-I./external/glm-0.9.6.3/glm \
-	-I./external/SOIL/src
+	-I./external/SOIL/src \
+	-I./external/stb
 
 # Libraries
 LFLAGS= -lGLEW \
 	-framework OpenGL \
-	-framework GLUT \
-	-lpng
+	-framework GLUT 
 
 CPPFLAGS=	-O3 -g -Wall -Wno-deprecated-declarations
 

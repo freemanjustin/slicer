@@ -63,6 +63,10 @@
              on 'test' only check type, not whether we support this variant
 */
 
+// freeman.justin@gmail.com
+// switch off the image write stuff in here...
+#define STBI_NO_WRITE
+
 #include "stb_image_aug.h"
 
 #ifndef STBI_NO_HDR
