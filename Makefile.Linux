@@ -10,6 +10,7 @@ OBJ=	./src/main.o \
 	./src/camera.o \
 	./src/sphere.o \
 	./src/GLSLShader.o \
+	./src/save_image.o \
 	./external/SOIL/src/SOIL.o \
 	./external/SOIL/src/image_DXT.o \
 	./external/SOIL/src/image_helper.o \
@@ -24,7 +25,8 @@ INC=   -D_LINUX_ \
 # Libraries
 LFLAGS= -lGLEW \
 	-lglut \
-	-lGL 
+	-lGL \
+	-lpng
 
 CPPFLAGS=	-O3 -g -Wall -Wno-deprecated-declarations
 

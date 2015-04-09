@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "sphere.h"
 #include "GLSLShader.h"
+#include "save_image.h"
 
 #include "SOIL.h"
 
@@ -132,7 +133,9 @@ void ReshapeFunc(int w, int h) {
 void KeyboardFunc(unsigned char c, int x, int y) {
     
 	switch (c) {
-            
+        case 'v':
+            WindowDump_PNG();
+            break;
         case 'j':
             camera.camera_position = glm::rotate(camera.camera_position, 0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             camera.camera_look_at = glm::rotate(camera.camera_look_at, 0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
