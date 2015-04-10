@@ -10,7 +10,7 @@ On linux I have tested this with [freeglut](http://freeglut.sourceforge.net/). O
 
 Two Makefiles are provided, one for OSX and another for Linux. You will (probably) need to edit the Makefile to point the location of `include` and `lib` directories on your system. 
 
-To build slicer type `make` at the top level directory. The app will be created in the `bin` directory.
+To build slicer type `make -f Makefile.[platform]` at the top level directory where `[platform]` is either `OSX` or `Linux`. The app will be created in the `bin` directory.
 
 ## Usage
 
