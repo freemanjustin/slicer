@@ -93,8 +93,10 @@ void Sphere::init(int n, glm::vec3 centre, double r, GLSLShader *shader)
     //      buffer[1] = normals
     //      buffer[2] = colors
     //      buffer[3] = texture_coords
-    
-    
+    //
+    // the buffer indexing below uses the enum declared above
+    // (enum    {vertex, normal, color, texture};)
+    //
     
     // set the VAO pointers to the VBO
     if(shader->vertex_coords_name != ""){
