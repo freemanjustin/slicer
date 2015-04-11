@@ -16,6 +16,14 @@
 
 using namespace std;
 
+
+enum attribute_kind {
+    vertex_coords,
+    texture_coords,
+    normals,
+    colors
+};
+
 class GLSLShader
 {
 public:
@@ -40,6 +48,14 @@ public:
     void SetUniform(const string& parameter, glm::vec3 p);
     void SetUniform(const string& uniform, glm::mat4 m);
     GLint GetAttributeLocation(const string& attribute);
+    void SetAttributeName(attribute_kind attribute, const string& value);
+    // j testing
+    //GLuint vertexLoc;
+    //GLint mvpMatrixLoc;
+    string  vertex_coords_name;
+    string  texture_coords_name;
+    string  normals_name;
+    string  colors_name;
 private:
 	enum ShaderType {VERTEX_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER};
 	GLuint	_program;
@@ -47,7 +63,4 @@ private:
 	GLuint _shaders[3];//0->vertexshader, 1->fragmentshader, 2->geometryshader
 	map<string,GLuint> _attributeList;
 	map<string,GLuint> _uniformLocationList;
-    // j testing
-    //GLuint vertexLoc;
-    //GLint mvpMatrixLoc;
 };	

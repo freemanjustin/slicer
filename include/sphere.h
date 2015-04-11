@@ -15,6 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "GLSLShader.h"
 
 class Sphere {
     
@@ -28,17 +29,22 @@ class Sphere {
     //int     textureVboId;
     std::vector<GLfloat> vertex_coords;
     std::vector<GLfloat> texture_coords;
+    std::vector<GLfloat> normal_coords;
+    std::vector<GLfloat> color_coords;
+    
+    GLSLShader  *shader;
 
 public:
     Sphere();
     ~Sphere();
-    void init(int, glm::vec3, double);
+    void init(int, glm::vec3, double, GLSLShader*);
     void draw();
-    static void drawSphere(int n, glm::vec3 centre, double r);
     //GLint getVertexVBOid();
     GLuint  vao[1];
     GLint  vertex_position_attrib_location;
     GLint  texture_coords_attrib_location;
+    GLint  normals_attrib_location;
+    GLint  colors_attrib_location;
     
 };
 

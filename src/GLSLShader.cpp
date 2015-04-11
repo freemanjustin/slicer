@@ -14,6 +14,12 @@ GLSLShader::GLSLShader(void)
 	_shaders[GEOMETRY_SHADER]=0;
 	_attributeList.clear();
 	_uniformLocationList.clear();
+    
+    // j addition
+    vertex_coords_name="";
+    texture_coords_name="";
+    normals_name="";
+    colors_name="";
 }
 
 GLSLShader::~GLSLShader(void)
@@ -22,7 +28,8 @@ GLSLShader::~GLSLShader(void)
 	_uniformLocationList.clear();	
 }
 
-void GLSLShader::LoadFromString(GLenum type, const string& source) {	
+void GLSLShader::LoadFromString(GLenum type, const string& source) {
+    
 	GLuint shader = glCreateShader (type);
 
 	const char * ptmp = source.c_str();
@@ -41,10 +48,12 @@ void GLSLShader::LoadFromString(GLenum type, const string& source) {
 		delete [] infoLog;
 	}
 	_shaders[_totalShaders++]=shader;
+    
 }
 
 
 void GLSLShader::CreateAndLinkProgram() {
+    
 	_program = glCreateProgram ();
 	if (_shaders[VERTEX_SHADER] != 0) {
 		glAttachShader (_program, _shaders[VERTEX_SHADER]);
@@ -77,67 +86,106 @@ void GLSLShader::CreateAndLinkProgram() {
 	glDeleteShader(_shaders[VERTEX_SHADER]);
 	glDeleteShader(_shaders[FRAGMENT_SHADER]);
 	glDeleteShader(_shaders[GEOMETRY_SHADER]);
+    
 }
 
 void GLSLShader::enable() {
-	glUseProgram(_program);
+
+    glUseProgram(_program);
+
 }
 
 void GLSLShader::disable() {
+    
 	glUseProgram(0);
+
 }
 
 void GLSLShader::AddAttribute(const string& attribute) {
+    
 	_attributeList[attribute]= glGetAttribLocation(_program, attribute.c_str());	
+
 }
 
 //An indexer that returns the location of the attribute
 GLuint GLSLShader::operator [](const string& attribute) {
+    
 	return _attributeList[attribute];
 }
 
 void GLSLShader::AddUniform(const string& uniform) {
+    
 	_uniformLocationList[uniform] = glGetUniformLocation(_program, uniform.c_str());
+
 }
 
 // j addition
 // freeman.justin@gmail.com
 void GLSLShader::SetUniform(const string& uniform, int n1){
+    
     GLint	location;
     location = glGetUniformLocation(_program, uniform.c_str());
     glUniform1i(location, n1);
+
 }
 
 // j additions
 // freeman.justin@gmail.com
 void GLSLShader::SetUniform(const string& uniform, float p1){
+    
     GLint	location;
     location = glGetUniformLocation(_program, uniform.c_str());
     glUniform1f(location, p1);
+
 }
 
 // j additions
 // freeman.justin@gmail.com
 void GLSLShader::SetUniform(const string& uniform, glm::vec3 p){
+    
     GLint	location;
     location = glGetUniformLocation(_program, uniform.c_str());
     glUniform3fv(location, 1, glm::value_ptr(p)) ;
+
 }
 
 // j addition
 // freeman.justin@gmail.com
 void GLSLShader::SetUniform(const string& uniform, glm::mat4 m){
+    
     GLint	location;
     location = glGetUniformLocation(_program, uniform.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(m));
+    
 }
 
 
 GLint GLSLShader::GetAttributeLocation(const string& attribute){
-    return glGetAttribLocation(_program, attribute.c_str());
-    //glEnableVertexAttribArray(location);
-    //glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 0,0 );
     
+    return glGetAttribLocation(_program, attribute.c_str());
+    
+}
+
+void GLSLShader::SetAttributeName(attribute_kind attribute, const string& value){
+    
+    switch (attribute) {
+        case vertex_coords:
+            vertex_coords_name.assign(value);
+            break;
+        case texture_coords:
+            texture_coords_name.assign(value);
+            break;
+        case normals:
+            normals_name.assign(value);
+            break;
+        case colors:
+            colors_name.assign(value);
+            break;
+        default:
+            cerr << "attribute not found!" << endl;
+            exit(1);
+            break;
+    }
 }
 
 

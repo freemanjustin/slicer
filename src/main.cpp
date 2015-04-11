@@ -254,6 +254,7 @@ void DisplayFunc() {
     
     glEnable(GL_MULTISAMPLE);
     
+    
     float camera_magnitude = glm::length(camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
@@ -331,9 +332,13 @@ void DisplayFunc() {
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     */
     
+    
+    
     // texture map sphere
     // bind the texture and set the "tex" uniform in the fragment shader
     
+    
+    //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glEnable(GL_TEXTURE_2D);
     //glEnable( GL_TEXTURE_RECTANGLE_ARB );// enables texture rectangle
     glActiveTexture(GL_TEXTURE0);
@@ -421,11 +426,12 @@ int main(int argc, char **argv) {
     groundFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/GroundFromSpaceVert.glsl");
     groundFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/GroundFromSpaceFrag.glsl");
     groundFromSpace.CreateAndLinkProgram();
+    groundFromSpace.SetAttributeName(vertex_coords,"v3Position");
     
     skyFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/SkyFromSpaceVert.glsl");
     skyFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/SkyFromSpaceFrag.glsl");
     skyFromSpace.CreateAndLinkProgram();
-
+    skyFromSpace.SetAttributeName(vertex_coords,"v3Position");
     
     
     // shader variables
@@ -461,13 +467,8 @@ int main(int argc, char **argv) {
     light_direction = glm::normalize(light_pos);
     
     // init sphere
-    ground.vertex_position_attrib_location = groundFromSpace.GetAttributeLocation("v3Position");
-    ground.texture_coords_attrib_location = groundFromSpace.GetAttributeLocation("v2TexCoords");
-    ground.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
-    
-    sky.vertex_position_attrib_location = skyFromSpace.GetAttributeLocation("v3Position");
-    sky.texture_coords_attrib_location = skyFromSpace.GetAttributeLocation("v2TexCoords");
-    sky.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius);
+    ground.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius, &groundFromSpace);
+    sky.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fOuterRadius, &skyFromSpace);
     
     
     /*
@@ -475,9 +476,9 @@ int main(int argc, char **argv) {
     texMap.LoadFromFile(GL_VERTEX_SHADER,"shaders/textureMap.vert");
     texMap.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/textureMap.frag");
     texMap.CreateAndLinkProgram();
+    texMap.SetAttributeName(vertex_coords,"v3Position");
+    texMap.SetAttributeName(texture_coords,"v2TexCoord");
     
-    texSphere.vertex_position_attrib_location = texMap.GetAttributeLocation("v3Position");
-    texSphere.texture_coords_attrib_location = texMap.GetAttributeLocation("v2TexCoord");
     texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     */
     
@@ -486,10 +487,11 @@ int main(int argc, char **argv) {
     texMap.LoadFromFile(GL_VERTEX_SHADER,"shaders/texBlend_contrast.vert");
     texMap.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/texBlend_contrast.frag");
     texMap.CreateAndLinkProgram();
+    texMap.SetAttributeName(vertex_coords,"v3Position");
+    texMap.SetAttributeName(texture_coords,"v2TexCoord");
+
     
-    texSphere.vertex_position_attrib_location = texMap.GetAttributeLocation("v3Position");
-    texSphere.texture_coords_attrib_location = texMap.GetAttributeLocation("v2TexCoord");
-    texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
+    texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius, &texMap);
     
     loadTextureMap();
     
