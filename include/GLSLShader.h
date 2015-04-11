@@ -1,5 +1,6 @@
 //A simple class for handling GLSL shader compilation
 //Auhtor: Movania Muhammad Mobeen
+
 #pragma once
 #include <GL/glew.h>
 #include <map>
@@ -16,17 +17,17 @@
 
 using namespace std;
 
-
-enum attribute_kind {
-    vertex_coords,
-    texture_coords,
-    normals,
-    colors
-};
-
 class GLSLShader
 {
 public:
+    
+    enum attribute_kind {
+        vertex_coords,
+        texture_coords,
+        normals,
+        colors
+    };
+    
 	GLSLShader(void);
 	~GLSLShader(void);	
 	void LoadFromString(GLenum whichShader, const string& source);
@@ -42,6 +43,7 @@ public:
 	GLuint operator()(const string& uniform);
 	//Program deletion
 	void DeleteProgram() {glDeleteProgram(_program);_program=-1;}
+    
     // j additions
     void SetUniform(const string& parameter, int n);
     void SetUniform(const string& parameter, float p1);
@@ -49,13 +51,12 @@ public:
     void SetUniform(const string& uniform, glm::mat4 m);
     GLint GetAttributeLocation(const string& attribute);
     void SetAttributeName(attribute_kind attribute, const string& value);
-    // j testing
-    //GLuint vertexLoc;
-    //GLint mvpMatrixLoc;
+    
     string  vertex_coords_name;
     string  texture_coords_name;
     string  normals_name;
     string  colors_name;
+    
 private:
 	enum ShaderType {VERTEX_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER};
 	GLuint	_program;

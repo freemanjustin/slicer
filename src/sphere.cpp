@@ -23,12 +23,11 @@ Sphere::~Sphere(){
 
 void Sphere::init(int n, glm::vec3 centre, double r, GLSLShader *shader)
 {
+    enum    {vertex, normal, color, texture};
+    
     int i,j;
     float t1,t2,t3;
     float e[3],p[3], c[3];
-    
-    //vector<GLfloat> buffer_data;
-    
     
     for (j=0;j<n/2;j++) {
         t1 = (j*M_PI / (n/2)) - (M_PI/2);
@@ -101,7 +100,7 @@ void Sphere::init(int n, glm::vec3 centre, double r, GLSLShader *shader)
     if(shader->vertex_coords_name != ""){
         
         // bind buffer for vertices
-        glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+        glBindBuffer(GL_ARRAY_BUFFER, buffers[vertex]);
         // and copy data into buffer
         glBufferData(GL_ARRAY_BUFFER, vertex_coords.size()*sizeof(GLfloat), &vertex_coords[0], GL_STATIC_DRAW);
         // get the attribute location
@@ -116,7 +115,7 @@ void Sphere::init(int n, glm::vec3 centre, double r, GLSLShader *shader)
     if(shader->normals_name != ""){
         
         // bind buffer for vertices
-        glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
+        glBindBuffer(GL_ARRAY_BUFFER, buffers[normal]);
         // and copy data into buffer
         glBufferData(GL_ARRAY_BUFFER, normal_coords.size()*sizeof(GLfloat), &normal_coords[0], GL_STATIC_DRAW);
         // get attribute location in shader
@@ -130,7 +129,7 @@ void Sphere::init(int n, glm::vec3 centre, double r, GLSLShader *shader)
     if(shader->colors_name != ""){
         
         // bind buffer for color
-        glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
+        glBindBuffer(GL_ARRAY_BUFFER, buffers[color]);
         // and copy data into buffer
         glBufferData(GL_ARRAY_BUFFER, color_coords.size()*sizeof(GLfloat), &color_coords[0], GL_STATIC_DRAW);
         // get attribute location in shader
@@ -145,7 +144,7 @@ void Sphere::init(int n, glm::vec3 centre, double r, GLSLShader *shader)
     if(shader->texture_coords_name != ""){
         
         // bind buffer for vertices
-        glBindBuffer(GL_ARRAY_BUFFER, buffers[3]);
+        glBindBuffer(GL_ARRAY_BUFFER, buffers[texture]);
         // and copy data into buffer
         glBufferData(GL_ARRAY_BUFFER, texture_coords.size()*sizeof(GLfloat), &texture_coords[0], GL_STATIC_DRAW);
         // get attribute location in shader
@@ -157,9 +156,6 @@ void Sphere::init(int n, glm::vec3 centre, double r, GLSLShader *shader)
     
     // unbind the VAO
     glBindVertexArray(0);
-    
-    
-    
     
 }
 

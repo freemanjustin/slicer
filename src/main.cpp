@@ -426,12 +426,12 @@ int main(int argc, char **argv) {
     groundFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/GroundFromSpaceVert.glsl");
     groundFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/GroundFromSpaceFrag.glsl");
     groundFromSpace.CreateAndLinkProgram();
-    groundFromSpace.SetAttributeName(vertex_coords,"v3Position");
+    groundFromSpace.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
     
     skyFromSpace.LoadFromFile(GL_VERTEX_SHADER,"shaders/SkyFromSpaceVert.glsl");
     skyFromSpace.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/SkyFromSpaceFrag.glsl");
     skyFromSpace.CreateAndLinkProgram();
-    skyFromSpace.SetAttributeName(vertex_coords,"v3Position");
+    skyFromSpace.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
     
     
     // shader variables
@@ -487,8 +487,8 @@ int main(int argc, char **argv) {
     texMap.LoadFromFile(GL_VERTEX_SHADER,"shaders/texBlend_contrast.vert");
     texMap.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/texBlend_contrast.frag");
     texMap.CreateAndLinkProgram();
-    texMap.SetAttributeName(vertex_coords,"v3Position");
-    texMap.SetAttributeName(texture_coords,"v2TexCoord");
+    texMap.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
+    texMap.SetAttributeName(GLSLShader::texture_coords,"v2TexCoord");
 
     
     texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius, &texMap);

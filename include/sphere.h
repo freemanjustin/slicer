@@ -19,14 +19,9 @@
 
 class Sphere {
     
-    //int     num_vertices;
     int     resolution;
     double  radius;
     
-    //int     vertexVboId;   // identifier for the Vertex Buffer Object to hold the vertex coords
-    //int     normalVboId;   // identifier for the Vertex Buffer Object to hold the normla vectors
-    //int     colorVboId;   // identifier for the Vertex Buffer Object to hold the normla vectors
-    //int     textureVboId;
     std::vector<GLfloat> vertex_coords;
     std::vector<GLfloat> texture_coords;
     std::vector<GLfloat> normal_coords;
@@ -39,12 +34,13 @@ public:
     ~Sphere();
     void init(int, glm::vec3, double, GLSLShader*);
     void draw();
-    //GLint getVertexVBOid();
-    GLuint  vao[1];
+
     GLint  vertex_position_attrib_location;
     GLint  texture_coords_attrib_location;
     GLint  normals_attrib_location;
     GLint  colors_attrib_location;
+    
+    GLuint  vao[1];
     
 };
 
