@@ -9,6 +9,7 @@
 OBJ=	./src/main.o \
 	./src/camera.o \
 	./src/sphere.o \
+	./src/texture.o \
 	./src/GLSLShader.o \
 	./src/save_image.o \
 	./external/SOIL/src/SOIL.o \
