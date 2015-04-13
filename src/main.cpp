@@ -89,19 +89,46 @@ void CallBackMotionFunc(int x, int y) {
 
 void DisplayFunc() {
     
-    
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, E->window.size.x, E->window.size.y);
 
 	glm::mat4 model, view, projection;
-	E->camera.Update();
-    
-	E->camera.GetMatricies(projection, view, model);
+	
 
     //model = glm::rotate(model, XrotationAngle, glm::vec3(1,0,0));//rotating x axis
     //model = glm::rotate(model, YrotationAngle, glm::vec3(0,1,0));//rotating y axis
     //model = glm::rotate(model, ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
+    
+    /*
+    float radius = glm::distance(E->camera.camera_position, glm::vec3(0.0f,0.0f,0.0f));
+    
+    if(radius <= E->as.m_fInnerRadius+.005f){
+        cout << "distance to centre = " << radius << endl;
+        cout<<"pre inside : " << radius << endl;
+        cout<<"  x: " <<E->camera.camera_position.x << endl;
+        cout<<"  y: " <<E->camera.camera_position.y << endl;
+        cout<<"  z: " <<E->camera.camera_position.z << endl;
+        float   theta, phi;
+        theta = acos(E->camera.camera_position.z/radius);
+        phi = atan2(E->camera.camera_position.y,E->camera.camera_position.x);
+
+        radius = E->as.m_fInnerRadius+.005f;
+        E->camera.camera_position.x = radius*sin(theta)*cos(phi);
+        E->camera.camera_position.y = radius*sin(theta)*sin(phi);
+        E->camera.camera_position.z = radius*cos(theta);
+        
+        cout<<"post outside : " << radius << endl;
+        cout<<"  x: " <<E->camera.camera_position.x << endl;
+        cout<<"  y: " <<E->camera.camera_position.y << endl;
+        cout<<"  z: " <<E->camera.camera_position.z << endl;
+        
+    }
+    */
+    
+    E->camera.Update();
+    
+    E->camera.GetMatricies(projection, view, model);
     
 	glm::mat4 mvp = projection * view * model;	//Compute the mvp matrix
 	

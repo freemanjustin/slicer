@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2004 Sean O'Neil
 //
-
+// updated by freeman.justin@gmail.com
 
 //uniform sampler2D s2Tex1;
 //uniform sampler2D s2Tex2;

@@ -1,3 +1,4 @@
+#version 150
 //
 // Atmospheric scattering vertex shader
 //
@@ -5,8 +6,18 @@
 //
 // Copyright (c) 2004 Sean O'Neil
 //
+// updated by freeman.justin@gmail.com (2015)
 
-uniform vec3 v3CameraPos;		// The camera's current position
+in vec3 v3Position;
+//in vec2 v2TexCoords;
+
+out vec3 v3Color;
+out vec3 v3SecondaryColor;
+out vec3 v3Direction;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;uniform vec3 v3CameraPos;		// The camera's current position
 uniform vec3 v3LightPos;		// The direction vector to the light source
 uniform vec3 v3InvWavelength;	// 1 / pow(wavelength, 4) for the red, green, and blue channels
 uniform float fCameraHeight;	// The camera's current height
@@ -26,8 +37,6 @@ uniform float fScaleOverScaleDepth;	// fScale / fScaleDepth
 uniform int nSamples;
 uniform float fSamples;
 
-varying vec3 v3Direction;
-
 
 float scale(float fCos)
 {
@@ -38,7 +47,8 @@ float scale(float fCos)
 void main(void)
 {
 	// Get the ray from the camera to the vertex, and its length (which is the far point of the ray passing through the atmosphere)
-	vec3 v3Pos = gl_Vertex.xyz;
+	//vec3 v3Pos = gl_Vertex.xyz;
+    vec3 v3Pos = v3Position.xyz;
 	vec3 v3Ray = v3Pos - v3CameraPos;
 	float fFar = length(v3Ray);
 	v3Ray /= fFar;
@@ -72,8 +82,11 @@ void main(void)
 	}
 
 	// Finally, scale the Mie and Rayleigh colors and set up the varying variables for the pixel shader
-	gl_FrontSecondaryColor.rgb = v3FrontColor * fKmESun;
-	gl_FrontColor.rgb = v3FrontColor * (v3InvWavelength * fKrESun);
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+	//gl_FrontSecondaryColor.rgb = v3FrontColor * fKmESun;
+    v3SecondaryColor.rgb = v3FrontColor * fKmESun;
+	//gl_FrontColor.rgb = v3FrontColor * (v3InvWavelength * fKrESun);
+    v3Color.rgb = v3FrontColor * (v3InvWavelength * fKrESun);
+	//gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    gl_Position = projection * view * model * vec4( v3Position, 1.0 );
 	v3Direction = v3CameraPos - v3Pos;
 }

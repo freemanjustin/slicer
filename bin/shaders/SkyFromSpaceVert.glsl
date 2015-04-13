@@ -14,6 +14,8 @@ in vec3 v3Position;
 out vec3 v3Color;
 out vec3 v3SecondaryColor;
 
+out vec3 v3Direction;
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -38,7 +40,7 @@ uniform float fScaleOverScaleDepth;	// fScale / fScaleDepth
 uniform int nSamples;
 uniform float fSamples;
 
-out vec3 v3Direction;
+
 
 
 float scale(float fCos)

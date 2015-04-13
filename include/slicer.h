@@ -88,8 +88,12 @@ class slicer{
         // shader variables
         GLSLShader groundFromSpace;
         GLSLShader skyFromSpace;
-        GLSLShader texMap;
     
+        GLSLShader groundFromAtmosphere;
+        GLSLShader skyFromAtmosphere;
+    
+        GLSLShader texMap;
+        
         atmospheric_scatter as;
     
         // rotation variables
@@ -127,9 +131,19 @@ void slicer::init(){
     skyFromSpace.CreateAndLinkProgram();
     skyFromSpace.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
     
+    groundFromAtmosphere.LoadFromFile(GL_VERTEX_SHADER,"shaders/GroundFromAtmosphereVert.glsl");
+    groundFromAtmosphere.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/GroundFromAtmosphereFrag.glsl");
+    groundFromAtmosphere.CreateAndLinkProgram();
+    groundFromAtmosphere.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
+    
+    skyFromAtmosphere.LoadFromFile(GL_VERTEX_SHADER,"shaders/SkyFromAtmosphereVert.glsl");
+    skyFromAtmosphere.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/SkyFromAtmosphereFrag.glsl");
+    skyFromAtmosphere.CreateAndLinkProgram();
+    skyFromAtmosphere.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
+    
     
     // shader variables
-    as.m_nSamples = 16;		// Number of sample rays to use in integral equation
+    as.m_nSamples = 32;		// Number of sample rays to use in integral equation
     as.m_Kr = 0.0035f;		// Rayleigh scattering constant
     as.m_Kr4PI = as.m_Kr*4.0f*M_PI;
     as.m_Km = 0.0015f;		// Mie scattering constant

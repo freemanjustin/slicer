@@ -6,6 +6,7 @@
 //
 // Copyright (c) 2004 Sean O'Neil
 //
+// updated by freeman.justin@gmail.com
 
 uniform vec3 v3LightPos;
 uniform float g;
