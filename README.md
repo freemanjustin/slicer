@@ -5,12 +5,18 @@ OpenGL data presentation project for animating Earth system modelling and observ
 slicer depends on the following libraries
 - [GLEW](http://glew.sourceforge.net/) 
 - a GLUT implementation
+- OpenGL
 
 On linux I have tested this with [freeglut](http://freeglut.sourceforge.net/). On OSX I am using the Apple provided GLUT (`-framework GLUT`).
 
-Two Makefiles are provided, one for OSX and another for Linux. You will (probably) need to edit the Makefile to point the location of `include` and `lib` directories on your system. 
-
-To build slicer type `make -f Makefile.[platform]` at the top level directory where `[platform]` is either `OSX` or `Linux`. The app will be created in the `bin` directory.
+To compile,
+```
+mkdir bld
+cd bld
+cmake ..
+make
+```
+Done. The binary will be in `bld/slicer`. 
 
 ## Usage
 
@@ -26,6 +32,9 @@ slicer is a work in progress and things are changing rapidly. slicer will load a
 | e     | move camera up    |
 | j     | rotate sphere left    |
 | l     | rotate sphere right    |
+| x,X   | rotate sphere along x axis |
+| y,Y   | rotate sphere along y axis |
+| z,Z   | rotate sphere along z axis |
 | r     | reset the view    |
 | v     | save current scene as png    |
 | esc     | quit    |
