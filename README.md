@@ -9,7 +9,7 @@ slicer depends on the following libraries
 
 On linux I have tested this with [freeglut](http://freeglut.sourceforge.net/). On OSX I am using the Apple provided GLUT (`-framework GLUT`).
 
-To compile,
+To compile using [cmake](http://www.cmake.org/)
 ```
 mkdir bld
 cd bld
