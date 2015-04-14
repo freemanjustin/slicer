@@ -97,9 +97,9 @@ class slicer{
         atmospheric_scatter as;
     
         // rotation variables
-        //GLfloat XrotationAngle;
-        //GLfloat YrotationAngle;
-        //GLfloat ZrotationAngle;
+        GLfloat XrotationAngle;
+        GLfloat YrotationAngle;
+        GLfloat ZrotationAngle;
     
         // texture map
         texture  continents;
@@ -110,6 +110,10 @@ class slicer{
 };
 
 void slicer::init(){
+    
+    XrotationAngle = 0.0f;
+    YrotationAngle = 0.0f;
+    ZrotationAngle = 0.0f;
     
     //Setup camera
     //camera.SetMode(SPHERICAL);
@@ -197,7 +201,7 @@ void slicer::init(){
     texMap.SetAttributeName(GLSLShader::texture_coords,"v2TexCoord");
     
     
-    texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), as.m_fInnerRadius, &texMap);
+    texSphere.init(300, glm::vec3(0.0f, 0.0f, 0.0f), as.m_fInnerRadius+0.005, &texMap);
     
     //loadTextureMap(E);
     // load two sample texture maps

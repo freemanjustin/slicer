@@ -32,16 +32,26 @@ void KeyboardFunc(unsigned char c, int x, int y) {
             E->camera.camera_position = glm::rotate(E->camera.camera_position, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             E->camera.camera_look_at = glm::rotate(E->camera.camera_look_at, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             break;
-        /*
-        case 'k':
-            camera.camera_position = glm::rotate(camera.camera_position, -0.1f, glm::vec3(0.0f,0.0f,1.0f)); //rotating z axis
-            camera.camera_look_at = glm::rotate(camera.camera_look_at, -0.1f, glm::vec3(0.0f,0.0f,1.0f)); //rotating z axis
+        
+        case 'z':
+            E->ZrotationAngle -= 0.05f;
             break;
-        case 'i':
-            camera.camera_position = glm::rotate(camera.camera_position, 0.1f, glm::vec3(0.0f,0.0f,1.0f)); //rotating z axis
-            camera.camera_look_at = glm::rotate(camera.camera_look_at, 0.1f, glm::vec3(0.0f,0.0f,1.0f)); //rotating z axis
+        case 'Z':
+            E->ZrotationAngle += 0.05f;
             break;
-         */
+        case 'y':
+            E->YrotationAngle -= 0.05f;
+            break;
+        case 'Y':
+            E->YrotationAngle += 0.05f;
+            break;
+        case 'x':
+            E->XrotationAngle -= 0.05f;
+            break;
+        case 'X':
+            E->XrotationAngle += 0.05f;
+            break;
+         
         case 'w':
             E->camera.Move(FORWARD);
             break;
@@ -63,8 +73,11 @@ void KeyboardFunc(unsigned char c, int x, int y) {
             E->camera.Move(UP);
             break;
         case 'r':
-            E->camera.SetPosition(glm::vec3(0, 0, 2));
+            E->camera.SetPosition(glm::vec3(2, 0, 0));
             E->camera.SetLookAt(glm::vec3(0, 0, 0));
+            E->XrotationAngle = 0.0;
+            E->YrotationAngle = 0.0;
+            E->ZrotationAngle = 0.0;
             break;
         case 27:
             exit(0);
@@ -232,6 +245,18 @@ void DisplayFunc() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, E->field.texture_id);
     //glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[1]);
+    
+    // perform scene roations
+    model = glm::rotate(model, E->XrotationAngle, glm::vec3(1,0,0));//rotating x axis
+    model = glm::rotate(model, E->YrotationAngle, glm::vec3(0,1,0));//rotating y axis
+    model = glm::rotate(model, E->ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
+    
+    //E->camera.GetMatricies(projection, view, model);
+    
+    //mvp = projection * view * model;	//Compute the mvp matrix
+    
+    //glLoadMatrixf(glm::value_ptr(mvp));
+    
     E->texMap.enable();
     
         E->texMap.SetUniform("Texture0", 0); //set to 0 because the texture is bound to GL_TEXTURE0
