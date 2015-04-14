@@ -1,5 +1,6 @@
 #include "texture.h"
 
+#include <stdlib.h>
 
 void texture::load_texture(string filename){
     
