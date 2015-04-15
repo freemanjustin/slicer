@@ -27,7 +27,7 @@ class Sphere {
     std::vector<GLfloat> normal_coords;
     std::vector<GLfloat> color_coords;
     
-    GLSLShader  *shader;
+    //GLSLShader  *shader;
 
 public:
     Sphere();

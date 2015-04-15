@@ -13,19 +13,23 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "GLSLShader.h"
+
+#ifndef NETCDFIO_H
 #include "netcdfIO.h"
+#endif
 
 class mesh{
     
-    int     resolution;
-    double  radius;
+    //int     resolution;
+    //double  radius;
     
     std::vector<GLfloat> vertex_coords;
     std::vector<GLfloat> texture_coords;
     std::vector<GLfloat> normal_coords;
     std::vector<GLfloat> color_coords;
+    std::vector<GLuint>  indices;
     
-    GLSLShader  *shader;
+    //GLSLShader  *shader;
 
     public:
         void init(ncio, GLSLShader*);

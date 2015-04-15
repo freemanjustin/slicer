@@ -8,7 +8,6 @@ Sphere::Sphere(){
     radius = 0.0;
     vertex_position_attrib_location = -1;
     texture_coords_attrib_location = -1;
-    shader = NULL;
 }
 
 Sphere::~Sphere(){

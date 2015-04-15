@@ -157,7 +157,7 @@ void DisplayFunc() {
     
     glEnable(GL_MULTISAMPLE);
     
-    
+    /*
     float camera_magnitude = glm::length(E->camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
@@ -226,6 +226,7 @@ void DisplayFunc() {
         glFrontFace(GL_CCW);
     
     E->skyFromSpace.disable();
+    */
     
     /*
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -233,30 +234,23 @@ void DisplayFunc() {
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     */
     
+    
+     /*
     // texture map sphere
     // bind the texture and set the "tex" uniform in the fragment shader
     
-    //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glEnable(GL_TEXTURE_2D);
-    //glEnable( GL_TEXTURE_RECTANGLE_ARB );// enables texture rectangle
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, E->continents.texture_id);
-    //glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[0]);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, E->field.texture_id);
-    //glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[1]);
     
     // perform scene roations
     model = glm::rotate(model, E->XrotationAngle, glm::vec3(1,0,0));//rotating x axis
     model = glm::rotate(model, E->YrotationAngle, glm::vec3(0,1,0));//rotating y axis
     model = glm::rotate(model, E->ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
     
-    //E->camera.GetMatricies(projection, view, model);
-    
-    //mvp = projection * view * model;	//Compute the mvp matrix
-    
-    //glLoadMatrixf(glm::value_ptr(mvp));
-    
+   
     E->texMap.enable();
     
         E->texMap.SetUniform("Texture0", 0); //set to 0 because the texture is bound to GL_TEXTURE0
@@ -276,6 +270,20 @@ void DisplayFunc() {
     glDisable(GL_BLEND);
     glDisable( GL_TEXTURE_2D );
     //glDisable( GL_TEXTURE_RECTANGLE_ARB );
+    */
+    
+    
+    
+    E->passThrough.enable();
+        E->passThrough.SetUniform("model", model );
+        E->passThrough.SetUniform("view", view );
+        E->passThrough.SetUniform("projection", projection );
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+            E->bathy_mesh.draw();
+            //E->test_sphere.draw();
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    E->passThrough.disable();
+    
     
     
     glutSwapBuffers();
@@ -299,7 +307,7 @@ int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(1024, 512);
     glutInitWindowPosition(0, 0);
-#ifdef _OS_X_
+#ifdef __APPLE__
     glutInitDisplayMode( GLUT_3_2_CORE_PROFILE | GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
 #else
     glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
