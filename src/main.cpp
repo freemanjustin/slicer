@@ -336,6 +336,7 @@ int main(int argc, char **argv) {
     
     
     // init the app
+    
     E->init();
     
     //Start the glut loop!

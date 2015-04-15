@@ -7,11 +7,14 @@
 ##################################################################
 
 OBJ=	./src/main.o \
+	./src/slicer.o \
 	./src/camera.o \
 	./src/sphere.o \
 	./src/texture.o \
 	./src/GLSLShader.o \
 	./src/save_image.o \
+	./src/netcdfIO.o \
+	./src/mesh.o \
 	./external/SOIL/src/SOIL.o \
 	./external/SOIL/src/image_DXT.o \
 	./external/SOIL/src/image_helper.o \
@@ -21,6 +24,7 @@ OBJ=	./src/main.o \
 
 # Include flags
 INC=   -D_OS_X_ \
+	-DNCIO \
 	-I./include \
 	-I./external/glm-0.9.6.3/glm \
 	-I./external/SOIL/src \
@@ -28,6 +32,7 @@ INC=   -D_OS_X_ \
 
 # Libraries
 LFLAGS= -lGLEW \
+	-lnetcdf \
 	-framework OpenGL \
 	-framework GLUT 
 
