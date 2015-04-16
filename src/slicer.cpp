@@ -112,7 +112,7 @@ void slicer::init(){
     //bathy.fname = "bathymetry/aust5.nc";
     //bathy.fname = "bathymetry/aust10.nc";
     bathy.fname = "bathymetry/strip.nc";
-    //bathy.fname = "bathymetry/sub5.nc";
+    //bathy.fname = "bathymetry/sub5a.nc";
     bathy.lat_name = "lat";
     bathy.lon_name = "lon";
     bathy.field_name = "z";
