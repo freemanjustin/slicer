@@ -289,7 +289,10 @@ void DisplayFunc() {
         E->passThrough.SetUniform("view", view );
         E->passThrough.SetUniform("projection", projection );
         //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
             E->bathy_mesh.draw();
+        glDisable(GL_BLEND);
             //E->test_sphere.draw();
         //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     E->passThrough.disable();

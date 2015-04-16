@@ -101,7 +101,6 @@ void slicer::init(){
     
     texSphere.init(300, glm::vec3(0.0f, 0.0f, 0.0f), as.m_fInnerRadius+0.005, &texMap);
     
-    //loadTextureMap(E);
     // load two sample texture maps
     continents.load_texture("bluemarble/cont8.png");
     field.load_texture("texture/test.jpg");
@@ -111,28 +110,15 @@ void slicer::init(){
     //bathy.fname = "bathymetry/etopo1min_nc4.nc";
     //bathy.fname = "bathymetry/aust20a.nc";
     //bathy.fname = "bathymetry/aust5.nc";
+    //bathy.fname = "bathymetry/aust10.nc";
     bathy.fname = "bathymetry/strip.nc";
+    //bathy.fname = "bathymetry/sub5.nc";
     bathy.lat_name = "lat";
     bathy.lon_name = "lon";
     bathy.field_name = "z";
     
     bathy.get_data();
     
-    /*
-    std::cout << "max_size: " << bathy.field.max_size() << "\n";
-    
-    cout << "done read bathy" << endl;
-    cout << "nlats = " << bathy.lat.size() << endl;
-    cout << "nlons = " << bathy.lon.size() << endl;
-    
-    for(int i =0;i<10;i++){
-        cout << "lat[" << i <<" ] = " << bathy.lat[i];
-        for(int j=0;j<10;j++){
-            cout << " lon[" << j <<" ] = " << bathy.lon[j];
-            cout << " z = " << bathy.field[bathy.lon.size() * i + j] << endl;
-        }
-    }
-    */
 #endif
     
     passThrough.LoadFromFile(GL_VERTEX_SHADER,"shaders/pass_through.vert");
@@ -141,6 +127,5 @@ void slicer::init(){
     passThrough.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
     passThrough.SetAttributeName(GLSLShader::colors,"v3Color");
     
-    //test_sphere.init(64, glm::vec3(0.0f, 0.0f, 0.0f), 1.2, &passThrough);
     bathy_mesh.init(bathy,&passThrough);
 }
