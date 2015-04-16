@@ -22,12 +22,16 @@ class mesh{
     
     //int     resolution;
     //double  radius;
+    int     width;
+    int     height;
     
     std::vector<GLfloat> vertex_coords;
     std::vector<GLfloat> texture_coords;
     std::vector<GLfloat> normal_coords;
     std::vector<GLfloat> color_coords;
     std::vector<GLuint>  indices;
+    
+    GLuint  buffers[5];
     
     //GLSLShader  *shader;
 

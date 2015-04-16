@@ -27,10 +27,16 @@ void KeyboardFunc(unsigned char c, int x, int y) {
         case 'j':
             E->camera.camera_position = glm::rotate(E->camera.camera_position, 0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             E->camera.camera_look_at = glm::rotate(E->camera.camera_look_at, 0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
+            //cout << E->camera.camera_position.x << endl;
+            //cout << E->camera.camera_position.y<< endl;
+            //cout << E->camera.camera_position.z<< endl;
             break;
         case 'l':
             E->camera.camera_position = glm::rotate(E->camera.camera_position, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             E->camera.camera_look_at = glm::rotate(E->camera.camera_look_at, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
+            //cout << E->camera.camera_position.x << endl;
+            //cout << E->camera.camera_position.y<< endl;
+            //cout << E->camera.camera_position.z<< endl;
             break;
         
         case 'z':
@@ -157,7 +163,8 @@ void DisplayFunc() {
     
     glEnable(GL_MULTISAMPLE);
     
-    /*
+    
+    
     float camera_magnitude = glm::length(E->camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
@@ -226,7 +233,7 @@ void DisplayFunc() {
         glFrontFace(GL_CCW);
     
     E->skyFromSpace.disable();
-    */
+    
     
     /*
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -272,18 +279,20 @@ void DisplayFunc() {
     //glDisable( GL_TEXTURE_RECTANGLE_ARB );
     */
     
-    
+    // perform scene roations
+    //model = glm::rotate(model, E->XrotationAngle, glm::vec3(1,0,0));//rotating x axis
+    //model = glm::rotate(model, E->YrotationAngle, glm::vec3(0,1,0));//rotating y axis
+    //model = glm::rotate(model, E->ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
     
     E->passThrough.enable();
         E->passThrough.SetUniform("model", model );
         E->passThrough.SetUniform("view", view );
         E->passThrough.SetUniform("projection", projection );
-        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
             E->bathy_mesh.draw();
             //E->test_sphere.draw();
-        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     E->passThrough.disable();
-    
     
     
     glutSwapBuffers();

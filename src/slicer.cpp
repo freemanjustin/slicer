@@ -11,7 +11,10 @@ void slicer::init(){
     //Setup camera
     //camera.SetMode(SPHERICAL);
     camera.SetMode(FREE);
-    camera.SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+    //camera.SetPosition(glm::vec3(-2.0f, 0.0f, 2.0f));
+    
+    camera.SetPosition(glm::vec3(-1.1f, 0.0f, 1.6f));
+    
     camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
     camera.SetClipping(.001f, 100.0f);
     camera.SetFOV(45.0f);
@@ -106,7 +109,9 @@ void slicer::init(){
 #ifdef NCIO
     // load bathymetry
     //bathy.fname = "bathymetry/etopo1min_nc4.nc";
-    bathy.fname = "bathymetry/sub5.nc";
+    //bathy.fname = "bathymetry/aust20a.nc";
+    //bathy.fname = "bathymetry/aust5.nc";
+    bathy.fname = "bathymetry/strip.nc";
     bathy.lat_name = "lat";
     bathy.lon_name = "lon";
     bathy.field_name = "z";
@@ -134,7 +139,8 @@ void slicer::init(){
     passThrough.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/pass_through.frag");
     passThrough.CreateAndLinkProgram();
     passThrough.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
+    passThrough.SetAttributeName(GLSLShader::colors,"v3Color");
     
-    test_sphere.init(64, glm::vec3(0.0f, 0.0f, 0.0f), 1.2, &passThrough);
+    //test_sphere.init(64, glm::vec3(0.0f, 0.0f, 0.0f), 1.2, &passThrough);
     bathy_mesh.init(bathy,&passThrough);
 }

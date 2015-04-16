@@ -24,7 +24,6 @@ OBJ=	./src/main.o \
 
 # Include flags
 INC=   -D_OS_X_ \
-	-DNCIO \
 	-I./include \
 	-I./external/glm-0.9.6.3/glm \
 	-I./external/SOIL/src \
