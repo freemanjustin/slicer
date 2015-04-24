@@ -11,6 +11,8 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
+
 
 #include "GLSLShader.h"
 
@@ -25,10 +27,10 @@ class mesh{
     int     width;
     int     height;
     
-    std::vector<GLfloat> vertex_coords;
-    std::vector<GLfloat> texture_coords;
-    std::vector<GLfloat> normal_coords;
-    std::vector<GLfloat> color_coords;
+    std::vector<glm::vec4> vertex_coords;
+    std::vector<glm::vec2> texture_coords;
+    std::vector<glm::vec3> normal_coords;
+    std::vector<glm::vec3> color_coords;
     std::vector<GLuint>  indices;
     
     GLuint  buffers[5];

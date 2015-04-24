@@ -106,26 +106,31 @@ void slicer::init(){
     field.load_texture("texture/test.jpg");
     
 #ifdef NCIO
+    
     // load bathymetry
     //bathy.fname = "bathymetry/etopo1min_nc4.nc";
-    //bathy.fname = "bathymetry/aust20a.nc";
-    //bathy.fname = "bathymetry/aust5.nc";
+    //bathy.fname = "bathymetry/aust20a.nc"; // 2 lats 2 lons
     //bathy.fname = "bathymetry/aust10.nc";
-    bathy.fname = "bathymetry/strip.nc";
+    //bathy.fname = "bathymetry/strip.nc";
     //bathy.fname = "bathymetry/sub5a.nc";
+    //bathy.fname = "bathymetry/sub5.nc";
+    //bathy.fname = "bathymetry/aust5a.nc"; // 5 lats, 6 lons
+    bathy.fname = "bathymetry/aust5.nc"; //
     bathy.lat_name = "lat";
     bathy.lon_name = "lon";
     bathy.field_name = "z";
     
     bathy.get_data();
     
-#endif
+    
+   #endif
     
     passThrough.LoadFromFile(GL_VERTEX_SHADER,"shaders/pass_through.vert");
     passThrough.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/pass_through.frag");
     passThrough.CreateAndLinkProgram();
-    passThrough.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
+    passThrough.SetAttributeName(GLSLShader::vertex_coords,"v4Position");
     passThrough.SetAttributeName(GLSLShader::colors,"v3Color");
+    passThrough.SetAttributeName(GLSLShader::normals,"v3Normal");
     
     bathy_mesh.init(bathy,&passThrough);
 }

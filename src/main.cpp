@@ -1,5 +1,7 @@
 #include "slicer.h"
 
+#include <glm/gtc/matrix_inverse.hpp>
+
 slicer *E;
 
 //Invalidate the window handle when window is closed
@@ -108,12 +110,11 @@ void CallBackMotionFunc(int x, int y) {
 
 void DisplayFunc() {
     
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, E->window.size.x, E->window.size.y);
 
-	glm::mat4 model, view, projection;
-	
+    glm::mat4 model, view, projection;
 
     //model = glm::rotate(model, XrotationAngle, glm::vec3(1,0,0));//rotating x axis
     //model = glm::rotate(model, YrotationAngle, glm::vec3(0,1,0));//rotating y axis
@@ -150,6 +151,12 @@ void DisplayFunc() {
     E->camera.GetMatricies(projection, view, model);
     
 	glm::mat4 mvp = projection * view * model;	//Compute the mvp matrix
+    
+    
+    //glm::mat3 m_3x3_inv_transp = glm::transpose(glm::inverse(glm::mat3(model)));
+    glm::mat3 m_3x3_inv_transp = glm::inverseTranspose(glm::mat3(model));
+    
+    glm::mat3 v_inv = glm::inverse(glm::mat3(view));
 	
     glLoadMatrixf(glm::value_ptr(mvp));
 	
@@ -168,6 +175,7 @@ void DisplayFunc() {
     float camera_magnitude = glm::length(E->camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
+    /*
     E->groundFromSpace.enable();
         E->groundFromSpace.SetUniform("model", model );
         E->groundFromSpace.SetUniform("view", view );
@@ -233,7 +241,7 @@ void DisplayFunc() {
         glFrontFace(GL_CCW);
     
     E->skyFromSpace.disable();
-    
+    */
     
     /*
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -288,6 +296,8 @@ void DisplayFunc() {
         E->passThrough.SetUniform("model", model );
         E->passThrough.SetUniform("view", view );
         E->passThrough.SetUniform("projection", projection );
+        E->passThrough.SetUniform("m_3x3_inv_transp", m_3x3_inv_transp );
+        E->passThrough.SetUniform("v_inv", v_inv);
         //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);

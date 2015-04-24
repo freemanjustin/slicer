@@ -48,6 +48,7 @@ public:
     void SetUniform(const string& parameter, int n);
     void SetUniform(const string& parameter, float p1);
     void SetUniform(const string& parameter, glm::vec3 p);
+    void SetUniform(const string& uniform, glm::mat3 m);
     void SetUniform(const string& uniform, glm::mat4 m);
     GLint GetAttributeLocation(const string& attribute);
     void SetAttributeName(attribute_kind attribute, const string& value);
