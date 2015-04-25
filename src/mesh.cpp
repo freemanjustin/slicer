@@ -188,16 +188,16 @@ void mesh::init(ncio data, GLSLShader *shader){
     
     
     
-    std::vector<GLuint>  seen;
+    std::vector<GLint>  seen;
     normal_coords.resize(vertex_coords.size(), glm::vec3(0.0, 0.0, 0.0));
     seen.resize(vertex_coords.size(), 0);
     for (i = 0; i < triangles.size(); i+=2) {
         
         // node a
         // step over the vertices of this triangle. calulating the normal per vertex
-        GLushort ia = triangles[i].x;
-        GLushort ib = triangles[i].y;
-        GLushort ic = triangles[i].z;
+        GLint ia = triangles[i].x;
+        GLint ib = triangles[i].y;
+        GLint ic = triangles[i].z;
         
         //cout << "doing normals for triangle = " << i << " indices = " << ia << " " << ib << " " <<ic <<endl;
         // original
@@ -214,7 +214,7 @@ void mesh::init(ncio data, GLSLShader *shader){
         
         int v[3];  v[0] = ia;  v[1] = ib;  v[2] = ic;
         for (int j = 0; j < 3; j++) {
-            GLushort cur_v = v[j];
+            GLint cur_v = v[j];
             normal_coords[cur_v] += norm;
             seen[cur_v]++;
             
@@ -243,7 +243,7 @@ void mesh::init(ncio data, GLSLShader *shader){
         
         v[0] = ia;  v[1] = ib;  v[2] = ic;
         for (int j = 0; j < 3; j++) {
-            GLushort cur_v = v[j];
+            GLint cur_v = v[j];
             normal_coords[cur_v] += norm;
             seen[cur_v]++;
             
@@ -286,15 +286,17 @@ void mesh::init(ncio data, GLSLShader *shader){
     */
     
     
-    cout<<"nNormals = " << normal_coords.size() << endl;
-    
     /*
     cout<<"nNormals = " << normal_coords.size() << endl;
+    
+    
+    cout<<"nNormals = " << normal_coords.size() << endl;
     for(i=0;i<normal_coords.size();i++){
-        cout << " normals:"<<endl;;
-        cout<<"node "<< i << "normal is: " <<glm::to_string(normal_coords[i])<<endl;
+        //cout << " normals:"<<endl;;
+        cout<<"vertex "<< i << " normal is: " <<glm::to_string(normal_coords[i])<<endl;
     }
     */
+    
     
     /*
     int v[3];  v[0] = ia;  v[1] = ib;  v[2] = ic;
