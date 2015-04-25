@@ -110,7 +110,7 @@ void CallBackMotionFunc(int x, int y) {
 
 void DisplayFunc() {
     
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, E->window.size.x, E->window.size.y);
 
@@ -175,7 +175,7 @@ void DisplayFunc() {
     float camera_magnitude = glm::length(E->camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
-    /*
+    
     E->groundFromSpace.enable();
         E->groundFromSpace.SetUniform("model", model );
         E->groundFromSpace.SetUniform("view", view );
@@ -241,7 +241,7 @@ void DisplayFunc() {
         glFrontFace(GL_CCW);
     
     E->skyFromSpace.disable();
-    */
+    
     
     /*
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );

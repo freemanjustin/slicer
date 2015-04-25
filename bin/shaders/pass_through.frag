@@ -21,7 +21,7 @@ struct lightSource
     float spotCutoff, spotExponent;
     vec3 spotDirection;
 };
-const int numberOfLights = 1;
+const int numberOfLights = 2;
 lightSource lights[numberOfLights];
 lightSource light0 = lightSource(
                                  vec4(-1.1, 0.0f, 1.6, 1.0),
@@ -32,7 +32,7 @@ lightSource light0 = lightSource(
                                  vec3(0.0, 0.0, 0.0)
                                  );
 
-/*
+
 lightSource light1 = lightSource(
                                  vec4(0.0, -2.0,  0.0, 1.0),
                                  vec4(2.0,  0.0,  0.0, 1.0),
@@ -41,8 +41,8 @@ lightSource light1 = lightSource(
                                  80.0, 10.0,
                                  vec3(0.0, 1.0, 0.0)
                                  );
-*/
-vec4 scene_ambient = vec4(0.8, 0.8, 0.8, 1.0);
+
+vec4 scene_ambient = vec4(1.0, 1.0, 1.0, 1.0);
 
 struct material
 {
@@ -60,7 +60,7 @@ material frontMaterial = material(
 
 
 
-vec4 getJetColor(vec4 value) {
+vec3 getJetColor(vec3 value) {
     
     if( (value.r == 0.0) || (value.r == 1.0)){
         return value;
@@ -71,7 +71,7 @@ vec4 getJetColor(vec4 value) {
         float green = min(fourValue - 0.5, -fourValue + 3.5);
         float blue  = min(fourValue + 0.5, -fourValue + 2.5);
         
-        return clamp( vec4(red, green, blue,value.a), 0.0, 1.0 );
+        return clamp( vec3(red, green, blue), 0.0, 1.0 );
     }
 }
 
@@ -110,12 +110,12 @@ void main() {
     
     
     lights[0] = light0;
-    //lights[1] = light1;
+    lights[1] = light1;
     
     
-    vec4 value = vec4(firstColor,1.0f);
-    vec4 jet = getJetColor(value);
-    
+    //vec4 value = vec4(firstColor,1.0f);
+    vec3 jet = getJetColor(firstColor);
+    //vec3 jet = firstColor;
     
     vec3 normalDirection = normalize(varyingNormalDirection);
     vec3 viewDirection = normalize(vec3(v_inv * vec4(0.0, 0.0, 0.0, 1.0) - position));
@@ -170,7 +170,7 @@ void main() {
             * pow(max(0.0, dot(reflect(-lightDirection, normalDirection), viewDirection)), frontMaterial.shininess);
         }
         //original
-        totalLighting = totalLighting + diffuseReflection + specularReflection;
+        totalLighting = jet*totalLighting + diffuseReflection + specularReflection;
     }
     
     //finalColor = jet*vec4(totalLighting, 1.0);

@@ -1,8 +1,5 @@
 #include "mesh.h"
 
-
-
-
 void mesh::init(ncio data, GLSLShader *shader){
     
     enum    {vertex, normal, color, texture, index};
@@ -11,9 +8,7 @@ void mesh::init(ncio data, GLSLShader *shader){
     float   r = 1.0f;
     float   lat, lon;
     
-    
-    
-    // define the mesh here
+    // define the mesh
     // including vertex position, texture coords, normals and/or colors
     
     // map the geolocated coords into cartesian coords.
@@ -24,9 +19,8 @@ void mesh::init(ncio data, GLSLShader *shader){
     width = data.nlon;
     height = data.nlat;
     
-    cout << "width = " << width << " height = " << height << endl;
+    //cout << "width = " << width << " height = " << height << endl;
     
-    int point = 0;
     glm::vec4 vert;
     glm::vec2 text_coords;
     glm::vec3 colors;
@@ -34,43 +28,20 @@ void mesh::init(ncio data, GLSLShader *shader){
     for (j=height-1;j>=0;j--) {
         for (i=0;i<width;i++) { // longitude
     
-            
             // normalized data field value
-            float data_value = ( (data.field[ (width-i-1) + (width*j)]- min_value) / range);
+            float data_value =( (data.field[ i + (width*j)]- min_value) / range);
             
             // set up vertex array
             // convert spherical coords to cartesian
             lat = data.lat[j] * M_PI/180.0f;
             lon = data.lon[i] * M_PI/180.0f;
             
-            //cout << "point = " << point << endl;;
-            //cout << "  lon = " << lon << " lat = " << lat << endl;
-            //vertex_coords.push_back( (r+data_value*0.0) * -cos(lat) * sin(lon));   // x
-            //cout << "    vertex is " << vertex_coords.back();
-            //vertex_coords.push_back( (r+data_value*0.0) * sin(lat));    // y
-            //cout << " " << vertex_coords.back();
-            //vertex_coords.push_back( (r+data_value*0.0) * -cos(lat) * cos(lon));             // z
-            //cout << " " << vertex_coords.back() << endl;
-            
-            //cout << "point = " << point << endl;;
-            //cout << "  lon = " << lon << " lat = " << lat << endl;
-            vert.x = ( (r+data_value*0.0) * -cos(lat) * sin(lon));   // x
-            //cout << "    vertex is " << vertex_coords.back();
-            vert.y = ( (r+data_value*0.0) * sin(lat));    // y
-            //cout << " " << vertex_coords.back();
-            vert.z = ( (r+data_value*0.0) * -cos(lat) * cos(lon));             // z
-            //cout << " " << vertex_coords.back() << endl;
+            // map each point to a position in our scene
+            vert.x = ( (r+data_value*0.01f) * -cos(lat) * sin(lon));    // x
+            vert.y = ( (r+data_value*0.01f) * sin(lat));                // y
+            vert.z = ( (r+data_value*0.01f) * -cos(lat) * cos(lon));    // z
             vert.w = 1.0;
             vertex_coords.push_back(vert);
-            
-            //cout<<glm::to_string(vertex_coords[point])<<endl;
-            
-            point++;
-            
-            
-            // set up texture coords
-            //texture_coords.push_back(1.0 - (float)(i)/(float)(width));
-            //texture_coords.push_back(1.0 - (float)j/(float)(height));
             
             // set up texture coords
             text_coords.x = (1.0 - (float)(i)/(float)(width));
@@ -80,19 +51,9 @@ void mesh::init(ncio data, GLSLShader *shader){
             // set vertex colors
             // this is a greyscale range
             
-            //array[width * row + col]
-            //x = data.field[ i + (width*j)] / range;
-            //return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-            
-            /*
-            color_coords.push_back( ( (data.field[ i + (width*j)]- min_value) / range) );
-            color_coords.push_back( ( (data.field[ i + (width*j)]- min_value) / range) );
-            color_coords.push_back( ( (data.field[ i + (width*j)]- min_value) / range) );
-            */
             colors.x = ( ( (data.field[ i + (width*j)]- min_value) / range) );
             colors.y = ( ( (data.field[ i + (width*j)]- min_value) / range) );
             colors.z = ( ( (data.field[ i + (width*j)]- min_value) / range) );
-            
             color_coords.push_back(colors);
         }
     }
@@ -113,225 +74,81 @@ void mesh::init(ncio data, GLSLShader *shader){
         indices.pop_back();
     }
     
+    // triangle list - trianles[i] = index coords for this triangle
     std::vector<glm::vec3> triangles;
     int row=1;
     for(i=0;i<indices.size();i++){
-        
-        
         if(i==row*(width*2)-2){
             i+=2;
             row++;
         }
-        //cout << "i = " << i << " index list: " << indices[i] << endl;
         triangles.push_back(glm::vec3(indices[i],indices[i+1],indices[i+2]));
-        //cout<<"i = " << i << " triangle index = " <<glm::to_string(triangles[i])<<endl;
-        
     }
     triangles.pop_back(); // trash the last entry
-    //cout << endl;
     
-    /*
-    for(i=0;i<triangles.size();i++){
-        cout<<"i = " << i << " triangle index = " <<glm::to_string(triangles[i])<<endl;
-    }
-    cout << endl;
-    */
-    
-    cout << "nVertex = " << vertex_coords.size() << endl;
-    cout << "nIndices = " << indices.size() << endl;
-    cout << "ntriangles = " << triangles.size() << endl;
-    
+    //cout << "nVertex = " << vertex_coords.size() << endl;
+    //cout << "nIndices = " << indices.size() << endl;
+    //cout << "ntriangles = " << triangles.size() << endl;
     
     // calculate vertex normals
-    // initialize the normals array to be zero
-    
-    // size should be same as size of vertex coords
-    /*
-    std::vector<GLuint>  seen;
-    normal_coords.resize(vertex_coords.size(), glm::vec3(0.0, 0.0, 0.0));
+    normal_coords.resize(vertex_coords.size(), glm::vec3(0.0, 0.0, 0.0)); // initialize the normals to the zero vector
+    std::vector<GLint>  seen;   // count of how many triangles this vertex is a member of
     seen.resize(vertex_coords.size(), 0);
-    int row = 1;
-    for (i = 0; i < indices.size(); i++) {
-        
-        
-        if(i==row*(width*2)-2){
-            i+=2;
-            row++;
-        }
-        
-        GLushort ia = indices[i];
-        GLushort ib = indices[i+1];
-        GLushort ic = indices[i+2];
-        
-        cout << "i = " << i <<" indices = " << ia << " " << ib << " " <<ic <<endl;
-        // original
-        glm::vec3 normal = glm::normalize(glm::cross(
-                           glm::vec3(vertex_coords[ib]) - glm::vec3(vertex_coords[ia]),
-                           glm::vec3(vertex_coords[ic]) - glm::vec3(vertex_coords[ia])));
-        
-        int v[3];  v[0] = ia;  v[1] = ib;  v[2] = ic;
-        for (int j = 0; j < 3; j++) {
-            GLushort cur_v = v[j];
-            seen[cur_v]++;
-            if (seen[cur_v] == 1) {
-                normal_coords[cur_v] = normal;
-            } else {
-                // average
-                normal_coords[cur_v].x = normal_coords[cur_v].x * (1.0 - 1.0/seen[cur_v]) + normal.x * 1.0/seen[cur_v];
-                normal_coords[cur_v].y = normal_coords[cur_v].y * (1.0 - 1.0/seen[cur_v]) + normal.y * 1.0/seen[cur_v];
-                normal_coords[cur_v].z = normal_coords[cur_v].z * (1.0 - 1.0/seen[cur_v]) + normal.z * 1.0/seen[cur_v];
-                normal_coords[cur_v] = glm::normalize(normal_coords[cur_v]);
-            }
-        }
-    }
-    */
     
-    
-    
-    std::vector<GLint>  seen;
-    normal_coords.resize(vertex_coords.size(), glm::vec3(0.0, 0.0, 0.0));
-    seen.resize(vertex_coords.size(), 0);
     for (i = 0; i < triangles.size(); i+=2) {
-        
-        // node a
-        // step over the vertices of this triangle. calulating the normal per vertex
+        // down pointing triangle
+        // the vertices of this triangle
         GLint ia = triangles[i].x;
         GLint ib = triangles[i].y;
         GLint ic = triangles[i].z;
-        
-        //cout << "doing normals for triangle = " << i << " indices = " << ia << " " << ib << " " <<ic <<endl;
-        // original
-        //glm::vec3 norm = glm::normalize(glm::cross(
-        //                                             glm::vec3(vertex_coords[ib]) - glm::vec3(vertex_coords[ia]),
-        //                                             glm::vec3(vertex_coords[ic]) - glm::vec3(vertex_coords[ia])));
         
         glm::vec3 norm = glm::cross(glm::vec3(vertex_coords[ib]) - glm::vec3(vertex_coords[ia]),
                                     glm::vec3(vertex_coords[ic]) - glm::vec3(vertex_coords[ia]));
         
         //cout<<"norm is "<<glm::to_string(norm)<<endl;
         
-        
-        
-        int v[3];  v[0] = ia;  v[1] = ib;  v[2] = ic;
+        int v[3];
+        v[0] = ia;
+        v[1] = ib;
+        v[2] = ic;
         for (int j = 0; j < 3; j++) {
             GLint cur_v = v[j];
             normal_coords[cur_v] += norm;
             seen[cur_v]++;
-            
-            //cout<<"normal: we added this normal to vertex " << cur_v <<" norm= "<<glm::to_string(normal_coords[cur_v])<<endl;
         }
-        //cout << endl;
         
-        // node a
-        // step over the vertices of this triangle. calulating the normal per vertex
+        // up pointing triangle
+        // the vertices of this triangle:
         ia = triangles[i+1].x;
         ib = triangles[i+1].y;
         ic = triangles[i+1].z;
-        
-        //cout << "doing normals for triangle = " << i+1 << " indices = " << ia << " " << ib << " " <<ic <<endl;
-        // original
-        //glm::vec3 norm = glm::normalize(glm::cross(
-        //                                             glm::vec3(vertex_coords[ib]) - glm::vec3(vertex_coords[ia]),
-        //                                             glm::vec3(vertex_coords[ic]) - glm::vec3(vertex_coords[ia])));
         
         norm = glm::cross(glm::vec3(vertex_coords[ic]) - glm::vec3(vertex_coords[ia]),
                                     glm::vec3(vertex_coords[ib]) - glm::vec3(vertex_coords[ia]));
         
         //cout<<"norm is "<<glm::to_string(norm)<<endl;
         
-        
-        
-        v[0] = ia;  v[1] = ib;  v[2] = ic;
+        v[0] = ia;
+        v[1] = ib;
+        v[2] = ic;
         for (int j = 0; j < 3; j++) {
             GLint cur_v = v[j];
             normal_coords[cur_v] += norm;
             seen[cur_v]++;
-            
-            //cout<<"normal: we added this normal to vertex " << cur_v <<" norm= "<<glm::to_string(normal_coords[cur_v])<<endl;
         }
-        //cout << endl;
     }
-    
-    
-    
-     //for(i=0;i<seen.size();i++)
-     //cout << " node = " << i << " seen = " << seen[i] << endl;
-     
     
     // average the vertex normals
     for (i = 0; i < normal_coords.size(); i++) {
-        
-        // node a
-        // step over the vertices of this triangle. calulating the normal per vertex
-    
-           // cout << "index = " << i << " seen = " << seen[i] << endl;
-            if (seen[i] > 1) {
-                // average
-                //cout << " averaging "<<endl ;
-                normal_coords[i].x /= seen[i];
-                normal_coords[i].y /= seen[i];
-                normal_coords[i].z /= seen[i];
-                //cout<<"averged norm is " <<glm::to_string(normal_coords[indices[i]])<<endl;
-            }
-            normal_coords[i] = glm::normalize(normal_coords[i]);
-            //cout<<"we added this: "<<glm::to_string(normal_coords[cur_v])<<endl;
-        //cout << endl;
-    }
-    
-    /*
-    cout<< "post averaging" <<endl;
-    for(i=0;i<normal_coords.size();i++)
-        cout<<"normals: "<<glm::to_string(normal_coords[i])<<endl;
-    cout<<endl;
-    */
-    
-    
-    /*
-    cout<<"nNormals = " << normal_coords.size() << endl;
-    
-    
-    cout<<"nNormals = " << normal_coords.size() << endl;
-    for(i=0;i<normal_coords.size();i++){
-        //cout << " normals:"<<endl;;
-        cout<<"vertex "<< i << " normal is: " <<glm::to_string(normal_coords[i])<<endl;
-    }
-    */
-    
-    
-    /*
-    int v[3];  v[0] = ia;  v[1] = ib;  v[2] = ic;
-    for (int j = 0; j < 3; j++) {
-        GLushort cur_v = v[j];
-        seen[cur_v]++;
-        if (seen[cur_v] == 1) {
-            //cout << "not averaging" << endl;
-            normal_coords[cur_v] = norm;
-        } else {
+        if (seen[i] > 1) {
             // average
-            //cout << " averaging for index " << cur_v << endl;
-            //cout << "  seen at this vertex is " << seen[cur_v] << endl;
-            //normal_coords[cur_v].x = normal_coords[cur_v].x * (1.0 - 1.0/seen[cur_v]) + norm.x * 1.0/seen[cur_v];
-            //normal_coords[cur_v].y = normal_coords[cur_v].y * (1.0 - 1.0/seen[cur_v]) + norm.y * 1.0/seen[cur_v];
-            //normal_coords[cur_v].z = normal_coords[cur_v].z * (1.0 - 1.0/seen[cur_v]) + norm.z * 1.0/seen[cur_v];
-            normal_coords[cur_v].x = (normal_coords[cur_v].x + norm.x) * 0.5;
-            normal_coords[cur_v].y = (normal_coords[cur_v].x + norm.x) * 0.5;
-            normal_coords[cur_v].z = (normal_coords[cur_v].x + norm.x) * 0.5;
-            normal_coords[cur_v] = glm::normalize(normal_coords[cur_v]);
+            normal_coords[i].x /= seen[i];
+            normal_coords[i].y /= seen[i];
+            normal_coords[i].z /= seen[i];
         }
-        //cout<<"we added this: "<<glm::to_string(normal_coords[cur_v])<<endl;
+        normal_coords[i] = glm::normalize(normal_coords[i]);
     }
-    //cout << endl;
-    */
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
     // color map testing
     
@@ -375,6 +192,7 @@ void mesh::init(ncio data, GLSLShader *shader){
     }
     */
     
+    
     // create VBO
     //
     // each buffer corresponds to:
@@ -410,7 +228,7 @@ void mesh::init(ncio data, GLSLShader *shader){
         
         // now bind the index buffer
         // Index buffer
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[4]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[index]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
     }
     

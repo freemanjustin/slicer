@@ -111,7 +111,7 @@ void slicer::init(){
     //bathy.fname = "bathymetry/etopo1min_nc4.nc";
     //bathy.fname = "bathymetry/aust20a.nc"; // 2 lats 2 lons
     //bathy.fname = "bathymetry/aust10.nc";
-    //bathy.fname = "bathymetry/strip.nc";
+    //bathy.fname = "bathymetry/strip2.nc";
     //bathy.fname = "bathymetry/sub5a.nc";
     //bathy.fname = "bathymetry/sub5.nc";
     //bathy.fname = "bathymetry/aust5a.nc"; // 5 lats, 6 lons
