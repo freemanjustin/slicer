@@ -37,9 +37,9 @@ void mesh::init(ncio data, GLSLShader *shader){
             lon = data.lon[i] * M_PI/180.0f;
             
             // map each point to a position in our scene
-            vert.x = ( (r+data_value*0.01f) * -cos(lat) * sin(lon));    // x
-            vert.y = ( (r+data_value*0.01f) * sin(lat));                // y
-            vert.z = ( (r+data_value*0.01f) * -cos(lat) * cos(lon));    // z
+            vert.x = ( (r+data_value*0.011f) * -cos(lat) * sin(lon));    // x
+            vert.y = ( (r+data_value*0.011f) * sin(lat));                // y
+            vert.z = ( (r+data_value*0.011f) * -cos(lat) * cos(lon));    // z
             vert.w = 1.0;
             vertex_coords.push_back(vert);
             

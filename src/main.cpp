@@ -23,6 +23,9 @@ void ReshapeFunc(int w, int h) {
 void KeyboardFunc(unsigned char c, int x, int y) {
     
 	switch (c) {
+        case '\\':
+            E->drawThis = !E->drawThis;
+            break;
         case 'v':
             WindowDump_PNG();
             break;
@@ -288,9 +291,11 @@ void DisplayFunc() {
     */
     
     // perform scene roations
-    //model = glm::rotate(model, E->XrotationAngle, glm::vec3(1,0,0));//rotating x axis
-    //model = glm::rotate(model, E->YrotationAngle, glm::vec3(0,1,0));//rotating y axis
-    //model = glm::rotate(model, E->ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
+    model = glm::rotate(model, E->XrotationAngle, glm::vec3(1,0,0));//rotating x axis
+    model = glm::rotate(model, E->YrotationAngle, glm::vec3(0,1,0));//rotating y axis
+    model = glm::rotate(model, E->ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
+    
+    
     
     E->passThrough.enable();
         E->passThrough.SetUniform("model", model );
@@ -298,16 +303,26 @@ void DisplayFunc() {
         E->passThrough.SetUniform("projection", projection );
         E->passThrough.SetUniform("m_3x3_inv_transp", m_3x3_inv_transp );
         E->passThrough.SetUniform("v_inv", v_inv);
+        E->passThrough.SetUniform("v3LightPos",E->camera.camera_position);
+    
         //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
             E->bathy_mesh.draw();
         glDisable(GL_BLEND);
-            //E->test_sphere.draw();
         //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     E->passThrough.disable();
     
     
+    if(E->drawThis){
+        E->renderNormals.enable();
+        E->renderNormals.SetUniform("model", model );
+        E->renderNormals.SetUniform("view", view );
+        E->renderNormals.SetUniform("projection", projection );
+        E->bathy_mesh_normals.draw();
+        //E->test_sphere.draw();
+        E->renderNormals.disable();
+    }
     glutSwapBuffers();
 }
 

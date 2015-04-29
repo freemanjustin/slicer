@@ -82,6 +82,9 @@ class Window {
 class slicer{
 
     public:
+    
+        bool drawThis;
+    
         // window
         Window  window;
     
@@ -95,8 +98,10 @@ class slicer{
     
     
         Sphere test_sphere;
-        mesh   bathy_mesh;
+        Sphere test_sphere2;
     
+        mesh   bathy_mesh;
+        mesh    bathy_mesh_normals;
         // shader variables
         GLSLShader groundFromSpace;
         GLSLShader skyFromSpace;
@@ -107,6 +112,8 @@ class slicer{
         GLSLShader texMap;
     
         GLSLShader passThrough;
+    
+        GLSLShader renderNormals;
     
         atmospheric_scatter as;
     

@@ -4,6 +4,7 @@ in vec4 v4Position;
 in vec3 v3Color;
 in vec3 v3Normal;
 
+
 out vec3 firstColor;
 out vec3 varyingNormalDirection;
 out vec4 position;
@@ -13,7 +14,7 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat3 m_3x3_inv_transp;
-
+uniform vec3 v3LightPos;
 
 void main() {
     
@@ -22,7 +23,6 @@ void main() {
     
     firstColor = v3Color;
     
-    //mat4 mvp = projection*view*model;
     gl_Position = projection * view * model * v4Position;
     
 }

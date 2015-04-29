@@ -113,7 +113,7 @@ void slicer::init(){
     //bathy.fname = "bathymetry/aust10.nc";
     //bathy.fname = "bathymetry/strip2.nc";
     //bathy.fname = "bathymetry/sub5a.nc";
-    //bathy.fname = "bathymetry/sub5.nc";
+    //bathy.fname = "bathymetry/sub5.nc"; // too big for lappy
     //bathy.fname = "bathymetry/aust5a.nc"; // 5 lats, 6 lons
     bathy.fname = "bathymetry/aust5.nc"; //
     bathy.lat_name = "lat";
@@ -132,5 +132,19 @@ void slicer::init(){
     passThrough.SetAttributeName(GLSLShader::colors,"v3Color");
     passThrough.SetAttributeName(GLSLShader::normals,"v3Normal");
     
+    
+    // normal vector rendering
+    renderNormals.LoadFromFile(GL_VERTEX_SHADER,"shaders/normals.vert");
+    renderNormals.LoadFromFile(GL_GEOMETRY_SHADER,"shaders/normals.geom");
+    renderNormals.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/normals.frag");
+    renderNormals.CreateAndLinkProgram();
+    renderNormals.SetAttributeName(GLSLShader::vertex_coords,"position");
+    renderNormals.SetAttributeName(GLSLShader::normals,"normal");
+    
+    //test_sphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), as.m_fOuterRadius, &renderNormals);
     bathy_mesh.init(bathy,&passThrough);
+    bathy_mesh_normals.init(bathy,&renderNormals);
+    
+    // trash this later
+    drawThis = false;
 }

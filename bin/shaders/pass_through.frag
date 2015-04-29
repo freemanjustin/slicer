@@ -10,6 +10,7 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 v_inv;
+uniform vec3 v3LightPos;
 
 
 struct lightSource
@@ -21,19 +22,24 @@ struct lightSource
     float spotCutoff, spotExponent;
     vec3 spotDirection;
 };
-const int numberOfLights = 2;
+const int numberOfLights = 1;
+
 lightSource lights[numberOfLights];
-lightSource light0 = lightSource(
-                                 vec4(-1.1, 0.0f, 1.6, 1.0),
-                                 vec4(1.0,  1.0,  1.0, 1.0),
-                                 vec4(1.0,  1.0,  1.0, 1.0),
-                                 0.0, 1.0, 0.0,
-                                 180.0, 0.0,
-                                 vec3(0.0, 0.0, 0.0)
-                                 );
 
 
-lightSource light1 = lightSource(
+/*
+ lightSource light0 = lightSource(
+ vec4(-1.1, 0.0f, 1.6, 1.0),
+ vec4(1.0,  1.0,  1.0, 1.0),
+ vec4(1.0,  1.0,  1.0, 1.0),
+ 0.0, 1.0, 0.0,
+ 180.0, 0.0,
+ vec3(0.0, 0.0, 0.0)
+ );
+
+ 
+ 
+ lightSource light1 = lightSource(
                                  vec4(0.0, -2.0,  0.0, 1.0),
                                  vec4(2.0,  0.0,  0.0, 1.0),
                                  vec4(0.1,  0.1,  0.1, 1.0),
@@ -41,8 +47,8 @@ lightSource light1 = lightSource(
                                  80.0, 10.0,
                                  vec3(0.0, 1.0, 0.0)
                                  );
-
-vec4 scene_ambient = vec4(1.0, 1.0, 1.0, 1.0);
+*/
+vec4 scene_ambient = vec4(0.2, 0.2, 0.2, 1.0);
 
 struct material
 {
@@ -51,9 +57,10 @@ struct material
     vec4 specular;
     float shininess;
 };
+
 material frontMaterial = material(
                                   vec4(0.2, 0.2, 0.2, 1.0),
-                                  vec4(1.0, 0.8, 0.8, 1.0),
+                                  vec4(0.8, 0.8, 0.8, 1.0),
                                   vec4(1.0, 1.0, 1.0, 1.0),
                                   5.0
                                   );
@@ -75,7 +82,7 @@ vec3 getJetColor(vec3 value) {
     }
 }
 
-vec4 getJetColorII(vec4 value) {
+vec3 getJetColorII(vec3 value) {
     
     if( (value.r == 0.0) || (value.r == 1.0)){
         return value;
@@ -86,12 +93,12 @@ vec4 getJetColorII(vec4 value) {
         float green = min(fourValue - 1.5, -fourValue + 2.5);
         float blue  = min(fourValue + 1.5, -fourValue + 1.5);
         
-        return clamp( vec4(red, green, blue,value.a), 0.0, 1.0 );
+        return clamp( vec3(red, green, blue), 0.0, 1.0 );
     }
 }
 
 // parula
-vec4 getJetColorIII(vec4 value) {
+vec3 getJetColorIII(vec3 value) {
     
     //if( (value.r == 0.0) || (value.r == 1.0)){
     //    return value;
@@ -100,7 +107,7 @@ vec4 getJetColorIII(vec4 value) {
         float red = 106.5f*pow(value.r,6.0f) - 315.71*pow(value.r,4.0f)-169.81*pow(value.r,3.0f) + 40.86*pow(value.r,2.0) - 4.485*value.r+0.2055;
         float green = 3.4634*pow(value.g,4.0f) - 4.777*pow(value.g,3.0f) + 0.5384*pow(value.g,2.0f)+1.5892*value.g+0.1703;
         float blue = -5.7193*pow(value.b,4.0f)+14.724*pow(value.b,3.0f)-13.342*pow(value.b,2.0f)+3.8436*value.b+0.5413;
-        return clamp( vec4(red, green, blue,value.a), 0.0f, 1.0f );
+        return clamp( vec3(red, green, blue), 0.0f, 1.0f );
     //}
 }
 
@@ -108,9 +115,21 @@ vec4 getJetColorIII(vec4 value) {
 
 void main() {
     
+    lightSource light0 = lightSource(
+                                     //vec4(-1.1, 0.0f, 1.6, 1.0),
+                                     vec4(v3LightPos,1.0),
+                                     vec4(1.0,  1.0,  1.0, 1.0),
+                                     vec4(1.0,  1.0,  1.0, 1.0),
+                                     0.0, 1.0, 0.0,
+                                     180.0, 0.0,
+                                     vec3(0.0, 0.0, 0.0)
+                                     );
     
     lights[0] = light0;
-    lights[1] = light1;
+    //lights[1] = light1;
+    
+    // j addition
+    //lights[0].position = vec4(lightPos, 1.0);
     
     
     //vec4 value = vec4(firstColor,1.0f);
@@ -127,6 +146,7 @@ void main() {
     
     for (int index = 0; index < numberOfLights; index++) // for all light sources
     {
+        
         if (0.0 == lights[index].position.w) // directional light?
         {
             attenuation = 1.0; // no attenuation
@@ -170,11 +190,15 @@ void main() {
             * pow(max(0.0, dot(reflect(-lightDirection, normalDirection), viewDirection)), frontMaterial.shininess);
         }
         //original
-        totalLighting = jet*totalLighting + diffuseReflection + specularReflection;
+        //totalLighting = (totalLighting + diffuseReflection + specularReflection);
+        
+        totalLighting = (totalLighting + (jet * diffuseReflection) + specularReflection);
+        
+        //totalLighting = jet*specularReflection;
     }
     
-    //finalColor = jet*vec4(totalLighting, 1.0);
     finalColor = vec4(totalLighting,1.0);
-    //finalColor = jet;
+    //finalColor = vec4(jet,1.0);
+    
 }
 
