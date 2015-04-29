@@ -24,12 +24,12 @@ void GenerateLine(int index)
     
     
     gl_Position = gl_in[index].gl_Position;
-    //gdata.color = green;
-    gdata.color = black;
+    gdata.color = green;
+    //gdata.color = black;
     EmitVertex();
     gl_Position = gl_in[index].gl_Position + vec4(gs_in[index].normal, 0.0f) * MAGNITUDE;
-    //gdata.color = blue;
-    gdata.color = white;
+    gdata.color = blue;
+    //gdata.color = white;
     EmitVertex();
     EndPrimitive();
 }
