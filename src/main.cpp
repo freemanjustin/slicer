@@ -1,5 +1,7 @@
 #include "slicer.h"
 
+#include <glm/gtc/matrix_inverse.hpp>
+
 slicer *E;
 
 //Invalidate the window handle when window is closed
@@ -21,16 +23,25 @@ void ReshapeFunc(int w, int h) {
 void KeyboardFunc(unsigned char c, int x, int y) {
     
 	switch (c) {
+        case '\\':
+            E->drawThis = !E->drawThis;
+            break;
         case 'v':
             WindowDump_PNG();
             break;
         case 'j':
             E->camera.camera_position = glm::rotate(E->camera.camera_position, 0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             E->camera.camera_look_at = glm::rotate(E->camera.camera_look_at, 0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
+            //cout << E->camera.camera_position.x << endl;
+            //cout << E->camera.camera_position.y<< endl;
+            //cout << E->camera.camera_position.z<< endl;
             break;
         case 'l':
             E->camera.camera_position = glm::rotate(E->camera.camera_position, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
             E->camera.camera_look_at = glm::rotate(E->camera.camera_look_at, -0.1f, glm::vec3(0.0f,1.0f,0.0f)); //rotating y axis
+            //cout << E->camera.camera_position.x << endl;
+            //cout << E->camera.camera_position.y<< endl;
+            //cout << E->camera.camera_position.z<< endl;
             break;
         
         case 'z':
@@ -102,12 +113,11 @@ void CallBackMotionFunc(int x, int y) {
 
 void DisplayFunc() {
     
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, E->window.size.x, E->window.size.y);
 
-	glm::mat4 model, view, projection;
-	
+    glm::mat4 model, view, projection;
 
     //model = glm::rotate(model, XrotationAngle, glm::vec3(1,0,0));//rotating x axis
     //model = glm::rotate(model, YrotationAngle, glm::vec3(0,1,0));//rotating y axis
@@ -144,6 +154,12 @@ void DisplayFunc() {
     E->camera.GetMatricies(projection, view, model);
     
 	glm::mat4 mvp = projection * view * model;	//Compute the mvp matrix
+    
+    
+    //glm::mat3 m_3x3_inv_transp = glm::transpose(glm::inverse(glm::mat3(model)));
+    glm::mat3 m_3x3_inv_transp = glm::inverseTranspose(glm::mat3(model));
+    
+    glm::mat3 v_inv = glm::inverse(glm::mat3(view));
 	
     glLoadMatrixf(glm::value_ptr(mvp));
 	
@@ -158,74 +174,149 @@ void DisplayFunc() {
     glEnable(GL_MULTISAMPLE);
     
     
+    
     float camera_magnitude = glm::length(E->camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
-    E->groundFromSpace.enable();
-        E->groundFromSpace.SetUniform("model", model );
-        E->groundFromSpace.SetUniform("view", view );
-        E->groundFromSpace.SetUniform("projection", projection );
-        E->groundFromSpace.SetUniform("v3CameraPos", E->camera.camera_position );
-        E->groundFromSpace.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
-        E->groundFromSpace.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
-        E->groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
-        E->groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
-        E->groundFromSpace.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
-        E->groundFromSpace.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
-        E->groundFromSpace.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
-        E->groundFromSpace.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
-        E->groundFromSpace.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
-        E->groundFromSpace.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
-        E->groundFromSpace.SetUniform("fKr4PI", E->as.m_Kr4PI);
-        E->groundFromSpace.SetUniform("fKm4PI", E->as.m_Km4PI);
-        E->groundFromSpace.SetUniform("fScale", E->as.m_fScale);
-        E->groundFromSpace.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
-        E->groundFromSpace.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
-        E->groundFromSpace.SetUniform("g", E->as.m_g);
-        E->groundFromSpace.SetUniform("g2", E->as.m_g2);
-        E->groundFromSpace.SetUniform("nSamples", E->as.m_nSamples);
-        E->groundFromSpace.SetUniform("fSamples", (float)E->as.m_nSamples);
+    //if(camera_magnitude > E->as.m_fOuterRadius ){
+        E->groundFromSpace.enable();
+            E->groundFromSpace.SetUniform("model", model );
+            E->groundFromSpace.SetUniform("view", view );
+            E->groundFromSpace.SetUniform("projection", projection );
+            E->groundFromSpace.SetUniform("v3CameraPos", E->camera.camera_position );
+            E->groundFromSpace.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
+            E->groundFromSpace.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
+            E->groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
+            E->groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
+            E->groundFromSpace.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
+            E->groundFromSpace.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
+            E->groundFromSpace.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
+            E->groundFromSpace.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
+            E->groundFromSpace.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
+            E->groundFromSpace.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
+            E->groundFromSpace.SetUniform("fKr4PI", E->as.m_Kr4PI);
+            E->groundFromSpace.SetUniform("fKm4PI", E->as.m_Km4PI);
+            E->groundFromSpace.SetUniform("fScale", E->as.m_fScale);
+            E->groundFromSpace.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
+            E->groundFromSpace.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
+            E->groundFromSpace.SetUniform("g", E->as.m_g);
+            E->groundFromSpace.SetUniform("g2", E->as.m_g2);
+            E->groundFromSpace.SetUniform("nSamples", E->as.m_nSamples);
+            E->groundFromSpace.SetUniform("fSamples", (float)E->as.m_nSamples);
+        
+            E->ground.draw();
+        
+        E->groundFromSpace.disable();
+        
+        
+        E->skyFromSpace.enable();
+            E->skyFromSpace.SetUniform("model", model );
+            E->skyFromSpace.SetUniform("view", view );
+            E->skyFromSpace.SetUniform("projection", projection );
+            E->skyFromSpace.SetUniform("v3CameraPos", E->camera.camera_position );
+            E->skyFromSpace.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
+            E->skyFromSpace.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
+            E->skyFromSpace.SetUniform("fCameraHeight", camera_magnitude);
+            E->skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
+            E->skyFromSpace.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
+            E->skyFromSpace.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
+            E->skyFromSpace.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
+            E->skyFromSpace.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
+            E->skyFromSpace.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
+            E->skyFromSpace.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
+            E->skyFromSpace.SetUniform("fKr4PI", E->as.m_Kr4PI);
+            E->skyFromSpace.SetUniform("fKm4PI", E->as.m_Km4PI);
+            E->skyFromSpace.SetUniform("fScale", E->as.m_fScale);
+            E->skyFromSpace.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
+            E->skyFromSpace.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
+            E->skyFromSpace.SetUniform("g", E->as.m_g);
+            E->skyFromSpace.SetUniform("g2", E->as.m_g2);
+            E->skyFromSpace.SetUniform("nSamples", E->as.m_nSamples);
+            E->skyFromSpace.SetUniform("fSamples", (float)E->as.m_nSamples);
+        
+            glFrontFace(GL_CW);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            
+            E->sky.draw();
+            
+            glDisable(GL_BLEND);
+            glFrontFace(GL_CCW);
+            
+        E->skyFromSpace.disable();
+    /*
+    }
+    else{
+        E->groundFromAtmosphere.enable();
+            E->groundFromAtmosphere.SetUniform("model", model );
+            E->groundFromAtmosphere.SetUniform("view", view );
+            E->groundFromAtmosphere.SetUniform("projection", projection );
+            E->groundFromAtmosphere.SetUniform("v3CameraPos", E->camera.camera_position );
+            E->groundFromAtmosphere.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
+            E->groundFromAtmosphere.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
+            E->groundFromAtmosphere.SetUniform("fCameraHeight", camera_magnitude);
+            E->groundFromAtmosphere.SetUniform("fCameraHeight2", camera_magnitude_squared);
+            E->groundFromAtmosphere.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
+            E->groundFromAtmosphere.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
+            E->groundFromAtmosphere.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
+            E->groundFromAtmosphere.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
+            E->groundFromAtmosphere.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
+            E->groundFromAtmosphere.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
+            E->groundFromAtmosphere.SetUniform("fKr4PI", E->as.m_Kr4PI);
+            E->groundFromAtmosphere.SetUniform("fKm4PI", E->as.m_Km4PI);
+            E->groundFromAtmosphere.SetUniform("fScale", E->as.m_fScale);
+            E->groundFromAtmosphere.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
+            E->groundFromAtmosphere.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
+            E->groundFromAtmosphere.SetUniform("g", E->as.m_g);
+            E->groundFromAtmosphere.SetUniform("g2", E->as.m_g2);
+            E->groundFromAtmosphere.SetUniform("nSamples", E->as.m_nSamples);
+            E->groundFromAtmosphere.SetUniform("fSamples", (float)E->as.m_nSamples);
+            
+            E->ground.draw();
+            
+        E->groundFromAtmosphere.disable();
+            
+            
+        E->skyFromAtmosphere.enable();
+            E->skyFromAtmosphere.SetUniform("model", model );
+            E->skyFromAtmosphere.SetUniform("view", view );
+            E->skyFromAtmosphere.SetUniform("projection", projection );
+            E->skyFromAtmosphere.SetUniform("v3CameraPos", E->camera.camera_position );
+            E->skyFromAtmosphere.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
+            E->skyFromAtmosphere.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
+            E->skyFromAtmosphere.SetUniform("fCameraHeight", camera_magnitude);
+            E->skyFromAtmosphere.SetUniform("fCameraHeight2", camera_magnitude_squared);
+            E->skyFromAtmosphere.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
+            E->skyFromAtmosphere.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
+            E->skyFromAtmosphere.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
+            E->skyFromAtmosphere.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
+            E->skyFromAtmosphere.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
+            E->skyFromAtmosphere.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
+            E->skyFromAtmosphere.SetUniform("fKr4PI", E->as.m_Kr4PI);
+            E->skyFromAtmosphere.SetUniform("fKm4PI", E->as.m_Km4PI);
+            E->skyFromAtmosphere.SetUniform("fScale", E->as.m_fScale);
+            E->skyFromAtmosphere.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
+            E->skyFromAtmosphere.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
+            E->skyFromAtmosphere.SetUniform("g", E->as.m_g);
+            E->skyFromAtmosphere.SetUniform("g2", E->as.m_g2);
+            E->skyFromAtmosphere.SetUniform("nSamples", E->as.m_nSamples);
+            E->skyFromAtmosphere.SetUniform("fSamples", (float)E->as.m_nSamples);
+            
+            glFrontFace(GL_CW);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            
+            E->sky.draw();
+            
+            glDisable(GL_BLEND);
+            glFrontFace(GL_CCW);
+            
+        E->skyFromAtmosphere.disable();
+            
+    }
+    */
     
-        E->ground.draw();
     
-    E->groundFromSpace.disable();
-    
-    
-    E->skyFromSpace.enable();
-        E->skyFromSpace.SetUniform("model", model );
-        E->skyFromSpace.SetUniform("view", view );
-        E->skyFromSpace.SetUniform("projection", projection );
-        E->skyFromSpace.SetUniform("v3CameraPos", E->camera.camera_position );
-        E->skyFromSpace.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
-        E->skyFromSpace.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
-        E->skyFromSpace.SetUniform("fCameraHeight", camera_magnitude);
-        E->skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
-        E->skyFromSpace.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
-        E->skyFromSpace.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
-        E->skyFromSpace.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
-        E->skyFromSpace.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
-        E->skyFromSpace.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
-        E->skyFromSpace.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
-        E->skyFromSpace.SetUniform("fKr4PI", E->as.m_Kr4PI);
-        E->skyFromSpace.SetUniform("fKm4PI", E->as.m_Km4PI);
-        E->skyFromSpace.SetUniform("fScale", E->as.m_fScale);
-        E->skyFromSpace.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
-        E->skyFromSpace.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
-        E->skyFromSpace.SetUniform("g", E->as.m_g);
-        E->skyFromSpace.SetUniform("g2", E->as.m_g2);
-        E->skyFromSpace.SetUniform("nSamples", E->as.m_nSamples);
-        E->skyFromSpace.SetUniform("fSamples", (float)E->as.m_nSamples);
-    
-        glFrontFace(GL_CW);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    
-        E->sky.draw();
-    
-        glDisable(GL_BLEND);
-        glFrontFace(GL_CCW);
-    
-    E->skyFromSpace.disable();
     
     /*
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -233,30 +324,23 @@ void DisplayFunc() {
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     */
     
+    
+     /*
     // texture map sphere
     // bind the texture and set the "tex" uniform in the fragment shader
     
-    //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glEnable(GL_TEXTURE_2D);
-    //glEnable( GL_TEXTURE_RECTANGLE_ARB );// enables texture rectangle
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, E->continents.texture_id);
-    //glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[0]);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, E->field.texture_id);
-    //glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textures[1]);
     
     // perform scene roations
     model = glm::rotate(model, E->XrotationAngle, glm::vec3(1,0,0));//rotating x axis
     model = glm::rotate(model, E->YrotationAngle, glm::vec3(0,1,0));//rotating y axis
     model = glm::rotate(model, E->ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
     
-    //E->camera.GetMatricies(projection, view, model);
-    
-    //mvp = projection * view * model;	//Compute the mvp matrix
-    
-    //glLoadMatrixf(glm::value_ptr(mvp));
-    
+   
     E->texMap.enable();
     
         E->texMap.SetUniform("Texture0", 0); //set to 0 because the texture is bound to GL_TEXTURE0
@@ -276,8 +360,41 @@ void DisplayFunc() {
     glDisable(GL_BLEND);
     glDisable( GL_TEXTURE_2D );
     //glDisable( GL_TEXTURE_RECTANGLE_ARB );
+    */
+    
+    // perform scene roations
+    model = glm::rotate(model, E->XrotationAngle, glm::vec3(1,0,0));//rotating x axis
+    model = glm::rotate(model, E->YrotationAngle, glm::vec3(0,1,0));//rotating y axis
+    model = glm::rotate(model, E->ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
     
     
+    
+    E->passThrough.enable();
+        E->passThrough.SetUniform("model", model );
+        E->passThrough.SetUniform("view", view );
+        E->passThrough.SetUniform("projection", projection );
+        E->passThrough.SetUniform("m_3x3_inv_transp", m_3x3_inv_transp );
+        E->passThrough.SetUniform("v_inv", v_inv);
+        E->passThrough.SetUniform("v3LightPos",E->camera.camera_position);
+    
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            E->bathy_mesh.draw();
+        glDisable(GL_BLEND);
+        //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    E->passThrough.disable();
+    
+    
+    if(E->drawThis){
+        E->renderNormals.enable();
+        E->renderNormals.SetUniform("model", model );
+        E->renderNormals.SetUniform("view", view );
+        E->renderNormals.SetUniform("projection", projection );
+        E->bathy_mesh_normals.draw();
+        //E->test_sphere.draw();
+        E->renderNormals.disable();
+    }
     glutSwapBuffers();
 }
 
@@ -299,7 +416,7 @@ int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(1024, 512);
     glutInitWindowPosition(0, 0);
-#ifdef _OS_X_
+#ifdef __APPLE__
     glutInitDisplayMode( GLUT_3_2_CORE_PROFILE | GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
 #else
     glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);

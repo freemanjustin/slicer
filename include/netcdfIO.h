@@ -1,3 +1,6 @@
+#ifndef NETCDFIO_H
+#define NETCDFIO_H
+
 #include <netcdf.h>
 #include <iostream>
 #include <vector>
@@ -26,3 +29,4 @@ class ncio{
 
         void get_data();
 };
+#endif

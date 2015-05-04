@@ -151,6 +151,16 @@ void GLSLShader::SetUniform(const string& uniform, glm::vec3 p){
 
 // j addition
 // freeman.justin@gmail.com
+void GLSLShader::SetUniform(const string& uniform, glm::mat3 m){
+    
+    GLint	location;
+    location = glGetUniformLocation(_program, uniform.c_str());
+    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(m));
+    
+}
+
+// j addition
+// freeman.justin@gmail.com
 void GLSLShader::SetUniform(const string& uniform, glm::mat4 m){
     
     GLint	location;

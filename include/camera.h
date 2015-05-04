@@ -8,7 +8,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#ifdef _OS_X_
+#ifdef __APPLE__
 #include <GLUT/glut.h>
 #elif defined _LINUX_
 #include <GL/freeglut.h>

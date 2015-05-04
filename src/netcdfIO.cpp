@@ -73,4 +73,5 @@ void ncio::get_data(){
     //cout << " getting field: " << field_name.c_str() << endl;
     //nc_get_var_float(ncid, varid, &field[0][0]);
     nc_get_var_float(ncid, varid, &field[0]);
+    
 }

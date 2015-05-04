@@ -12,7 +12,7 @@
 #include <math.h>
 #include <GL/glew.h>
 
-#ifdef _OS_X_
+#ifdef __APPLE__
 #include <GLUT/glut.h>
 #elif defined _LINUX_
 #include <GL/freeglut.h>
@@ -25,12 +25,17 @@
 #include "texture.h"
 #include "GLSLShader.h"
 #include "save_image.h"
+#include "mesh.h"
+
+
+#define NCIO
 
 #ifdef NCIO
 #include "netcdfIO.h"
 #endif
 
 #include "SOIL.h"
+
 
 using namespace std;
 
@@ -77,6 +82,9 @@ class Window {
 class slicer{
 
     public:
+    
+        bool drawThis;
+    
         // window
         Window  window;
     
@@ -88,6 +96,12 @@ class slicer{
         Sphere sky;
         Sphere texSphere;
     
+    
+        Sphere test_sphere;
+        Sphere test_sphere2;
+    
+        mesh   bathy_mesh;
+        mesh    bathy_mesh_normals;
         // shader variables
         GLSLShader groundFromSpace;
         GLSLShader skyFromSpace;
@@ -96,7 +110,11 @@ class slicer{
         GLSLShader skyFromAtmosphere;
     
         GLSLShader texMap;
-        
+    
+        GLSLShader passThrough;
+    
+        GLSLShader renderNormals;
+    
         atmospheric_scatter as;
     
         // rotation variables

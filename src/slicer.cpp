@@ -1,5 +1,7 @@
 #include "slicer.h"
 
+
+
 void slicer::init(){
     
     XrotationAngle = 0.0f;
@@ -9,7 +11,10 @@ void slicer::init(){
     //Setup camera
     //camera.SetMode(SPHERICAL);
     camera.SetMode(FREE);
-    camera.SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+    //camera.SetPosition(glm::vec3(-2.0f, 0.0f, 2.0f));
+    
+    camera.SetPosition(glm::vec3(-1.1f, 0.0f, 1.6f));
+    
     camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
     camera.SetClipping(.001f, 100.0f);
     camera.SetFOV(45.0f);
@@ -85,6 +90,8 @@ void slicer::init(){
      texSphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
      */
     
+    
+    
     texMap.LoadFromFile(GL_VERTEX_SHADER,"shaders/texBlend_contrast.vert");
     texMap.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/texBlend_contrast.frag");
     texMap.CreateAndLinkProgram();
@@ -94,15 +101,21 @@ void slicer::init(){
     
     texSphere.init(300, glm::vec3(0.0f, 0.0f, 0.0f), as.m_fInnerRadius+0.005, &texMap);
     
-    //loadTextureMap(E);
     // load two sample texture maps
     continents.load_texture("bluemarble/cont8.png");
     field.load_texture("texture/test.jpg");
     
 #ifdef NCIO
+    
     // load bathymetry
     //bathy.fname = "bathymetry/etopo1min_nc4.nc";
-    bathy.fname = "bathymetry/sub2.nc";
+    //bathy.fname = "bathymetry/aust20a.nc"; // 2 lats 2 lons
+    //bathy.fname = "bathymetry/aust10.nc";
+    //bathy.fname = "bathymetry/strip2.nc";
+    //bathy.fname = "bathymetry/sub5a.nc";
+    //bathy.fname = "bathymetry/sub5.nc"; // too big for lappy
+    //bathy.fname = "bathymetry/aust5a.nc"; // 5 lats, 6 lons
+    bathy.fname = "bathymetry/aust5.nc"; //
     bathy.lat_name = "lat";
     bathy.lon_name = "lon";
     bathy.field_name = "z";
@@ -110,18 +123,28 @@ void slicer::init(){
     bathy.get_data();
     
     
-    std::cout << "max_size: " << bathy.field.max_size() << "\n";
+   #endif
     
-    cout << "done read bathy" << endl;
-    cout << "nlats = " << bathy.lat.size() << endl;
-    cout << "nlons = " << bathy.lon.size() << endl;
+    passThrough.LoadFromFile(GL_VERTEX_SHADER,"shaders/pass_through.vert");
+    passThrough.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/pass_through.frag");
+    passThrough.CreateAndLinkProgram();
+    passThrough.SetAttributeName(GLSLShader::vertex_coords,"v4Position");
+    passThrough.SetAttributeName(GLSLShader::colors,"v3Color");
+    passThrough.SetAttributeName(GLSLShader::normals,"v3Normal");
     
-    for(int i =0;i<10;i++){
-        cout << "lat[" << i <<" ] = " << bathy.lat[i];
-        for(int j=0;j<10;j++){
-            cout << " lon[" << j <<" ] = " << bathy.lon[j];
-            cout << " z = " << bathy.field[bathy.lon.size() * i + j] << endl;
-        }
-    }
-#endif
+    
+    // normal vector rendering
+    renderNormals.LoadFromFile(GL_VERTEX_SHADER,"shaders/normals.vert");
+    renderNormals.LoadFromFile(GL_GEOMETRY_SHADER,"shaders/normals.geom");
+    renderNormals.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/normals.frag");
+    renderNormals.CreateAndLinkProgram();
+    renderNormals.SetAttributeName(GLSLShader::vertex_coords,"position");
+    renderNormals.SetAttributeName(GLSLShader::normals,"normal");
+    
+    //test_sphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), as.m_fOuterRadius, &renderNormals);
+    bathy_mesh.init(bathy,&passThrough);
+    bathy_mesh_normals.init(bathy,&renderNormals);
+    
+    // trash this later
+    drawThis = false;
 }
