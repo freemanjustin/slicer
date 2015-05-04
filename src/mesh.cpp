@@ -11,13 +11,28 @@ void mesh::init(ncio data, GLSLShader *shader){
     // define the mesh
     // including vertex position, texture coords, normals and/or colors
     
+    
+    width = data.nlon;
+    height = data.nlat;
+    
+    /*
+    // map the bathymetry to only values greater than -5.0
+    // will give a flat ocean...
+    for (j=height-1;j>=0;j--) {
+        for (i=0;i<width;i++) { // longitude
+            if (data.field[ i + (width*j)]<=-5.0){
+                data.field[ i + (width*j)] = -5.0;
+            }
+        }
+    }
+    */
+    
+    
     // map the geolocated coords into cartesian coords.
     float min_value = *min_element(data.field.begin(), data.field.end());
     float max_value = *max_element(data.field.begin(), data.field.end());
     float range = max_value - min_value;
     
-    width = data.nlon;
-    height = data.nlat;
     
     //cout << "width = " << width << " height = " << height << endl;
     
@@ -37,9 +52,9 @@ void mesh::init(ncio data, GLSLShader *shader){
             lon = data.lon[i] * M_PI/180.0f;
             
             // map each point to a position in our scene
-            vert.x = ( (r+data_value*0.011f) * -cos(lat) * sin(lon));    // x
-            vert.y = ( (r+data_value*0.011f) * sin(lat));                // y
-            vert.z = ( (r+data_value*0.011f) * -cos(lat) * cos(lon));    // z
+            vert.x = ( (r+data_value*0.01f) * -cos(lat) * sin(lon));    // x
+            vert.y = ( (r+data_value*0.01f) * sin(lat));                // y
+            vert.z = ( (r+data_value*0.01f) * -cos(lat) * cos(lon));    // z
             vert.w = 1.0;
             vertex_coords.push_back(vert);
             

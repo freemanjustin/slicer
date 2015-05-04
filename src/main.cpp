@@ -178,72 +178,144 @@ void DisplayFunc() {
     float camera_magnitude = glm::length(E->camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
+    //if(camera_magnitude > E->as.m_fOuterRadius ){
+        E->groundFromSpace.enable();
+            E->groundFromSpace.SetUniform("model", model );
+            E->groundFromSpace.SetUniform("view", view );
+            E->groundFromSpace.SetUniform("projection", projection );
+            E->groundFromSpace.SetUniform("v3CameraPos", E->camera.camera_position );
+            E->groundFromSpace.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
+            E->groundFromSpace.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
+            E->groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
+            E->groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
+            E->groundFromSpace.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
+            E->groundFromSpace.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
+            E->groundFromSpace.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
+            E->groundFromSpace.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
+            E->groundFromSpace.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
+            E->groundFromSpace.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
+            E->groundFromSpace.SetUniform("fKr4PI", E->as.m_Kr4PI);
+            E->groundFromSpace.SetUniform("fKm4PI", E->as.m_Km4PI);
+            E->groundFromSpace.SetUniform("fScale", E->as.m_fScale);
+            E->groundFromSpace.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
+            E->groundFromSpace.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
+            E->groundFromSpace.SetUniform("g", E->as.m_g);
+            E->groundFromSpace.SetUniform("g2", E->as.m_g2);
+            E->groundFromSpace.SetUniform("nSamples", E->as.m_nSamples);
+            E->groundFromSpace.SetUniform("fSamples", (float)E->as.m_nSamples);
+        
+            E->ground.draw();
+        
+        E->groundFromSpace.disable();
+        
+        
+        E->skyFromSpace.enable();
+            E->skyFromSpace.SetUniform("model", model );
+            E->skyFromSpace.SetUniform("view", view );
+            E->skyFromSpace.SetUniform("projection", projection );
+            E->skyFromSpace.SetUniform("v3CameraPos", E->camera.camera_position );
+            E->skyFromSpace.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
+            E->skyFromSpace.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
+            E->skyFromSpace.SetUniform("fCameraHeight", camera_magnitude);
+            E->skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
+            E->skyFromSpace.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
+            E->skyFromSpace.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
+            E->skyFromSpace.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
+            E->skyFromSpace.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
+            E->skyFromSpace.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
+            E->skyFromSpace.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
+            E->skyFromSpace.SetUniform("fKr4PI", E->as.m_Kr4PI);
+            E->skyFromSpace.SetUniform("fKm4PI", E->as.m_Km4PI);
+            E->skyFromSpace.SetUniform("fScale", E->as.m_fScale);
+            E->skyFromSpace.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
+            E->skyFromSpace.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
+            E->skyFromSpace.SetUniform("g", E->as.m_g);
+            E->skyFromSpace.SetUniform("g2", E->as.m_g2);
+            E->skyFromSpace.SetUniform("nSamples", E->as.m_nSamples);
+            E->skyFromSpace.SetUniform("fSamples", (float)E->as.m_nSamples);
+        
+            glFrontFace(GL_CW);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            
+            E->sky.draw();
+            
+            glDisable(GL_BLEND);
+            glFrontFace(GL_CCW);
+            
+        E->skyFromSpace.disable();
+    /*
+    }
+    else{
+        E->groundFromAtmosphere.enable();
+            E->groundFromAtmosphere.SetUniform("model", model );
+            E->groundFromAtmosphere.SetUniform("view", view );
+            E->groundFromAtmosphere.SetUniform("projection", projection );
+            E->groundFromAtmosphere.SetUniform("v3CameraPos", E->camera.camera_position );
+            E->groundFromAtmosphere.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
+            E->groundFromAtmosphere.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
+            E->groundFromAtmosphere.SetUniform("fCameraHeight", camera_magnitude);
+            E->groundFromAtmosphere.SetUniform("fCameraHeight2", camera_magnitude_squared);
+            E->groundFromAtmosphere.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
+            E->groundFromAtmosphere.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
+            E->groundFromAtmosphere.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
+            E->groundFromAtmosphere.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
+            E->groundFromAtmosphere.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
+            E->groundFromAtmosphere.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
+            E->groundFromAtmosphere.SetUniform("fKr4PI", E->as.m_Kr4PI);
+            E->groundFromAtmosphere.SetUniform("fKm4PI", E->as.m_Km4PI);
+            E->groundFromAtmosphere.SetUniform("fScale", E->as.m_fScale);
+            E->groundFromAtmosphere.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
+            E->groundFromAtmosphere.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
+            E->groundFromAtmosphere.SetUniform("g", E->as.m_g);
+            E->groundFromAtmosphere.SetUniform("g2", E->as.m_g2);
+            E->groundFromAtmosphere.SetUniform("nSamples", E->as.m_nSamples);
+            E->groundFromAtmosphere.SetUniform("fSamples", (float)E->as.m_nSamples);
+            
+            E->ground.draw();
+            
+        E->groundFromAtmosphere.disable();
+            
+            
+        E->skyFromAtmosphere.enable();
+            E->skyFromAtmosphere.SetUniform("model", model );
+            E->skyFromAtmosphere.SetUniform("view", view );
+            E->skyFromAtmosphere.SetUniform("projection", projection );
+            E->skyFromAtmosphere.SetUniform("v3CameraPos", E->camera.camera_position );
+            E->skyFromAtmosphere.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
+            E->skyFromAtmosphere.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
+            E->skyFromAtmosphere.SetUniform("fCameraHeight", camera_magnitude);
+            E->skyFromAtmosphere.SetUniform("fCameraHeight2", camera_magnitude_squared);
+            E->skyFromAtmosphere.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
+            E->skyFromAtmosphere.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
+            E->skyFromAtmosphere.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
+            E->skyFromAtmosphere.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
+            E->skyFromAtmosphere.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
+            E->skyFromAtmosphere.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
+            E->skyFromAtmosphere.SetUniform("fKr4PI", E->as.m_Kr4PI);
+            E->skyFromAtmosphere.SetUniform("fKm4PI", E->as.m_Km4PI);
+            E->skyFromAtmosphere.SetUniform("fScale", E->as.m_fScale);
+            E->skyFromAtmosphere.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
+            E->skyFromAtmosphere.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
+            E->skyFromAtmosphere.SetUniform("g", E->as.m_g);
+            E->skyFromAtmosphere.SetUniform("g2", E->as.m_g2);
+            E->skyFromAtmosphere.SetUniform("nSamples", E->as.m_nSamples);
+            E->skyFromAtmosphere.SetUniform("fSamples", (float)E->as.m_nSamples);
+            
+            glFrontFace(GL_CW);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            
+            E->sky.draw();
+            
+            glDisable(GL_BLEND);
+            glFrontFace(GL_CCW);
+            
+        E->skyFromAtmosphere.disable();
+            
+    }
+    */
     
-    E->groundFromSpace.enable();
-        E->groundFromSpace.SetUniform("model", model );
-        E->groundFromSpace.SetUniform("view", view );
-        E->groundFromSpace.SetUniform("projection", projection );
-        E->groundFromSpace.SetUniform("v3CameraPos", E->camera.camera_position );
-        E->groundFromSpace.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
-        E->groundFromSpace.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
-        E->groundFromSpace.SetUniform("fCameraHeight", camera_magnitude);
-        E->groundFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
-        E->groundFromSpace.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
-        E->groundFromSpace.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
-        E->groundFromSpace.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
-        E->groundFromSpace.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
-        E->groundFromSpace.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
-        E->groundFromSpace.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
-        E->groundFromSpace.SetUniform("fKr4PI", E->as.m_Kr4PI);
-        E->groundFromSpace.SetUniform("fKm4PI", E->as.m_Km4PI);
-        E->groundFromSpace.SetUniform("fScale", E->as.m_fScale);
-        E->groundFromSpace.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
-        E->groundFromSpace.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
-        E->groundFromSpace.SetUniform("g", E->as.m_g);
-        E->groundFromSpace.SetUniform("g2", E->as.m_g2);
-        E->groundFromSpace.SetUniform("nSamples", E->as.m_nSamples);
-        E->groundFromSpace.SetUniform("fSamples", (float)E->as.m_nSamples);
-    
-        E->ground.draw();
-    
-    E->groundFromSpace.disable();
-    
-    
-    E->skyFromSpace.enable();
-        E->skyFromSpace.SetUniform("model", model );
-        E->skyFromSpace.SetUniform("view", view );
-        E->skyFromSpace.SetUniform("projection", projection );
-        E->skyFromSpace.SetUniform("v3CameraPos", E->camera.camera_position );
-        E->skyFromSpace.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position) );
-        E->skyFromSpace.SetUniform("v3InvWavelength", E->as.m_fWavelength4_inv );
-        E->skyFromSpace.SetUniform("fCameraHeight", camera_magnitude);
-        E->skyFromSpace.SetUniform("fCameraHeight2", camera_magnitude_squared);
-        E->skyFromSpace.SetUniform("fInnerRadius", E->as.m_fInnerRadius);
-        E->skyFromSpace.SetUniform("fInnerRadius2", E->as.m_fInnerRadius2);
-        E->skyFromSpace.SetUniform("fOuterRadius", E->as.m_fOuterRadius);
-        E->skyFromSpace.SetUniform("fOuterRadius2", E->as.m_fOuterRadius2);
-        E->skyFromSpace.SetUniform("fKrESun", E->as.m_Kr*E->as.m_ESun);
-        E->skyFromSpace.SetUniform("fKmESun", E->as.m_Km*E->as.m_ESun);
-        E->skyFromSpace.SetUniform("fKr4PI", E->as.m_Kr4PI);
-        E->skyFromSpace.SetUniform("fKm4PI", E->as.m_Km4PI);
-        E->skyFromSpace.SetUniform("fScale", E->as.m_fScale);
-        E->skyFromSpace.SetUniform("fScaleDepth", E->as.m_fRayleighScaleDepth);
-        E->skyFromSpace.SetUniform("fScaleOverScaleDepth", E->as.m_fScaleOverScaleDepth);
-        E->skyFromSpace.SetUniform("g", E->as.m_g);
-        E->skyFromSpace.SetUniform("g2", E->as.m_g2);
-        E->skyFromSpace.SetUniform("nSamples", E->as.m_nSamples);
-        E->skyFromSpace.SetUniform("fSamples", (float)E->as.m_nSamples);
-    
-        glFrontFace(GL_CW);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    
-        E->sky.draw();
-    
-        glDisable(GL_BLEND);
-        glFrontFace(GL_CCW);
-    
-    E->skyFromSpace.disable();
     
     
     /*
