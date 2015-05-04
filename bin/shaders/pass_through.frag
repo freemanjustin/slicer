@@ -36,9 +36,19 @@ lightSource lights[numberOfLights];
  180.0, 0.0,
  vec3(0.0, 0.0, 0.0)
  );
+*/
 
- 
- 
+ lightSource light0 = lightSource(
+ //vec4(-1.1, 0.0f, 1.6, 1.0),
+ vec4(v3LightPos,1.0),
+ vec4(1.0,  1.0,  1.0, 1.0),
+ vec4(1.0,  1.0,  1.0, 1.0),
+ 0.0, 1.0, 0.0,
+ 180.0, 0.0,
+ vec3(0.0, 0.0, 0.0)
+ );
+
+/*
  lightSource light1 = lightSource(
                                  vec4(0.0, -2.0,  0.0, 1.0),
                                  vec4(2.0,  0.0,  0.0, 1.0),
@@ -60,9 +70,9 @@ struct material
 
 material frontMaterial = material(
                                   vec4(0.2, 0.2, 0.2, 1.0),
-                                  vec4(0.8, 0.8, 0.8, 1.0),
                                   vec4(1.0, 1.0, 1.0, 1.0),
-                                  5.0
+                                  vec4(1.0, 1.0, 1.0, 1.0),
+                                  50.0
                                   );
 
 
@@ -115,15 +125,7 @@ vec3 getJetColorIII(vec3 value) {
 
 void main() {
     
-    lightSource light0 = lightSource(
-                                     //vec4(-1.1, 0.0f, 1.6, 1.0),
-                                     vec4(v3LightPos,1.0),
-                                     vec4(1.0,  1.0,  1.0, 1.0),
-                                     vec4(1.0,  1.0,  1.0, 1.0),
-                                     0.0, 1.0, 0.0,
-                                     180.0, 0.0,
-                                     vec3(0.0, 0.0, 0.0)
-                                     );
+    
     
     lights[0] = light0;
     //lights[1] = light1;

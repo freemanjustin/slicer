@@ -18,7 +18,7 @@ uniform vec3 v3LightPos;
 
 void main() {
     
-    position = model * v4Position;
+    position = view * model * v4Position;
     varyingNormalDirection = normalize(m_3x3_inv_transp * v3Normal);
     
     firstColor = v3Color;
