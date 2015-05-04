@@ -18,7 +18,8 @@ OBJ=	./src/main.o \
 	./external/SOIL/src/SOIL.o \
 	./external/SOIL/src/image_DXT.o \
 	./external/SOIL/src/image_helper.o \
-	./external/SOIL/src/stb_image_aug.o
+	./external/SOIL/src/stb_image_aug.o \
+	./external/glew/glew.o
 		
 
 
@@ -27,15 +28,16 @@ INC=   -D_OS_X_ \
 	-I./include \
 	-I./external/glm-0.9.6.3/glm \
 	-I./external/SOIL/src \
-	-I./external/stb
+	-I./external/stb \
+	-I./external/glew
 
 # Libraries
-LFLAGS= -lGLEW \
+LFLAGS= \
 	-lnetcdf \
 	-framework OpenGL \
 	-framework GLUT 
 
-CPPFLAGS=	-O3 -g -Wall -Wno-deprecated-declarations
+CPPFLAGS=	-O3 -g -Wall -Wno-deprecated-declarations $(INC)
 
 CXX=	g++ $(CPPFLAGS) $(INC) 
 
