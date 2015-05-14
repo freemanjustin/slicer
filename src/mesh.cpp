@@ -8,9 +8,12 @@ void mesh::init(ncio data, GLSLShader *shader){
     float   r = 1.0f;
     float   lat, lon;
     
+    //GLint   max;
+    //glGetIntegerv(GL_MAX_ELEMENTS_VERTICES, &max);
+    //cout << "max vertices = " << max << endl;
+    
     // define the mesh
     // including vertex position, texture coords, normals and/or colors
-    
     
     width = data.nlon;
     height = data.nlat;
@@ -55,12 +58,12 @@ void mesh::init(ncio data, GLSLShader *shader){
             vert.x = ( (r+data_value*0.01f) * -cos(lat) * sin(lon));    // x
             vert.y = ( (r+data_value*0.01f) * sin(lat));                // y
             vert.z = ( (r+data_value*0.01f) * -cos(lat) * cos(lon));    // z
-            vert.w = 1.0;
+            vert.w = 1.0f;
             vertex_coords.push_back(vert);
             
             // set up texture coords
-            text_coords.x = (1.0 - (float)(i)/(float)(width));
-            text_coords.y = (1.0 - (float)j/(float)(height));
+            text_coords.x = (1.0f - (float)(i)/(float)(width));
+            text_coords.y = (1.0f - (float)j/(float)(height));
             texture_coords.push_back(text_coords);
             
             // set vertex colors
@@ -73,6 +76,7 @@ void mesh::init(ncio data, GLSLShader *shader){
         }
     }
     
+    //cout << "we have " << vertex_coords.size()/3 << " vertex_coords" << endl;
     // setup triangle face list - this is done per triangle
     // for each triangle we just store the index into the vertex array
     for (j=1;j<height;j++) { // latitude
@@ -106,7 +110,7 @@ void mesh::init(ncio data, GLSLShader *shader){
     //cout << "ntriangles = " << triangles.size() << endl;
     
     // calculate vertex normals
-    normal_coords.resize(vertex_coords.size(), glm::vec3(0.0, 0.0, 0.0)); // initialize the normals to the zero vector
+    normal_coords.resize(vertex_coords.size(), glm::vec3(0.0f, 0.0f, 0.0f)); // initialize the normals to the zero vector
     std::vector<GLint>  seen;   // count of how many triangles this vertex is a member of
     seen.resize(vertex_coords.size(), 0);
     
@@ -301,7 +305,13 @@ void mesh::draw(){
     glBindVertexArray(vao[0]);
     
     // draw strips
-    for(int i=0;i<height-1;i++){
+    //for(int i=0;i<height-1;i++){
+    for(int i=0;i<(height/2)-1;i++){
+        glDrawElements(GL_TRIANGLE_STRIP, width*2, GL_UNSIGNED_INT,
+                       (void*) ((width*2*i)*sizeof(GLuint)));
+    }
+    
+    for(int i=(height/2)-1;i<(height)-1;i++){
         glDrawElements(GL_TRIANGLE_STRIP, width*2, GL_UNSIGNED_INT,
                        (void*) ((width*2*i)*sizeof(GLuint)));
     }

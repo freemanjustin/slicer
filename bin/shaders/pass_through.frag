@@ -39,7 +39,6 @@ lightSource lights[numberOfLights];
 */
 
  lightSource light0 = lightSource(
- //vec4(-1.1, 0.0f, 1.6, 1.0),
  vec4(v3LightPos,1.0),
  vec4(1.0,  1.0,  1.0, 1.0),
  vec4(1.0,  1.0,  1.0, 1.0),
