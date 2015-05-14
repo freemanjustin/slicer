@@ -42,6 +42,8 @@ slicer is a work in progress and things are changing rapidly. slicer will load a
 ## Sample Output
 ![slicer sample](https://raw.github.com/freemanjustin/slicer/master/bin/sample/sample.png)
 ![slicer sample2](https://raw.github.com/freemanjustin/slicer/master/bin/sample/sample2.png)
+![slicer sample3](https://raw.github.com/freemanjustin/slicer/master/bin/sample/sample3.png)
+![slicer sample4](https://raw.github.com/freemanjustin/slicer/master/bin/sample/sample4.png)
 
 ## Sample animations
 
