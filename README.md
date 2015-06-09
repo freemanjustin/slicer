@@ -44,6 +44,7 @@ slicer is a work in progress and things are changing rapidly. slicer will load a
 ![slicer sample2](https://raw.github.com/freemanjustin/slicer/master/bin/sample/sample2.png)
 ![slicer sample3](https://raw.github.com/freemanjustin/slicer/master/bin/sample/sample3.png)
 ![slicer sample4](https://raw.github.com/freemanjustin/slicer/master/bin/sample/sample4.png)
+![slicer sample5](https://raw.github.com/freemanjustin/slicer/master/bin/sample/coastline.png)
 
 ## Sample animations
 
