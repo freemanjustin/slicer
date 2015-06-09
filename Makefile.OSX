@@ -15,6 +15,7 @@ OBJ=	./src/main.o \
 	./src/save_image.o \
 	./src/netcdfIO.o \
 	./src/mesh.o \
+	./src/lines.o \
 	./external/SOIL/src/SOIL.o \
 	./external/SOIL/src/image_DXT.o \
 	./external/SOIL/src/image_helper.o \

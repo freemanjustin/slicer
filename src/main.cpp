@@ -116,7 +116,7 @@ void DisplayFunc() {
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, E->window.size.x, E->window.size.y);
-
+    
     glm::mat4 model, view, projection;
 
     //model = glm::rotate(model, XrotationAngle, glm::vec3(1,0,0));//rotating x axis
@@ -155,14 +155,10 @@ void DisplayFunc() {
     
 	glm::mat4 mvp = projection * view * model;	//Compute the mvp matrix
     
-    
     //glm::mat3 m_3x3_inv_transp = glm::transpose(glm::inverse(glm::mat3(model)));
     glm::mat3 m_3x3_inv_transp = glm::inverseTranspose(glm::mat3(model));
+    glm::mat4 v_inv = glm::inverse(view);
     
-    glm::mat3 v_inv = glm::inverse(glm::mat3(view));
-	
-    glLoadMatrixf(glm::value_ptr(mvp));
-	
     // Enables Depth Testing
     glEnable(GL_DEPTH_TEST);
     
@@ -172,14 +168,16 @@ void DisplayFunc() {
     glEnable(GL_CULL_FACE);
     
     glEnable(GL_MULTISAMPLE);
-    
-    
+
     
     float camera_magnitude = glm::length(E->camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
     
-    //if(camera_magnitude > E->as.m_fOuterRadius ){
+    
+    if(camera_magnitude > E->as.m_fOuterRadius ){
+        
         E->groundFromSpace.enable();
+        
             E->groundFromSpace.SetUniform("model", model );
             E->groundFromSpace.SetUniform("view", view );
             E->groundFromSpace.SetUniform("projection", projection );
@@ -207,7 +205,6 @@ void DisplayFunc() {
             E->ground.draw();
         
         E->groundFromSpace.disable();
-        
         
         E->skyFromSpace.enable();
             E->skyFromSpace.SetUniform("model", model );
@@ -244,7 +241,7 @@ void DisplayFunc() {
             glFrontFace(GL_CCW);
             
         E->skyFromSpace.disable();
-    /*
+    
     }
     else{
         E->groundFromAtmosphere.enable();
@@ -314,8 +311,6 @@ void DisplayFunc() {
         E->skyFromAtmosphere.disable();
             
     }
-    */
-    
     
     
     /*
@@ -323,7 +318,6 @@ void DisplayFunc() {
     Sphere::drawSphere(64, glm::vec3(0.0f, 0.0f, 0.0f), m_fInnerRadius);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     */
-    
     
      /*
     // texture map sphere
@@ -368,15 +362,13 @@ void DisplayFunc() {
     model = glm::rotate(model, E->ZrotationAngle, glm::vec3(0,0,1));//rotating z axis
     
     
-    
     E->passThrough.enable();
         E->passThrough.SetUniform("model", model );
         E->passThrough.SetUniform("view", view );
         E->passThrough.SetUniform("projection", projection );
         E->passThrough.SetUniform("m_3x3_inv_transp", m_3x3_inv_transp );
         E->passThrough.SetUniform("v_inv", v_inv);
-        E->passThrough.SetUniform("v3LightPos",E->camera.camera_position);
-    
+        E->passThrough.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position));
         //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -386,6 +378,14 @@ void DisplayFunc() {
     E->passThrough.disable();
     
     
+    E->lineShader.enable();
+        E->lineShader.SetUniform("model", model );
+        E->lineShader.SetUniform("view", view );
+        E->lineShader.SetUniform("projection", projection );
+        E->continent.draw();
+    E->lineShader.disable();
+    
+    /*
     if(E->drawThis){
         E->renderNormals.enable();
         E->renderNormals.SetUniform("model", model );
@@ -395,6 +395,8 @@ void DisplayFunc() {
         //E->test_sphere.draw();
         E->renderNormals.disable();
     }
+     */
+    
     glutSwapBuffers();
 }
 
@@ -438,11 +440,14 @@ int main(int argc, char **argv) {
         cerr << "GLEW failed to initialize." << endl;
         exit(1);
     }
+    
     if (!glewIsSupported("GL_VERSION_3_2")){
         cerr << "OpenGL 3.2 not supported." << endl;
         exit(1);
     }
 
+    // glew throws errors so discard them
+    while(glGetError() != GL_NO_ERROR) {}
     
     // print out some info about the graphics drivers
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
@@ -450,7 +455,6 @@ int main(int argc, char **argv) {
     std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
-    
     
     // init the app
     

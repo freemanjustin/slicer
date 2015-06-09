@@ -23,9 +23,11 @@ void mesh::init(ncio data, GLSLShader *shader){
     // will give a flat ocean...
     for (j=height-1;j>=0;j--) {
         for (i=0;i<width;i++) { // longitude
-            if (data.field[ i + (width*j)]<=-5.0){
-                data.field[ i + (width*j)] = -5.0;
+            if (data.field[ i + (width*j)] <= 0.0){
+                data.field[ i + (width*j)] = 0.0;
             }
+            else
+                data.field[ i + (width*j)] = log(data.field[ i + (width*j)]);
         }
     }
     */
@@ -55,9 +57,9 @@ void mesh::init(ncio data, GLSLShader *shader){
             lon = data.lon[i] * M_PI/180.0f;
             
             // map each point to a position in our scene
-            vert.x = ( (r+data_value*0.01f) * -cos(lat) * sin(lon));    // x
-            vert.y = ( (r+data_value*0.01f) * sin(lat));                // y
-            vert.z = ( (r+data_value*0.01f) * -cos(lat) * cos(lon));    // z
+            vert.x = ( (r+data_value*0.005f) * -cos(lat) * sin(lon));    // x
+            vert.y = ( (r+data_value*0.005f) * sin(lat));                // y
+            vert.z = ( (r+data_value*0.005f) * -cos(lat) * cos(lon));    // z
             vert.w = 1.0f;
             vertex_coords.push_back(vert);
             
@@ -228,9 +230,26 @@ void mesh::init(ncio data, GLSLShader *shader){
     // create VBO's
     glGenBuffers(5, buffers);
     
+    GLenum error = glGetError();
+    if(error != GL_NO_ERROR) {
+        std::cerr << "glGenBuffers failed: error " << error << std::endl;
+        exit( 1);
+    }
+
+    
     // create VAO
     glGenVertexArrays(1, vao);
+    error = glGetError();
+    if(error != GL_NO_ERROR) {
+        std::cerr << "glGenVertexArrays failed: error " << error << std::endl;
+        exit( 1);
+    }
     glBindVertexArray(vao[0]);
+    error = glGetError();
+    if(error != GL_NO_ERROR) {
+        std::cerr << "glBindVertexArray failed: error " << error << std::endl;
+        exit( 1);
+    }
     
     // set the VAO pointers to the VBO
     if(shader->vertex_coords_name != ""){
@@ -249,6 +268,7 @@ void mesh::init(ncio data, GLSLShader *shader){
         // Index buffer
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[index]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+        
     }
     
     
@@ -297,23 +317,58 @@ void mesh::init(ncio data, GLSLShader *shader){
     // unbind the VAO
     glBindVertexArray(0);
     
+    error = glGetError();
+    if(error != GL_NO_ERROR) {
+        std::cerr << "?? failed: error " << error << std::endl;
+        exit( 1);
+    }
+    
 }
 
 
 void mesh::draw(){
     
+    
+    
+    GLenum error;
+    /*
+    error = glGetError();
+    if(error != GL_NO_ERROR) {
+        std::cerr << " pre bindvertexarray failed error = " << error << std::endl;
+        //exit(1);
+    }
+    */
+    
     glBindVertexArray(vao[0]);
     
-    // draw strips
-    //for(int i=0;i<height-1;i++){
-    for(int i=0;i<(height/2)-1;i++){
-        glDrawElements(GL_TRIANGLE_STRIP, width*2, GL_UNSIGNED_INT,
-                       (void*) ((width*2*i)*sizeof(GLuint)));
+    /*
+    error = glGetError();
+    if(error != GL_NO_ERROR) {
+        std::cerr << " ### bindvertexarray failed error = " << error << std::endl;
+        //exit(1);
     }
+     */
     
+    
+        // draw strips
+    for(int i=0;i<height-1;i++){
+    //for(int i=0;i<(height/2)-1;i++){
+        glDrawElements(GL_TRIANGLE_STRIP, width*2, GL_UNSIGNED_INT, (void*) ((width*2*i)*sizeof(GLuint)));
+        //glDrawElements(GL_LINE_STRIP, width*2, GL_UNSIGNED_INT, (void*) ((width*2*i)*sizeof(GLuint)));
+    }
+    /*
     for(int i=(height/2)-1;i<(height)-1;i++){
         glDrawElements(GL_TRIANGLE_STRIP, width*2, GL_UNSIGNED_INT,
                        (void*) ((width*2*i)*sizeof(GLuint)));
     }
+    */
+    /*
+    // check for errors
+    error = glGetError();
+    if(error != GL_NO_ERROR) {
+        std::cerr << "XX error " << error << std::endl;
+        exit( 1);
+    }
+     */
     
 }

@@ -26,6 +26,7 @@
 #include "GLSLShader.h"
 #include "save_image.h"
 #include "mesh.h"
+#include "lines.h"
 
 
 #define NCIO
@@ -94,14 +95,17 @@ class slicer{
         // our spheres
         Sphere ground;
         Sphere sky;
-        Sphere texSphere;
+        //Sphere texSphere;
     
     
-        Sphere test_sphere;
-        Sphere test_sphere2;
+        //Sphere test_sphere;
+        //Sphere test_sphere2;
     
         mesh   bathy_mesh;
         mesh    bathy_mesh_normals;
+    
+        lines   continent;
+    
         // shader variables
         GLSLShader groundFromSpace;
         GLSLShader skyFromSpace;
@@ -109,11 +113,14 @@ class slicer{
         GLSLShader groundFromAtmosphere;
         GLSLShader skyFromAtmosphere;
     
-        GLSLShader texMap;
+        GLSLShader  lineShader;
+    
+        //GLSLShader texMap;
     
         GLSLShader passThrough;
     
         GLSLShader renderNormals;
+    
     
         atmospheric_scatter as;
     
@@ -123,8 +130,8 @@ class slicer{
         GLfloat ZrotationAngle;
     
         // texture map
-        texture  continents;
-        texture  field;
+        //texture  continents;
+        //texture  field;
     
     #ifdef NCIO
         // netcdf tsting

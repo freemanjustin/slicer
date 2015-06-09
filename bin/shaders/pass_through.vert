@@ -14,7 +14,9 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat3 m_3x3_inv_transp;
+uniform mat4 v_inv;
 uniform vec3 v3LightPos;
+
 
 void main() {
     
@@ -26,3 +28,4 @@ void main() {
     gl_Position = projection * view * model * v4Position;
     
 }
+

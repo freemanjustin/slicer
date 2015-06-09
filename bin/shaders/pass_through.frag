@@ -27,17 +27,6 @@ const int numberOfLights = 1;
 lightSource lights[numberOfLights];
 
 
-/*
- lightSource light0 = lightSource(
- vec4(-1.1, 0.0f, 1.6, 1.0),
- vec4(1.0,  1.0,  1.0, 1.0),
- vec4(1.0,  1.0,  1.0, 1.0),
- 0.0, 1.0, 0.0,
- 180.0, 0.0,
- vec3(0.0, 0.0, 0.0)
- );
-*/
-
  lightSource light0 = lightSource(
  vec4(v3LightPos,1.0),
  vec4(1.0,  1.0,  1.0, 1.0),
@@ -47,16 +36,6 @@ lightSource lights[numberOfLights];
  vec3(0.0, 0.0, 0.0)
  );
 
-/*
- lightSource light1 = lightSource(
-                                 vec4(0.0, -2.0,  0.0, 1.0),
-                                 vec4(2.0,  0.0,  0.0, 1.0),
-                                 vec4(0.1,  0.1,  0.1, 1.0),
-                                 0.0, 1.0, 0.0,
-                                 80.0, 10.0,
-                                 vec3(0.0, 1.0, 0.0)
-                                 );
-*/
 vec4 scene_ambient = vec4(0.2, 0.2, 0.2, 1.0);
 
 struct material
@@ -113,10 +92,10 @@ vec3 getJetColorIII(vec3 value) {
     //    return value;
     //}
     //else{
-        float red = 106.5f*pow(value.r,6.0f) - 315.71*pow(value.r,4.0f)-169.81*pow(value.r,3.0f) + 40.86*pow(value.r,2.0) - 4.485*value.r+0.2055;
-        float green = 3.4634*pow(value.g,4.0f) - 4.777*pow(value.g,3.0f) + 0.5384*pow(value.g,2.0f)+1.5892*value.g+0.1703;
-        float blue = -5.7193*pow(value.b,4.0f)+14.724*pow(value.b,3.0f)-13.342*pow(value.b,2.0f)+3.8436*value.b+0.5413;
-        return clamp( vec3(red, green, blue), 0.0f, 1.0f );
+        float red = 106.5*pow(value.r,6.0) - 315.71*pow(value.r,4.0)-169.81*pow(value.r,3.0) + 40.86*pow(value.r,2.0) - 4.485*value.r+0.2055;
+        float green = 3.4634*pow(value.g,4.0) - 4.777*pow(value.g,3.0) + 0.5384*pow(value.g,2.0)+1.5892*value.g+0.1703;
+        float blue = -5.7193*pow(value.b,4.0)+14.724*pow(value.b,3.0)-13.342*pow(value.b,2.0)+3.8436*value.b+0.5413;
+        return clamp( vec3(red, green, blue), 0.0, 1.0 );
     //}
 }
 
@@ -134,8 +113,10 @@ void main() {
     
     
     //vec4 value = vec4(firstColor,1.0f);
-    vec3 jet = getJetColor(firstColor);
+    vec3 jet = getJetColorIII(firstColor);
     //vec3 jet = firstColor;
+    
+    
     
     vec3 normalDirection = normalize(varyingNormalDirection);
     vec3 viewDirection = normalize(vec3(v_inv * vec4(0.0, 0.0, 0.0, 1.0) - position));
@@ -145,8 +126,9 @@ void main() {
     // initialize total lighting with ambient lighting
     vec3 totalLighting = vec3(scene_ambient) * vec3(frontMaterial.ambient);
     
-    for (int index = 0; index < numberOfLights; index++) // for all light sources
-    {
+    int index = 0;
+    //for (int index = 0; index < numberOfLights; index++) // for all light sources
+    //{
         
         if (0.0 == lights[index].position.w) // directional light?
         {
@@ -193,12 +175,13 @@ void main() {
         //original
         //totalLighting = (totalLighting + diffuseReflection + specularReflection);
         
-        totalLighting = (totalLighting + (jet * diffuseReflection) + specularReflection);
+        totalLighting = (totalLighting + (jet*diffuseReflection) + specularReflection);
         
         //totalLighting = jet*specularReflection;
-    }
+    //}
     
     finalColor = vec4(totalLighting,1.0);
+    
     //finalColor = vec4(jet,1.0);
     
 }

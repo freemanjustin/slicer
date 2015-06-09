@@ -91,7 +91,7 @@ void slicer::init(){
      */
     
     
-    
+    /*
     texMap.LoadFromFile(GL_VERTEX_SHADER,"shaders/texBlend_contrast.vert");
     texMap.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/texBlend_contrast.frag");
     texMap.CreateAndLinkProgram();
@@ -104,6 +104,8 @@ void slicer::init(){
     // load two sample texture maps
     continents.load_texture("bluemarble/cont8.png");
     field.load_texture("texture/test.jpg");
+    */
+    
     
 #ifdef NCIO
     
@@ -112,10 +114,11 @@ void slicer::init(){
     //bathy.fname = "bathymetry/aust20a.nc"; // 2 lats 2 lons
     //bathy.fname = "bathymetry/aust10.nc";
     //bathy.fname = "bathymetry/strip2.nc";
-    bathy.fname = "bathymetry/sub5a.nc";
+    //bathy.fname = "bathymetry/sub5a.nc";
     //bathy.fname = "bathymetry/sub5.nc"; // too big for lappy
     //bathy.fname = "bathymetry/aust5a.nc"; // 5 lats, 6 lons
     //bathy.fname = "bathymetry/aust5.nc"; //
+    bathy.fname = "bathymetry/jaust.nc";
     bathy.lat_name = "lat";
     bathy.lon_name = "lon";
     bathy.field_name = "z";
@@ -125,6 +128,8 @@ void slicer::init(){
     
    #endif
     
+    
+    
     passThrough.LoadFromFile(GL_VERTEX_SHADER,"shaders/pass_through.vert");
     passThrough.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/pass_through.frag");
     passThrough.CreateAndLinkProgram();
@@ -133,6 +138,7 @@ void slicer::init(){
     passThrough.SetAttributeName(GLSLShader::normals,"v3Normal");
     
     
+    /*
     // normal vector rendering
     renderNormals.LoadFromFile(GL_VERTEX_SHADER,"shaders/normals.vert");
     renderNormals.LoadFromFile(GL_GEOMETRY_SHADER,"shaders/normals.geom");
@@ -140,10 +146,23 @@ void slicer::init(){
     renderNormals.CreateAndLinkProgram();
     renderNormals.SetAttributeName(GLSLShader::vertex_coords,"position");
     renderNormals.SetAttributeName(GLSLShader::normals,"normal");
+    */
     
     //test_sphere.init(200, glm::vec3(0.0f, 0.0f, 0.0f), as.m_fOuterRadius, &renderNormals);
     bathy_mesh.init(bathy,&passThrough);
-    bathy_mesh_normals.init(bathy,&renderNormals);
+    //bathy_mesh_normals.init(bathy,&renderNormals);
+    
+    
+    lineShader.LoadFromFile(GL_VERTEX_SHADER,"shaders/line.vert");
+    //lineShader.LoadFromFile(GL_GEOMETRY_SHADER,"shaders/line.geom");
+    lineShader.LoadFromFile(GL_FRAGMENT_SHADER,"shaders/line.frag");
+    lineShader.CreateAndLinkProgram();
+    lineShader.SetAttributeName(GLSLShader::vertex_coords,"v3Position");
+    lineShader.SetAttributeName(GLSLShader::colors,"v3Color");
+    
+    
+    continent.init(&lineShader);
+    //exit(0);
     
     // trash this later
     drawThis = false;
