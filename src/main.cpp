@@ -28,12 +28,24 @@ void KeyboardFunc(unsigned char c, int x, int y) {
             E->drawThis = !E->drawThis;
             break;
 				case 'p':
+
+					/*
 					cout << "x: " << E->camera.camera_position.x;
 					cout << " y: " << E->camera.camera_position.y;
 					cout << " z: " << E->camera.camera_position.z << endl;
 					cout << "lx: " << E->camera.camera_look_at.x;
 					cout << " ly: " << E->camera.camera_look_at.y;
 					cout << " lz: " << E->camera.camera_look_at.z << endl;
+					*/
+					// just write out code...
+					cout << "E->camera.SetPosition(glm::vec3("<<E->camera.camera_position.x;
+					cout << ", " << E->camera.camera_position.y;
+					cout << ", " << E->camera.camera_position.z << "));";
+					cout << endl;
+					cout << "E->camera.SetLookAt(glm::vec3("<<E->camera.camera_look_at.x;
+					cout << ", " << E->camera.camera_look_at.y;
+					cout << ", " << E->camera.camera_look_at.z << "));";
+					cout << endl;
 					break;
         case 'v':
             WindowDump_PNG();
@@ -100,8 +112,8 @@ void KeyboardFunc(unsigned char c, int x, int y) {
             E->ZrotationAngle = 0.0;
             break;
 				case '2':
-            E->camera.SetPosition(glm::vec3(-0.931838, -1.05105, 0.971687));
-            E->camera.SetLookAt(glm::vec3(-0.393087, -0.395228, 0.442877));
+            E->camera.SetPosition(glm::vec3(-0.716337, -1.03872, 0.760163));
+            E->camera.SetLookAt(glm::vec3(-0.177585, -0.382897, 0.231351));
             //E->XrotationAngle = 0.0;
             //E->YrotationAngle = 0.0;
             //E->ZrotationAngle = 0.0;
@@ -113,6 +125,10 @@ void KeyboardFunc(unsigned char c, int x, int y) {
             //E->YrotationAngle = 0.0;
             //E->ZrotationAngle = 0.0;
             break;
+				case '4':
+					E->camera.SetPosition(glm::vec3(-0.945751, -0.793196, 1.2331));
+					E->camera.SetLookAt(glm::vec3(-0.398712, -0.293814, 0.561259));
+					break;
         case 27:
             exit(0);
             return;
@@ -386,7 +402,7 @@ void DisplayFunc() {
 
 
 
-
+		#ifndef _ACCESSR_
     E->passThrough.enable();
         E->passThrough.SetUniform("model", model );
         E->passThrough.SetUniform("view", view );
@@ -401,7 +417,7 @@ void DisplayFunc() {
         glDisable(GL_BLEND);
         //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     E->passThrough.disable();
-
+		#endif
 
 		E->passThrough.enable();
         E->passThrough.SetUniform("model", model );
@@ -418,7 +434,7 @@ void DisplayFunc() {
         //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     E->passThrough.disable();
 
-/*
+		#ifdef _ACCESSR_
     E->lineShader.enable();
         E->lineShader.SetUniform("model", model );
         E->lineShader.SetUniform("view", view );
@@ -428,7 +444,7 @@ void DisplayFunc() {
           E->continent.draw();
 				glDisable(GL_BLEND);
     E->lineShader.disable();
-*/
+		#endif
 
     /*
     if(E->drawThis){

@@ -31,7 +31,7 @@ lightSource lights[numberOfLights];
  vec4(v3LightPos,1.0),
  vec4(1.0,  1.0,  1.0, 1.0),
  vec4(1.0,  1.0,  1.0, 1.0),
- 1.0, 0.0, 0.0,
+ 1.1, 0.0, 0.0,
  180.0, 50.0,
  vec3(0.0, 0.0, 0.0)
  );

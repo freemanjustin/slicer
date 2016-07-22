@@ -154,15 +154,27 @@ void slicer::init(){
     field.field_name = "hi_cld";
 */
 
-
+  #ifdef _WW3_
+  field.fname = "bathymetry/wave.nc";
+  field.lat_name = "lat";
+  field.lon_name = "lon";
+  field.field_name = "sig_wav_ht";
+  #endif
 
     // oceanmaps
     #ifdef _OCEANMAPS_
       field.fname = "bathymetry/omap_speed.nc";
       field.lat_name = "yt_ocean";
       field.lon_name = "xt_ocean";
-      field.field_name = "sst";
-    //field.field_name = "speed";
+      //field.field_name = "sst";
+      field.field_name = "speed";
+    #endif
+
+    #ifdef _ACCESSR_
+    field.fname = "bathymetry/yasi_strs.nc";
+    field.lat_name = "lat";
+    field.lon_name = "lon";
+    field.field_name = "strs";
     #endif
 
     bathy.get_data();
@@ -200,11 +212,25 @@ void slicer::init(){
 
     // OCEANMAPS
     // OCEANMAPS SST scale = 0.0008f
-    field_mesh.init(field,&passThrough, 0.0008f, artmap, true);
+    #ifdef _OCEANMAPS_
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap, true);
     // OCEANMAPS speed
-    //field_mesh.init(field,&passThrough, 0.001f, jaisnb, true);
+    field_mesh.init(field,&passThrough, 0.005f, artmap, true);
+    #endif
+
     // tsunami
-    //field_mesh.init(field,&passThrough, 0.002f, rainbow, false);
+    #ifdef _TSUNAMI_
+    field_mesh.init(field,&passThrough, 0.002f, artmap, false);
+    #endif
+
+    // waves
+    #ifdef _WW3_
+    field_mesh.init(field,&passThrough, 0.0001f, artmap, false);
+    #endif
+
+    #ifdef _ACCESSR_
+    field_mesh.init(field,&passThrough, 0.005f, artmap, false);
+    #endif
 
     //bathy_mesh_normals.init(bathy,&renderNormals);
 

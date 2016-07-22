@@ -44,14 +44,14 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
 
     // FIELDS TO VISUALIZE
 
-    // 1. OCEANMAPS SST
-    // 2. OCEANMAPS VELOCITY MAGNITUDE
-    // 3. TSUNAMI MAX HEIGHT
-    // 4. ETOPO 1minute TOPOGRAPHY
+    // 1. OCEANMAPS SST (checked)
+    // 2. OCEANMAPS VELOCITY MAGNITUDE (checked)
+    // 3. TSUNAMI MAX HEIGHT (checked)
+    // 4. ETOPO 1minute TOPOGRAPHY (checked)
 
     // not tested:
-    // 5. WAVEWATCH III Sig Wave Height
-    // 6. access-r
+    // 5. WAVEWATCH III Sig Wave Height (checked)
+    // 6. access-r - use a storm surge field
 
     // generate k-means images
     // can we do better than gnuplot??
@@ -95,6 +95,56 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
     else{
 
       #ifdef _TSUNAMI_
+      // tsunami hamaxall
+      // access-g accum_ls_prcp
+      // make fill values zero
+      for (j=height-1;j>=0;j--) {
+          for (i=0;i<width;i++) { // longitude
+              if (data.field[ i + (width*j)] <= 0.0f){
+                  data.field[ i + (width*j)] = 0.0;
+                  //cout << "did it" << endl;
+              }
+              // tranform LOW
+              else{
+                data.field[ i + (width*j)] = sqrt( data.field[ i + (width*j)] );
+  							data.field[ i + (width*j)] = sqrt( data.field[ i + (width*j)] );
+              }
+              //else
+              //  cout << "i,j = " << i << " " << j << " data = " << data.field[ i + (width*j)] << endl;
+              //else
+              //    data.field[ i + (width*j)] = log(data.field[ i + (width*j)]);
+          }
+      }
+      min_value = *min_element(data.field.begin(), data.field.end());
+      max_value = *max_element(data.field.begin(), data.field.end());
+      #endif
+
+      #ifdef _WW3_
+      // tsunami hamaxall
+      // access-g accum_ls_prcp
+      // make fill values zero
+      for (j=height-1;j>=0;j--) {
+          for (i=0;i<width;i++) { // longitude
+              if (data.field[ i + (width*j)] <= 0.0f){
+                  data.field[ i + (width*j)] = 0.0;
+                  //cout << "did it" << endl;
+              }
+              // tranform LOW
+              else{
+                data.field[ i + (width*j)] = sqrt( data.field[ i + (width*j)] );
+  							data.field[ i + (width*j)] = sqrt( data.field[ i + (width*j)] );
+              }
+              //else
+              //  cout << "i,j = " << i << " " << j << " data = " << data.field[ i + (width*j)] << endl;
+              //else
+              //    data.field[ i + (width*j)] = log(data.field[ i + (width*j)]);
+          }
+      }
+      min_value = *min_element(data.field.begin(), data.field.end());
+      max_value = *max_element(data.field.begin(), data.field.end());
+      #endif
+
+      #ifdef _ACCESSR_
       // tsunami hamaxall
       // access-g accum_ls_prcp
       // make fill values zero
