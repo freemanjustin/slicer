@@ -6,13 +6,14 @@ Camera::Camera() {
 	camera_mode = FREE;
 	camera_up = glm::vec3(0, 1, 0);
 	field_of_view = 45;
-    rotation_quaternion = glm::quat(1, 0, 0, 0);
+  rotation_quaternion = glm::quat(1, 0, 0, 0);
 	camera_position_delta = glm::vec3(0, 0, 0);
 	camera_scale = .005f;
 	max_pitch_rate = 5;
 	max_heading_rate = 5;
 	move_camera = true;
 }
+
 Camera::~Camera() {
 }
 
@@ -48,10 +49,10 @@ void Camera::Update() {
 		camera_direction = glm::rotate(temp, camera_direction);
 		//add the camera delta
 		camera_position += camera_position_delta;
-        
+
 		//set the look at to be infront of the camera
 		camera_look_at = camera_position + camera_direction * 1.0f;
-        
+
 		//damping for smooth camera
         camera_heading *= 0.15; //.25;
         camera_pitch *= 0.15;//.25;
@@ -98,7 +99,7 @@ void Camera::SetClipping(double near_clip_distance, double far_clip_distance) {
 }
 
 void Camera::Move(CameraDirection dir) {
-    
+
     if(camera_mode == SPHERICAL) {
         float angle = 0;
         glm::quat rot_quat;
@@ -136,7 +137,7 @@ void Camera::Move(CameraDirection dir) {
 			case BACK:
 				camera_position_delta -= camera_direction * camera_scale;
 				break;
-                
+
 		}
 	}
 }

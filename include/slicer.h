@@ -28,7 +28,7 @@
 #include "mesh.h"
 #include "lines.h"
 
-
+#include "defines.h"
 #define NCIO
 
 #ifdef NCIO
@@ -36,7 +36,6 @@
 #endif
 
 #include "SOIL.h"
-
 
 using namespace std;
 
@@ -83,62 +82,65 @@ class Window {
 class slicer{
 
     public:
-    
+
         bool drawThis;
-    
+
         // window
         Window  window;
-    
+
         //Create the Camera
         Camera camera;
-    
+
         // our spheres
         Sphere ground;
         Sphere sky;
         //Sphere texSphere;
-    
-    
+
+
         //Sphere test_sphere;
         //Sphere test_sphere2;
-    
+
         mesh   bathy_mesh;
         mesh    bathy_mesh_normals;
-    
+
+        mesh  field_mesh;
+
         lines   continent;
-    
+
         // shader variables
         GLSLShader groundFromSpace;
         GLSLShader skyFromSpace;
-    
+
         GLSLShader groundFromAtmosphere;
         GLSLShader skyFromAtmosphere;
-    
+
         GLSLShader  lineShader;
-    
+
         //GLSLShader texMap;
-    
+
         GLSLShader passThrough;
-    
+
         GLSLShader renderNormals;
-    
-    
+
+
         atmospheric_scatter as;
-    
+
         // rotation variables
         GLfloat XrotationAngle;
         GLfloat YrotationAngle;
         GLfloat ZrotationAngle;
-    
+
         // texture map
         //texture  continents;
         //texture  field;
-    
+
     #ifdef NCIO
         // netcdf tsting
         // this will be trashed
         ncio    bathy;
+        ncio    field;
     #endif
-    
+
         void    init();
 
 };

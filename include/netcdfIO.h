@@ -19,11 +19,11 @@ class ncio{
         string  lat_name;
         string  lon_name;
         string  field_name;
-    
+
         size_t nlat;
         size_t nlon;
-        std::vector<float>  lat;
-        std::vector<float>  lon;
+        std::vector<double>  lat;
+        std::vector<double>  lon;
         //std::vector< std::vector<float> >  field;
         std::vector<float> field;
 

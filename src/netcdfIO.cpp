@@ -2,17 +2,17 @@
 
 /*
 void open_netcdf(slicer *E){
-    
+
     if(nc_open(E->input_file, NC_WRITE | NC_SHARE, &E->ncid))
         fail("netcdf file %s not found\n", E->input_file);
-    
+
 }
 
 void close_netcdf(slicer *E){
-    
+
     if(nc_close(E->ncid))
         fail("netcdf file %s could not be closed!\n", E->input_file);
-    
+
 }
 */
 
@@ -45,7 +45,7 @@ void ncio::get_data(){
 
     if((retval = nc_inq_dimlen(ncid,varid,&nlon)))
         ERR(retval);
-    
+
     //cout << "nlats = " << nlat << endl;
     //cout << "nlons = " << nlon << endl;
 
@@ -55,24 +55,24 @@ void ncio::get_data(){
     //E->bathy_lat = malloc(E->b.nlat*sizeof(double));
     //E->bathy_lon = malloc(E->b.nlon*sizeof(double));
     //E->bathy_field = malloc2d_double(E->b.nlat, E->b.nlon);
-    
+
     lat.resize((int)nlat);
     lon.resize((int)nlon);
     //field.resize((int)nlat, vector<float>((int)nlon));
     field.resize((int)nlat*(int)nlon);
     //cout << "done malloc" << endl;
-    
+
     // read the data
     nc_inq_varid(ncid, lat_name.c_str(), &varid);
-    nc_get_var_float(ncid, varid, &lat[0]);
+    nc_get_var_double(ncid, varid, &lat[0]);
 
     nc_inq_varid(ncid, lon_name.c_str(), &varid);
-    nc_get_var_float(ncid, varid, &lon[0]);
+    nc_get_var_double(ncid, varid, &lon[0]);
 
     nc_inq_varid(ncid, field_name.c_str(), &varid);
     //cout << " getting field: " << field_name.c_str() << endl;
     //nc_get_var_float(ncid, varid, &field[0][0]);
     if((retval =nc_get_var_float(ncid, varid, &field[0])))
         ERR(retval);
-    
+
 }
