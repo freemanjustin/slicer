@@ -190,6 +190,12 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
                   average += data.field[ i + (width*j)];
                   count++;
 
+
+                  if(data.field[ i + (width*j)] > max_value)
+                    max_value = data.field[ i + (width*j)];
+                  if(data.field[ i + (width*j)] < min_value)
+                    min_value = data.field[ i + (width*j)];
+
               }
           }
       }
@@ -200,6 +206,8 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
       for (j=height-1;j>=0;j--) {
           for (i=0;i<width;i++) { // longitude
               //data.field[ i + (width*j)] = data.field[ i + (width*j)]*0.001678518f + 45.0;
+
+              //data.field[ i + (width*j)] = log(data.field[ i + (width*j)]);
               if (data.field[ i + (width*j)] <= -1.e+20f){
                   //data.field[ i + (width*j)] = 0.0;
                   //data.field[ i + (width*j)] = average;
@@ -207,10 +215,12 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
               }
               else{
                   //data.field[ i + (width*j)] -= average;
+                  /*
                   if(data.field[ i + (width*j)] > max_value)
                     max_value = data.field[ i + (width*j)];
                   if(data.field[ i + (width*j)] < min_value)
                     min_value = data.field[ i + (width*j)];
+                  */
               }
 
               //else
@@ -313,7 +323,15 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
               colors.w = 1.0;
             }
             else{
-              apply_colormap(data_value, min_value, max_value );
+              // for oceanmaps velocity:
+              // apply_colormap(data_value, 0.05, 1.1 );
+
+
+              // ww3
+              apply_colormap(data_value, 0.1, max_value);
+              // standard case:
+              //apply_colormap(data_value, min_value, max_value );
+
               //cout << mesh_red << " " << mesh_green << " " << mesh_blue << endl;
               colors.x = mesh_red/255.0f;
               colors.y = mesh_green/255.0f;
@@ -763,6 +781,98 @@ void mesh::init_cmaps_from_data(colormap cm){
     init_cmap_from_data( cmap_artmap );
     return;
   }
+  if(cm == artmap_starry_night){
+    init_cmap_from_data( cmap_artmap_starry_night );
+    return;
+  }
+  if(cm == artmap_pauldavies1){
+    init_cmap_from_data( cmap_artmap_pauldavies1 );
+    return;
+  }
+  if(cm == artmap_pauldavies2){
+    init_cmap_from_data( cmap_artmap_pauldavies2 );
+    return;
+  }
+  if(cm == artmap_pauldavies3){
+    init_cmap_from_data( cmap_artmap_pauldavies3 );
+    return;
+  }
+  if(cm == artmap_pauldavies4){
+    init_cmap_from_data( cmap_artmap_pauldavies4 );
+    return;
+  }
+  if(cm == artmap_pauldavies5){
+    init_cmap_from_data( cmap_artmap_pauldavies5 );
+    return;
+  }
+  if(cm == artmap_pauldavies6){
+    init_cmap_from_data( cmap_artmap_pauldavies6 );
+    return;
+  }
+  if(cm == artmap_pauldavies7){
+    init_cmap_from_data( cmap_artmap_pauldavies7 );
+    return;
+  }
+  if(cm == artmap_pauldavies8){
+    init_cmap_from_data( cmap_artmap_pauldavies8 );
+    return;
+  }
+  if(cm == artmap_jacksonpollock1){
+    init_cmap_from_data( cmap_artmap_jacksonpollock1 );
+    return;
+  }
+  if(cm == artmap_jacksonpollock2){
+    init_cmap_from_data( cmap_artmap_jacksonpollock2 );
+    return;
+  }
+  if(cm == artmap_jacksonpollock3){
+    init_cmap_from_data( cmap_artmap_jacksonpollock3 );
+    return;
+  }
+  if(cm == artmap_edwardhopper1){
+    init_cmap_from_data( cmap_artmap_edwardhopper1 );
+    return;
+  }
+  if(cm == artmap_edwardhopper2){
+    init_cmap_from_data( cmap_artmap_edwardhopper2 );
+    return;
+  }
+  if(cm == artmap_jeffwall1){
+    init_cmap_from_data( cmap_artmap_jeffwall1 );
+    return;
+  }
+  if(cm == artmap_danflavin1){
+    init_cmap_from_data( cmap_artmap_danflavin1 );
+    return;
+  }
+  if(cm == artmap_danflavin2){
+    init_cmap_from_data( cmap_artmap_danflavin2 );
+    return;
+  }
+  if(cm == artmap_gerhardrichter1){
+    init_cmap_from_data( cmap_artmap_gerhardrichter1 );
+    return;
+  }
+  if(cm == artmap_warhol1){
+    init_cmap_from_data( cmap_artmap_warhol1 );
+    return;
+  }
+  if(cm == artmap_warhol2){
+    init_cmap_from_data( cmap_artmap_warhol2 );
+    return;
+  }
+  if(cm == artmap_georgebyrne1){
+    init_cmap_from_data( cmap_artmap_georgebyrne1 );
+    return;
+  }
+  if(cm == artmap_georgebyrne2){
+    init_cmap_from_data( cmap_artmap_georgebyrne2 );
+    return;
+  }
+
+
+
+
 }
 
 void mesh::init_cmap_from_data( int *data ){

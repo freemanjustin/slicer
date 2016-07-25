@@ -1,7 +1,5 @@
 #include "slicer.h"
 
-
-
 void slicer::init(){
 
     XrotationAngle = 0.0f;
@@ -11,11 +9,41 @@ void slicer::init(){
     //Setup camera
     //camera.SetMode(SPHERICAL);
     camera.SetMode(FREE);
+
+    // original
+    /*
     camera.SetPosition(glm::vec3(-2.0f, 0.0f, 1.3f));
-
     //camera.SetPosition(glm::vec3(-1.1f, 0.0f, 1.6f));
-
     camera.SetLookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+    */
+
+    // oceanmaps
+    /*
+    camera.SetPosition(glm::vec3(-0.753972, -1.12866, 0.747551));
+    camera.SetLookAt(glm::vec3(-0.310679, -0.372261, 0.266565));
+    */
+
+    /*
+    // access-r
+    camera.SetPosition(glm::vec3(-0.711731, -0.435703, 1.26402));
+    camera.SetLookAt(glm::vec3(-0.459889, -0.188518, 0.328355));
+    */
+
+    /*
+    // tsunami
+    camera.SetPosition(glm::vec3(-0.268745, 0.719448, 1.31449));
+    camera.SetLookAt(glm::vec3(-0.129125, 0.272709, 0.430792));
+    */
+
+    // WAVEWATCH
+    /*
+    camera.SetPosition(glm::vec3(-0.945751, -0.793196, 1.2331));
+    camera.SetLookAt(glm::vec3(-0.398712, -0.293814, 0.561259));
+    */
+    // ww3 north america atlantic
+    camera.SetPosition(glm::vec3(1.06181, 0.98145, -0.68306));
+    camera.SetLookAt(glm::vec3(0.369914, 0.420842, -0.228093));
+
     /*
     cout << "----- INIT --------" << endl;
     cout << "x: " << camera.camera_position.x;
@@ -131,6 +159,7 @@ void slicer::init(){
 
 
 
+
     bathy.fname = "bathymetry/sub5.nc";
     bathy.lat_name = "lat";
     bathy.lon_name = "lon";
@@ -210,26 +239,92 @@ void slicer::init(){
     bathy_mesh.init(bathy,&passThrough, 0.0003f, bw, false);
     cout << "doing field_mesh init" << endl;
 
+
+    cmap_map["pauldavies1"]=artmap_pauldavies1;
+    cmap_map["pauldavies2"]=artmap_pauldavies2;
+    cmap_map["pauldavies3"]=artmap_pauldavies3;
+    cmap_map["pauldavies4"]=artmap_pauldavies4;
+    cmap_map["pauldavies5"]=artmap_pauldavies5;
+    cmap_map["pauldavies6"]=artmap_pauldavies6;
+    cmap_map["pauldavies7"]=artmap_pauldavies7;
+    cmap_map["pauldavies8"]=artmap_pauldavies8;
+
+    cmap_map["jacksonpollock1"]=artmap_jacksonpollock1;
+    cmap_map["jacksonpollock2"]=artmap_jacksonpollock2;
+    cmap_map["jacksonpollock3"]=artmap_jacksonpollock3;
+    cmap_map["jeffwall1"]=artmap_jeffwall1;
+    cmap_map["edwardhopper1"]=artmap_edwardhopper1;
+    cmap_map["edwardhopper2"]=artmap_edwardhopper2;
+    cmap_map["danflavin1"]=artmap_danflavin1;
+    cmap_map["danflavin2"]=artmap_danflavin2;
+    cmap_map["gerhardrichter1"]=artmap_gerhardrichter1;
+    cmap_map["warhol1"]=artmap_warhol1;
+    cmap_map["warhol2"]=artmap_warhol2;
+    cmap_map["vangough1"]=artmap_starry_night;
+    cmap_map["georgebyrne1"]=artmap_georgebyrne1;
+    cmap_map["georgebyrne2"]=artmap_georgebyrne2;
+
+
+
+
+
+    cout << "cmap_map is " << cmap_name << endl;
+    //std::cout << "mymap['b'] is " << mymap['b'] << '\n';
+    //std::cout << "mymap['c'] is " << mymap['c'] << '\n';
+    //std::cout << "mymap['d'] is " << mymap['d'] << '\n';
+
+    //std::cout << "mymap now contains " << mymap.size() << " elements.\n";
+
+
+
     // OCEANMAPS
     // OCEANMAPS SST scale = 0.0008f
     #ifdef _OCEANMAPS_
-    //field_mesh.init(field,&passThrough, 0.0008f, artmap, true);
+    // OCEANMAPS sst
+    //field_mesh.init(field, &passThrough, 0.0009f, cmap_map[cmap_name], true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_pauldavies1, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_pauldavies2, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_pauldavies3, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_pauldavies4, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_pauldavies5, true); // looks ok
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_pauldavies6, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_pauldavies7, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_pauldavies8, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_jacksonpollock1, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_jacksonpollock2, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_jacksonpollock3, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_edwardhopper1, true); // looks good!
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_edwardhopper2, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_jeffwall1, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_danflavin1, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_danflavin2, true);
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_gerhardrichter1, true); // do this one
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_warhol1, true); // and this one
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_warhol2, true); // maybe this one as well?
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_starry_night, true); // do this one
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_georgebyrne1, true);  // looks pretty good
+    //field_mesh.init(field,&passThrough, 0.0008f, artmap_georgebyrne2, true);
+
     // OCEANMAPS speed
-    field_mesh.init(field,&passThrough, 0.005f, artmap, true);
+    field_mesh.init(field,&passThrough, 0.005f, cmap_map[cmap_name], true);
     #endif
 
     // tsunami
     #ifdef _TSUNAMI_
-    field_mesh.init(field,&passThrough, 0.002f, artmap, false);
+    //field_mesh.init(field,&passThrough, 0.002f, artmap, false);
+    field_mesh.init(field,&passThrough, 0.006f, cmap_map[cmap_name], false);
+    //field_mesh.init(field,&passThrough, 0.002f, artmap_georgebyrne2, false);
     #endif
 
     // waves
     #ifdef _WW3_
-    field_mesh.init(field,&passThrough, 0.0001f, artmap, false);
+    //field_mesh.init(field,&passThrough, 0.0001f, artmap, false);
+    field_mesh.init(field,&passThrough, 0.001f, cmap_map[cmap_name], false);
     #endif
 
     #ifdef _ACCESSR_
-    field_mesh.init(field,&passThrough, 0.005f, artmap, false);
+    //field_mesh.init(field,&passThrough, 0.006f, artmap_starry_night, false);
+    field_mesh.init(field,&passThrough, 0.006f, cmap_map[cmap_name], false);
     #endif
 
     //bathy_mesh_normals.init(bathy,&renderNormals);

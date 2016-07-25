@@ -112,8 +112,8 @@ void KeyboardFunc(unsigned char c, int x, int y) {
             E->ZrotationAngle = 0.0;
             break;
 				case '2':
-            E->camera.SetPosition(glm::vec3(-0.716337, -1.03872, 0.760163));
-            E->camera.SetLookAt(glm::vec3(-0.177585, -0.382897, 0.231351));
+						E->camera.SetPosition(glm::vec3(-0.753972, -1.12866, 0.747551));
+						E->camera.SetLookAt(glm::vec3(-0.310679, -0.372261, 0.266565));
             //E->XrotationAngle = 0.0;
             //E->YrotationAngle = 0.0;
             //E->ZrotationAngle = 0.0;
@@ -128,6 +128,22 @@ void KeyboardFunc(unsigned char c, int x, int y) {
 				case '4':
 					E->camera.SetPosition(glm::vec3(-0.945751, -0.793196, 1.2331));
 					E->camera.SetLookAt(glm::vec3(-0.398712, -0.293814, 0.561259));
+					break;
+				case '5':
+					E->camera.SetPosition(glm::vec3(-0.575471, -0.581941, 0.891852));
+					E->camera.SetLookAt(glm::vec3(-0.297424, 0.267454, 0.443277));
+					break;
+				case '6':
+					E->camera.SetPosition(glm::vec3(-0.711731, -0.435703, 1.26402));
+					E->camera.SetLookAt(glm::vec3(-0.459889, -0.188518, 0.328355));
+					break;
+				case '7':
+					E->camera.SetPosition(glm::vec3(1.61011, -0.131071, 0.0453234));
+					E->camera.SetLookAt(glm::vec3(0.615158, -0.0309438, 0.0390834));
+					break;
+				case '8':
+					E->camera.SetPosition(glm::vec3(1.36545, 0.673726, -0.345385));
+					E->camera.SetLookAt(glm::vec3(0.509625, 0.202446, -0.132157));
 					break;
         case 27:
             exit(0);
@@ -151,6 +167,7 @@ void CallBackMotionFunc(int x, int y) {
 
 
 void DisplayFunc() {
+
 
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -212,6 +229,14 @@ void DisplayFunc() {
     float camera_magnitude = glm::length(E->camera.camera_position);
     float camera_magnitude_squared = pow(camera_magnitude ,2.0f);
 
+		//cout << E->camera.camera_position.x << endl;
+		//cout << E->camera.camera_position.y << endl;
+		//cout << E->camera.camera_position.z << endl;
+
+		//glm::mat4 rotationMat(1); // Creates a identity matrix
+		// glm::mat4() returns identity matrix
+		glm::mat4 rotationMat = glm::rotate(glm::mat4(), 175.0f, glm::vec3(0.0, 0.5, 1.0));
+		glm::vec3 rotatedVec = glm::vec3(rotationMat * glm::vec4( E->camera.camera_position, 1.0));
 
     if(camera_magnitude > E->as.m_fOuterRadius ){
 
@@ -402,14 +427,17 @@ void DisplayFunc() {
 
 
 
-		#ifndef _ACCESSR_
+		#if defined(_OCEANMAPS_) || defined(_WW3_) || defined(_TSUNAMI_)
     E->passThrough.enable();
         E->passThrough.SetUniform("model", model );
         E->passThrough.SetUniform("view", view );
         E->passThrough.SetUniform("projection", projection );
         E->passThrough.SetUniform("m_3x3_inv_transp", m_3x3_inv_transp );
         E->passThrough.SetUniform("v_inv", v_inv);
-        E->passThrough.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position));
+				// original
+				E->passThrough.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position));
+				// for tsunami
+				//E->passThrough.SetUniform("v3LightPos", glm::normalize(rotatedVec));
         //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -425,7 +453,10 @@ void DisplayFunc() {
         E->passThrough.SetUniform("projection", projection );
         E->passThrough.SetUniform("m_3x3_inv_transp", m_3x3_inv_transp );
         E->passThrough.SetUniform("v_inv", v_inv);
-        E->passThrough.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position));
+				// original
+				E->passThrough.SetUniform("v3LightPos", glm::normalize(E->camera.camera_position));
+				// light pos for tsunami
+				//E->passThrough.SetUniform("v3LightPos", glm::normalize(rotatedVec));
         //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -434,7 +465,7 @@ void DisplayFunc() {
         //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     E->passThrough.disable();
 
-		#ifdef _ACCESSR_
+		#if defined(_ACCESSR_) || defined(_WW3_)
     E->lineShader.enable();
         E->lineShader.SetUniform("model", model );
         E->lineShader.SetUniform("view", view );
@@ -460,6 +491,9 @@ void DisplayFunc() {
 
     glutSwapBuffers();
 
+		WindowDump_PNG(E->cmap_name);
+		exit(0);
+
 }
 
 //Redraw based on fps set for window
@@ -475,6 +509,13 @@ void TimerFunc(int value) {
 int main(int argc, char **argv) {
 
     E = new slicer;
+
+		// grab colormap name from command line argc
+	  if (argc > 1)
+	  {
+	    E->cmap_name = argv[1];
+	    // do stuff with arg1
+	  }
 
     //glut boilerplate
     glutInit(&argc, argv);

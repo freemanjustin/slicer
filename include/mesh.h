@@ -55,7 +55,38 @@
 #include "viridis.h"
 #include "parula.h"
 
+// artmaps
 #include "artmap.h"
+#include "artmap_starry_night.h"
+#include "pauldavies1.h"
+#include "pauldavies2.h"
+#include "pauldavies3.h"
+#include "pauldavies4.h"
+#include "pauldavies5.h"
+#include "pauldavies6.h"
+#include "pauldavies7.h"
+#include "pauldavies8.h"
+
+#include "jacksonpollock1.h"
+#include "jacksonpollock2.h"
+#include "jacksonpollock3.h"
+
+#include "edwardhopper1.h"
+#include "edwardhopper2.h"
+
+#include "jeffwall1.h"
+
+#include "danflavin1.h"
+#include "danflavin2.h"
+
+#include "gerhardrichter1.h"
+
+#include "warhol1.h"
+#include "warhol2.h"
+
+#include "georgebyrne1.h"
+#include "georgebyrne2.h"
+
 
 typedef struct{
   int r[256];
@@ -89,7 +120,29 @@ typedef enum {
   plasma,
   viridis,
   parula,
-  artmap
+  artmap,
+  artmap_starry_night,
+  artmap_pauldavies1,
+  artmap_pauldavies2,
+  artmap_pauldavies3,
+  artmap_pauldavies4,
+  artmap_pauldavies5,
+  artmap_pauldavies6,
+  artmap_pauldavies7,
+  artmap_pauldavies8,
+  artmap_jacksonpollock1,
+  artmap_jacksonpollock2,
+  artmap_jacksonpollock3,
+  artmap_edwardhopper1,
+  artmap_edwardhopper2,
+  artmap_jeffwall1,
+  artmap_danflavin1,
+  artmap_danflavin2,
+  artmap_gerhardrichter1,
+  artmap_warhol1,
+  artmap_warhol2,
+  artmap_georgebyrne1,
+  artmap_georgebyrne2
 }colormap;
 
 class mesh{

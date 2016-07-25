@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,6 +6,7 @@
 
 #include <GL/glew.h>
 
-void WindowDump_PPM(void);
-void WindowDump_PNG(void);
 
+  void WindowDump_PPM(void);
+  void WindowDump_PNG(void);
+  void WindowDump_PNG(std::string);

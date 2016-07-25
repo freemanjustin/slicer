@@ -10,6 +10,8 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <map>
+#include <string>
 #include <GL/glew.h>
 
 #ifdef __APPLE__
@@ -140,6 +142,11 @@ class slicer{
         ncio    bathy;
         ncio    field;
     #endif
+
+        // array of colormap names
+        //std::vector<colormap>  cmaps;
+        map<string,colormap> cmap_map;
+        string  cmap_name;
 
         void    init();
 
