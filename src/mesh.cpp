@@ -28,33 +28,10 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
     height = data.nlat;
 
 
-    // 1. collect art assets
-    // 2. make colormaps - store colormap output images for inclusion in preentation
-    // 3. need around 4 or 5 colormaps per field
-    // 4. can use sampe colormap for different data sets
-    // 5. need to start collecting art asset metadata for inclusion in presentation
-    // 5a. metadata: Artist Name, Name of Work, Year of Work.
 
-    // SLICER UPDATES
+    // SLICER UPDATES TODO
     // 1. can we add the read colormap from file code to this?
-    // 2. add colormap parameter to command line arguments
-    // 3. hotkey different view settings to make image generation easy
-    // 4. only need 1 or 2 views per colormap (maybe only 1 view for some fields)
-    //    view will be different depending on data field
 
-    // FIELDS TO VISUALIZE
-
-    // 1. OCEANMAPS SST (checked)
-    // 2. OCEANMAPS VELOCITY MAGNITUDE (checked)
-    // 3. TSUNAMI MAX HEIGHT (checked)
-    // 4. ETOPO 1minute TOPOGRAPHY (checked)
-
-    // not tested:
-    // 5. WAVEWATCH III Sig Wave Height (checked)
-    // 6. access-r - use a storm surge field
-
-    // generate k-means images
-    // can we do better than gnuplot??
 
     // handle _FillValue
     // accessg
