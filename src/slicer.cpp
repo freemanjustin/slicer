@@ -18,31 +18,36 @@ void slicer::init(){
     */
 
     // oceanmaps
-    /*
+    #ifdef _OCEANMAPS_
     camera.SetPosition(glm::vec3(-0.753972, -1.12866, 0.747551));
     camera.SetLookAt(glm::vec3(-0.310679, -0.372261, 0.266565));
-    */
+    #endif
 
-    /*
+
     // access-r
+    #ifdef _ACCESSR_
     camera.SetPosition(glm::vec3(-0.711731, -0.435703, 1.26402));
     camera.SetLookAt(glm::vec3(-0.459889, -0.188518, 0.328355));
-    */
+    #endif
 
-    /*
+
     // tsunami
+    #ifdef _TSUNAMI_
     camera.SetPosition(glm::vec3(-0.268745, 0.719448, 1.31449));
     camera.SetLookAt(glm::vec3(-0.129125, 0.272709, 0.430792));
-    */
+    #endif
 
     // WAVEWATCH
     /*
     camera.SetPosition(glm::vec3(-0.945751, -0.793196, 1.2331));
     camera.SetLookAt(glm::vec3(-0.398712, -0.293814, 0.561259));
     */
+
     // ww3 north america atlantic
+    #ifdef _WW3_
     camera.SetPosition(glm::vec3(1.06181, 0.98145, -0.68306));
     camera.SetLookAt(glm::vec3(0.369914, 0.420842, -0.228093));
+    #endif
 
     /*
     cout << "----- INIT --------" << endl;
@@ -264,6 +269,33 @@ void slicer::init(){
     cmap_map["georgebyrne1"]=artmap_georgebyrne1;
     cmap_map["georgebyrne2"]=artmap_georgebyrne2;
 
+    cmap_map["arthurboyd1"]=artmap_arthurboyd1;
+    cmap_map["charlesdemuth1"]=artmap_charlesdemuth1;
+    cmap_map["claudemonet1"]=artmap_claudemonet1;
+    cmap_map["ellswothkelly1"]=artmap_ellswothkelly1;
+    cmap_map["franzkline1"]=artmap_franzkline1;
+    cmap_map["jasperjohns1"]=artmap_jasperjohns1;
+    cmap_map["joanmiro1"]=artmap_joanmiro1;
+    cmap_map["johnolsen1"]=artmap_johnolsen1;
+    cmap_map["johnolsen2"]=artmap_johnolsen2;
+    cmap_map["leilajeffreys1"]=artmap_leilajeffreys1;
+    cmap_map["leilajeffreys2"]=artmap_leilajeffreys2;
+    cmap_map["maxernst1"]=artmap_maxernst1;
+    cmap_map["maxernst2"]=artmap_maxernst2;
+    cmap_map["maxernst3"]=artmap_maxernst3;
+    cmap_map["maxernst4"]=artmap_maxernst4;
+    cmap_map["pauldelvaux1"]=artmap_pauldelvaux1;
+    cmap_map["pauldelvaux2"]=artmap_pauldelvaux2;
+    cmap_map["pauldelvaux3"]=artmap_pauldelvaux3;
+    cmap_map["pauldelvaux4"]=artmap_pauldelvaux4;
+    cmap_map["pauldelvaux5"]=artmap_pauldelvaux5;
+    cmap_map["renemagritte1"]=artmap_renemagritte1;
+    cmap_map["renemagritte2"]=artmap_renemagritte2;
+    cmap_map["rossbleckner1"]=artmap_rossbleckner1;
+    cmap_map["roylichtenstein1"]=artmap_roylichtenstein1;
+    cmap_map["roylichtenstein2"]=artmap_roylichtenstein2;
+    cmap_map["yvestanguy1"]=artmap_yvestanguy1;
+
 
 
 
@@ -305,8 +337,12 @@ void slicer::init(){
     //field_mesh.init(field,&passThrough, 0.0008f, artmap_georgebyrne1, true);  // looks pretty good
     //field_mesh.init(field,&passThrough, 0.0008f, artmap_georgebyrne2, true);
 
+    // OCEANMAPS sst
+    //field_mesh.init(field,&passThrough, 0.0008f, cmap_map[cmap_name], true);
+
     // OCEANMAPS speed
-    field_mesh.init(field,&passThrough, 0.005f, cmap_map[cmap_name], true);
+    field_mesh.init(field,&passThrough, 0.006f, cmap_map[cmap_name], true);
+
     #endif
 
     // tsunami

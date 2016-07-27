@@ -87,6 +87,33 @@
 #include "georgebyrne1.h"
 #include "georgebyrne2.h"
 
+#include "arthurboyd1.h"
+#include "charlesdemuth1.h"
+#include "claudemonet1.h"
+#include "ellswothkelly1.h"
+#include "franzkline1.h"
+#include "jasperjohns1.h"
+#include "joanmiro1.h"
+#include "johnolsen1.h"
+#include "johnolsen2.h"
+#include "leilajeffreys1.h"
+#include "leilajeffreys2.h"
+#include "maxernst1.h"
+#include "maxernst2.h"
+#include "maxernst3.h"
+#include "maxernst4.h"
+#include "pauldelvaux1.h"
+#include "pauldelvaux2.h"
+#include "pauldelvaux3.h"
+#include "pauldelvaux4.h"
+#include "pauldelvaux5.h"
+#include "renemagritte1.h"
+#include "renemagritte2.h"
+#include "rossbleckner1.h"
+#include "roylichtenstein1.h"
+#include "roylichtenstein2.h"
+#include "yvestanguy1.h"
+
 
 typedef struct{
   int r[256];
@@ -142,7 +169,33 @@ typedef enum {
   artmap_warhol1,
   artmap_warhol2,
   artmap_georgebyrne1,
-  artmap_georgebyrne2
+  artmap_georgebyrne2,
+  artmap_arthurboyd1,
+  artmap_charlesdemuth1,
+  artmap_claudemonet1,
+  artmap_ellswothkelly1,
+  artmap_franzkline1,
+  artmap_jasperjohns1,
+  artmap_joanmiro1,
+  artmap_johnolsen1,
+  artmap_johnolsen2,
+  artmap_leilajeffreys1,
+  artmap_leilajeffreys2,
+  artmap_maxernst1,
+  artmap_maxernst2,
+  artmap_maxernst3,
+  artmap_maxernst4,
+  artmap_pauldelvaux1,
+  artmap_pauldelvaux2,
+  artmap_pauldelvaux3,
+  artmap_pauldelvaux4,
+  artmap_pauldelvaux5,
+  artmap_renemagritte1,
+  artmap_renemagritte2,
+  artmap_rossbleckner1,
+  artmap_roylichtenstein1,
+  artmap_roylichtenstein2,
+  artmap_yvestanguy1
 }colormap;
 
 class mesh{

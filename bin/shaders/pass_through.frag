@@ -28,7 +28,7 @@ lightSource lights[numberOfLights];
 
 
  lightSource light0 = lightSource(
- vec4(v3LightPos,0.0),  // make w zero for access-r
+ vec4(v3LightPos,1.0),  // make w zero for access-r
  vec4(1.0,  1.0,  1.0, 1.0),
  vec4(1.0,  1.0,  1.0, 1.0),
  1.1, 0.0, 0.0,

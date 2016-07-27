@@ -207,21 +207,23 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
           for (i=0;i<width;i++) { // longitude
               //data.field[ i + (width*j)] = data.field[ i + (width*j)]*0.001678518f + 45.0;
 
-              //data.field[ i + (width*j)] = log(data.field[ i + (width*j)]);
               if (data.field[ i + (width*j)] <= -1.e+20f){
                   //data.field[ i + (width*j)] = 0.0;
                   //data.field[ i + (width*j)] = average;
                   data.field[ i + (width*j)] = -999.0;
               }
+              /*
               else{
                   //data.field[ i + (width*j)] -= average;
-                  /*
+
+
                   if(data.field[ i + (width*j)] > max_value)
                     max_value = data.field[ i + (width*j)];
                   if(data.field[ i + (width*j)] < min_value)
                     min_value = data.field[ i + (width*j)];
-                  */
+
               }
+              */
 
               //else
               //  cout << "i,j = " << i << " " << j << " data = " << data.field[ i + (width*j)] << endl;
@@ -323,14 +325,13 @@ void mesh::init(ncio data, GLSLShader *shader, float scale_factor, colormap the_
               colors.w = 1.0;
             }
             else{
-              // for oceanmaps velocity:
-              // apply_colormap(data_value, 0.05, 1.1 );
+              //apply_colormap(data_value, 25.0, 35.0 );
 
 
               // ww3
-              apply_colormap(data_value, 0.1, max_value);
+              //apply_colormap(data_value, 0.1, max_value);
               // standard case:
-              //apply_colormap(data_value, min_value, max_value );
+              apply_colormap(data_value, min_value, max_value );
 
               //cout << mesh_red << " " << mesh_green << " " << mesh_blue << endl;
               colors.x = mesh_red/255.0f;
@@ -869,6 +870,113 @@ void mesh::init_cmaps_from_data(colormap cm){
     init_cmap_from_data( cmap_artmap_georgebyrne2 );
     return;
   }
+  if(cm==artmap_arthurboyd1){
+  init_cmap_from_data( cmap_artmap_arthurboyd1 );
+  return;
+  }
+  if(cm==artmap_charlesdemuth1){
+    init_cmap_from_data( cmap_artmap_charlesdemuth1 );
+    return;
+  }
+  if(cm==artmap_claudemonet1){
+    init_cmap_from_data( cmap_artmap_claudemonet1 );
+    return;
+  }
+  if(cm==artmap_ellswothkelly1){
+    init_cmap_from_data( cmap_artmap_ellswothkelly1 );
+    return;
+  }
+  if(cm==artmap_franzkline1){
+    init_cmap_from_data( cmap_artmap_franzkline1 );
+    return;
+  }
+  if(cm==artmap_jasperjohns1){
+    init_cmap_from_data( cmap_artmap_jasperjohns1 );
+    return;
+  }
+  if(cm==artmap_joanmiro1){
+    init_cmap_from_data( cmap_artmap_joanmiro1 );
+    return;
+  }
+  if(cm==artmap_johnolsen1){
+    init_cmap_from_data( cmap_artmap_johnolsen1 );
+    return;
+  }
+  if(cm==artmap_johnolsen2){
+    init_cmap_from_data( cmap_artmap_johnolsen2 );
+    return;
+  }
+  if(cm==artmap_leilajeffreys1){
+    init_cmap_from_data( cmap_artmap_leilajeffreys1 );
+    return;
+  }
+  if(cm==artmap_leilajeffreys2){
+    init_cmap_from_data( cmap_artmap_leilajeffreys2 );
+    return;
+  }
+  if(cm==artmap_maxernst1){
+    init_cmap_from_data( cmap_artmap_maxernst1 );
+    return;
+  }
+  if(cm==artmap_maxernst2){
+    init_cmap_from_data( cmap_artmap_maxernst2 );
+    return;
+  }
+  if(cm==artmap_maxernst3){
+    init_cmap_from_data( cmap_artmap_maxernst3 );
+    return;
+  }
+  if(cm==artmap_maxernst4){
+    init_cmap_from_data( cmap_artmap_maxernst4 );
+    return;
+  }
+  if(cm==artmap_pauldelvaux1){
+    init_cmap_from_data( cmap_artmap_pauldelvaux1 );
+    return;
+  }
+  if(cm==artmap_pauldelvaux2){
+    init_cmap_from_data( cmap_artmap_pauldelvaux2 );
+    return;
+  }
+  if(cm==artmap_pauldelvaux3){
+    init_cmap_from_data( cmap_artmap_pauldelvaux3 );
+    return;
+  }
+  if(cm==artmap_pauldelvaux4){
+    init_cmap_from_data( cmap_artmap_pauldelvaux4 );
+    return;
+  }
+  if(cm==artmap_pauldelvaux5){
+    init_cmap_from_data( cmap_artmap_pauldelvaux5 );
+    return;
+  }
+  if(cm==artmap_renemagritte1){
+    init_cmap_from_data( cmap_artmap_renemagritte1 );
+    return;
+  }
+  if(cm==artmap_renemagritte2){
+    init_cmap_from_data( cmap_artmap_renemagritte2 );
+    return;
+  }
+  if(cm==artmap_rossbleckner1){
+    init_cmap_from_data( cmap_artmap_rossbleckner1 );
+    return;
+  }
+  if(cm==artmap_roylichtenstein1){
+    init_cmap_from_data( cmap_artmap_roylichtenstein1 );
+    return;
+  }
+  if(cm==artmap_roylichtenstein2){
+    init_cmap_from_data( cmap_artmap_roylichtenstein2 );
+    return;
+  }
+  if(cm==artmap_yvestanguy1){
+    init_cmap_from_data( cmap_artmap_yvestanguy1 );
+    return;
+  }
+
+
+
 
 
 
